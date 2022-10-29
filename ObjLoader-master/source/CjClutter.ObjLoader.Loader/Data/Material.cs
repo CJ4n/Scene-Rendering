@@ -9,9 +9,9 @@
 
         public string Name { get; set; }
 
-        public Vec3 AmbientColor { get; set; }
-        public Vec3 DiffuseColor { get; set; }
-        public Vec3 SpecularColor { get; set; }
+        public Vector3 AmbientColor { get; set; }
+        public Vector3 DiffuseColor { get; set; }
+        public Vector3 SpecularColor { get; set; }
         public float SpecularCoefficient { get; set; }
 
         public float Transparency { get; set; }

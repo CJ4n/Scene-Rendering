@@ -17,4 +17,10 @@
     <ProjectReference Include="..\..\ObjLoader-master\source\CjClutter.ObjLoader.Loader\CjClutter.ObjLoader.Loader.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="PresentationCore">
+      <HintPath>..\..\PresentationCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

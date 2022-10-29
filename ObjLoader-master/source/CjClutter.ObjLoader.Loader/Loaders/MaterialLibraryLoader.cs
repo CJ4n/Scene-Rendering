@@ -80,7 +80,7 @@ namespace ObjLoader.Loader.Loaders
             _materialLibrary.Push(_currentMaterial);
         }
 
-        private Vec3 ParseVec3(string data)
+        private Vector3 ParseVec3(string data)
         {
             string[] parts = data.Split(' ');
 
@@ -88,7 +88,7 @@ namespace ObjLoader.Loader.Loaders
             float y = parts[1].ParseInvariantFloat();
             float z = parts[2].ParseInvariantFloat();
 
-            return new Vec3(x, y, z);
+            return new Vector3(x, y, z);
         }
 
         public void Load(Stream lineStream)

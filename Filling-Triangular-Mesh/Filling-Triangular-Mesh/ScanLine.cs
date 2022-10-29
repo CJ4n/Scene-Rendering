@@ -1,6 +1,5 @@
 ﻿namespace Filling_Triangular_Mesh
 {
-
     class ScanLine
     {
         private readonly List<AETPointer> AET;
@@ -14,7 +13,7 @@
 
 
             sortedInd = new Stack<int>(polygon.Select((p, i) => new KeyValuePair<Point, int>(p, i)).
-                z(pair => pair.Key.Y).
+                OrderByDescending(pair => pair.Key.Y).
                 Select(pair => pair.Value));
         }
 
@@ -92,5 +91,117 @@
             return xCmp == 0 ? yMax.CompareTo(other.yMax) : xCmp;
         }
     }
+    //class ScanLine
+    //{
+    //    private readonly List<AETPointer> AET;
+    //    private readonly Stack<int> sortedInd;
+    //    private readonly List<Point> polygon;
+
+    //    public ScanLine(List<Point> polygon)
+    //    {
+    //        AET = new List<AETPointer>();
+    //        this.polygon = polygon;
+
+
+    //        sortedInd = new Stack<int>(polygon.Select((p, i) => new KeyValuePair<Point, int>(p, i)).
+    //            OrderByDescending(pair => pair.Key.Y).
+    //            Select(pair => pair.Value));
+    //    }
+
+    //    public IEnumerable<(List<int> xList, int y)> GetIntersectionPoints()
+    //    {
+
+    //        int yMin = (int)polygon[sortedInd.Peek()].Y;
+    //        int yMax = (int)polygon[sortedInd.Last()].Y;
+    //        if (yMin == 802 && yMax == 824)
+    //        {
+    //            int adsfsad = 2;
+    //        }
+    //        var mockPointer = new AETPointer(0, 0, 0);
+    //        for (int y = yMin + 1; y <= yMax; ++y)
+    //        {
+    //            while (sortedInd.Count > 0 && polygon[sortedInd.Peek()].Y == y - 1)
+    //            {
+    //                var ind = sortedInd.Pop();
+    //                var current = polygon[ind];
+    //                var prev = polygon[(ind - 1 + polygon.Count) % polygon.Count];
+    //                if (prev.Y >= current.Y)
+    //                {
+    //                    AET.Add(new AETPointer(prev.Y, current.X, PointGeometry.Slope(current, prev)));
+    //                    var aaa = new AETPointer(prev.Y, current.X, PointGeometry.Slope(current, prev));
+    //                    if (-2141483648 > aaa._m)
+    //                    {
+    //                        int asdfa1sd = 2232;
+    //                    }
+    //                }
+    //                else if (prev.Y < current.Y)
+    //                {
+    //                    mockPointer.x = prev.X;
+    //                    mockPointer.yMax = (int)prev.Y;
+    //                    AET.Remove(mockPointer);
+    //                }
+
+    //                var next = polygon[(ind + 1) % polygon.Count];
+    //                if (next.Y >= current.Y)
+    //                {
+    //                    AET.Add(new AETPointer(next.Y, current.X, PointGeometry.Slope(current, next)));
+    //                    var aaa = new AETPointer(prev.Y, current.X, PointGeometry.Slope(current, prev));
+    //                    if (-2141483648 > aaa._m)
+    //                    {
+    //                        int asdfa1sd = 2232;
+    //                    }
+    //                }
+    //                else if (next.Y < current.Y)
+    //                {
+    //                    mockPointer.x = next.X;
+    //                    mockPointer.yMax = (int)next.Y;
+    //                    AET.Remove(mockPointer);
+    //                }
+
+    //            }
+    //            var res123 = AET.Select(ptr => ptr.X).OrderBy(x => x).ToList();
+    //            if (-2141483648 > res123[0])
+    //            {
+    //                int asas = 2232;
+    //            }
+
+    //            yield return (AET.Select(ptr => ptr.X).OrderBy(x => x).ToList(), y);
+
+    //            AET.RemoveAll((ptr) => ptr.yMax <= y);
+    //            foreach (var ptr in AET)
+    //            {
+    //                ptr.UpdateX();
+    //            }
+    //        }
+    //    }
+    //}
+
+
+    //class AETPointer : IComparable<AETPointer>
+    //{
+    //    public int yMax;
+    //    public double x;
+    //    public double _m;
+
+    //    public AETPointer(double yMax, double x, double m)
+    //    {
+    //        this.yMax = (int)yMax;
+    //        this.x = x;
+    //        _m = 1.0 / m;
+    //    }
+
+    //    public int X { get => (int)Math.Round(x); }
+
+    //    public void UpdateX()
+    //    {
+    //        x = /*_m == Geometry.Infinity ? Geometry.Infinity :*/ x + _m;
+    //    }
+
+    //    public int CompareTo(AETPointer other)
+    //    {
+    //        var xCmp = x.CompareTo(other.x);
+    //        return xCmp == 0 ? yMax.CompareTo(other.yMax) : xCmp;
+    //    }
+    //}
 
 }
