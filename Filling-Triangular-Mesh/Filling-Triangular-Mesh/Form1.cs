@@ -17,21 +17,51 @@ namespace Filling_Triangular_Mesh
         private Bitmap _drawArea;
         float minX;
         float minY;
+        float minZ;
         public Form1()
         {
             InitializeComponent();
-            var result = LoadObjFile("C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\sphere.obj");
+            var result = LoadObjFile("C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2);
-            minX = result.Vertices.Min(x => x.X);
-            minY = result.Vertices.Min(x => x.Y);
-            result.Vertices.All(v =>
+
+            //minX = result.Vertices.Min(x => x.X);
+            //minY = result.Vertices.Min(x => x.Y);
+            //minZ = result.Vertices.Min(x => x.Z);
+
+            //result.Vertices.All((v) =>
+            //{
+            //    v.X = (float)((v.X - minX) * 300.0 + 100);
+            //    v.Y = (float)((v.Y - minY) * 300.0 + 100);
+            //    v.Z = (float)((v.Z - minZ) * 300.0 + 100);
+            //    return true;
+            //});
+
+            //minX = result.Normals.Min(x => x.X);
+            //minY = result.Normals.Min(x => x.Y);
+            //minZ = result.Normals.Min(x => x.Z);
+            //result.Normals.All((v) =>
+            //{
+            //    v.X = (float)((v.X - minX) * 300.0 + 100);
+            //    v.Y = (float)((v.Y - minY) * 300.0 + 100);
+            //    v.Z = (float)((v.Z - minZ) * 300.0 + 100);
+            //    return true;
+            //});
+
+            var aaa = result.Vertices.Min(x => x.Z);
+            //var count = result.Vertices.Select(x =>
+            //{
+            //    if (x.Z == aaa)
+            //    {
+            //        return true;
+            //    }
+            //    return false;
+            //}).Count();
+            int count = 0;
+            foreach (var v in result.Vertices)
             {
-                v.X = (float)((v.X - minX) * 300.0 + 100);
-                v.Y = (float)((v.Y - minY) * 300.0 + 150);
-                return true;
-            });
-
-
+                if (v.Z == aaa)
+                    count++;
+            }
             Canvas.Image = _drawArea;
             var faces = GetAllFaces(result);
             //var triangles = GetTriangles(result);
@@ -63,7 +93,11 @@ namespace Filling_Triangular_Mesh
                     vertices.Add(v0);
                     vertices.Add(v1);
                     vertices.Add(v2);
-                    faces.Add(new MyFace(vertices, normals));
+                    List<int> ids = new List<int>();
+                    ids.Add(f[0].VertexIndex);
+                    ids.Add(f[1].VertexIndex);
+                    ids.Add(f[2].VertexIndex);
+                    faces.Add(new MyFace(vertices, normals, ids));
                 }
             }
             return faces;

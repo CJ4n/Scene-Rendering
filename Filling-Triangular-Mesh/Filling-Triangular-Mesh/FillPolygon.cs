@@ -53,32 +53,35 @@ namespace Filling_Triangular_Mesh
             for (int i = 0; i < grid.Count; ++i)
             {
                 var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
-                                                              new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
-                                                              new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
+                                                 new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
+                                                 new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
+                //var triangle = new List<Point> { new Point((int)Math.Round(grid[i].vertices[0].X), (int)Math.Round(grid[i].vertices[0].Y)),
+                //                                 new Point((int)Math.Round(grid[i].vertices[1].X), (int)Math.Round(grid[i].vertices[1].Y)),
+                //                                 new Point((int)Math.Round(grid[i].vertices[2].X), (int)Math.Round(grid[i].vertices[2].Y))};
                 var gen = new ColorGenerator(grid[i]);
 
-                FillTriangle(triangle);
+                FillTriangle(triangle, gen);
 
             }
 
         }
 
-        public void FillTriangle(List<Point> triangle)
+        public void FillTriangle(List<Point> triangle, ColorGenerator colorGenerator)
         {
             var scanLine = new ScanLine(triangle);
             //var generator = GetGenerator(triangle);
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                FillRow(xList, y/*, generator*/);
+                FillRow(xList, y, colorGenerator);
             }
         }
 
-        private void FillRow(List<int> xList, int y/*, ColorGenerator colorGenerator = null*/)
+        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator)
         {
             Color color = Color.Yellow;
             //var gen = new ColorGenerator(null);
             //int rowShift = y * bitmap.BackBufferStride;
-            for (int i = 0; i < xList.Count - 1; i += 1)
+            for (int i = 0; i < xList.Count - 1; ++i)
             {
                 //int currShift = rowShift + xList[i] * 4;
                 //IntPtr pBackBuffer = bitmap.BackBuffer + currShift;
@@ -93,7 +96,7 @@ namespace Filling_Triangular_Mesh
                 {
 
                     //bitmap.SetPixel(x, y, color);
-                    bitmap.SetPixel(x, y, color);
+                    bitmap.SetPixel(x, y, colorGenerator.ComputeColor(x, y));
                     //var (R, G, B) = GetColors(colorGenerator, currShift, x, y);
                     //byte A = buffer[currShift + 3];
                     //unsafe
@@ -103,7 +106,7 @@ namespace Filling_Triangular_Mesh
                     //}
                     //currShift += 4;
                 }
-                color = Color.Red;
+                //color = Color.Red;
             }
         }
     }

@@ -22,6 +22,14 @@ namespace ObjLoader.Loader.Data
         {
             return new Vector3(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z);
         }
+        public static Vector3 operator /(Vector3 v1, double s)
+        {
+            if (s == 0)
+            {
+                throw new System.Exception("dividing by zero!");
+            }
+            return new Vector3(v1.X / s, v1.Y / s, v1.Z / s);
+        }
         public static Vector3 operator *(double s, Vector3 v)
         {
             return new Vector3(s * v.X, s * v.Y, s * v.Z);

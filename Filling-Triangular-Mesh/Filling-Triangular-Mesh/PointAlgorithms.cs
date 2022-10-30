@@ -177,22 +177,26 @@ namespace Filling_Triangular_Mesh
         {
             return v1.X * v2.X + v1.Y * v2.Y + v1.Z * v2.Z;
         }
-        public static double CosBetweenVersors(Vector3 v1, Vector3 v2)
+        //public static Vector3 CrossProduct(Vector3 v1, Vector3 v2)
+        //{
+
+        //}
+        public static double CosBetweenVectors(Vector3 v1, Vector3 v2)
         {
-            if (Magnitude(v1) > 1 || Magnitude(v2) > 1)
-            {
-                throw new Exception("Versors magnitude greater then 1");
-            }
-            return DotProduct(v1, v2);
+            //if (Magnitude(v1) > 1 || Magnitude(v2) > 1)
+            //{
+            //    throw new Exception("Versors magnitude greater then 1");
+            //}
+            return DotProduct(v1 / Magnitude(v1), v2 / Magnitude(v2));
         }
         public static double Magnitude(Vector3 v)
         {
-            return v.X * v.X + v.Y * v.Y + v.Z * v.Z;
+            return Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
         }
         public static Vector3 Normalize(Vector3 v)
         {
             var magnitude = Magnitude(v);
-            return new Vector3(v.X / magnitude, v.Y / magnitude, v.Y / magnitude);
+            return new Vector3(v.X / magnitude, v.Y / magnitude, v.Z / magnitude);
         }
 
         // https://math.stackexchange.com/questions/175896/finding-a-point-along-a-line-https://stackoverflow.com/questions/13302396/given-two-points-find-a-third-point-on-the-line?rq=1a-certain-distance-away-from-another-point/175906
