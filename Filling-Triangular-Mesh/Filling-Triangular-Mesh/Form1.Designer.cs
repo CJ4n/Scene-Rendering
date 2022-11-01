@@ -28,21 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.animationCheckBox = new System.Windows.Forms.CheckBox();
+            this.zLabel = new System.Windows.Forms.Label();
+            this.zTrackBar = new System.Windows.Forms.TrackBar();
+            this.colorRadioButton = new System.Windows.Forms.RadioButton();
+            this.normalRadioButton = new System.Windows.Forms.RadioButton();
             this.kdLabel = new System.Windows.Forms.Label();
             this.ksLabel = new System.Windows.Forms.Label();
             this.mLabel = new System.Windows.Forms.Label();
             this.mTrackBar = new System.Windows.Forms.TrackBar();
             this.ksTrackBar = new System.Windows.Forms.TrackBar();
             this.kdTrackBar = new System.Windows.Forms.TrackBar();
+            this.animationTimer = new System.Windows.Forms.Timer(this.components);
+            this.paintTriangulationCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ksTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.kdTrackBar)).BeginInit();
@@ -77,6 +86,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.paintTriangulationCheckBox);
+            this.groupBox1.Controls.Add(this.animationCheckBox);
+            this.groupBox1.Controls.Add(this.zLabel);
+            this.groupBox1.Controls.Add(this.zTrackBar);
+            this.groupBox1.Controls.Add(this.colorRadioButton);
+            this.groupBox1.Controls.Add(this.normalRadioButton);
             this.groupBox1.Controls.Add(this.kdLabel);
             this.groupBox1.Controls.Add(this.ksLabel);
             this.groupBox1.Controls.Add(this.mLabel);
@@ -89,7 +104,66 @@
             this.groupBox1.Size = new System.Drawing.Size(238, 951);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "Parameter adjustment";
+            // 
+            // animationCheckBox
+            // 
+            this.animationCheckBox.AutoSize = true;
+            this.animationCheckBox.Checked = true;
+            this.animationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.animationCheckBox.Location = new System.Drawing.Point(1, 459);
+            this.animationCheckBox.Name = "animationCheckBox";
+            this.animationCheckBox.Size = new System.Drawing.Size(100, 24);
+            this.animationCheckBox.TabIndex = 10;
+            this.animationCheckBox.Text = "Animation";
+            this.animationCheckBox.UseVisualStyleBackColor = true;
+            this.animationCheckBox.CheckedChanged += new System.EventHandler(this.animationCheckBox_CheckedChanged);
+            // 
+            // zLabel
+            // 
+            this.zLabel.AutoSize = true;
+            this.zLabel.Location = new System.Drawing.Point(1, 379);
+            this.zLabel.Name = "zLabel";
+            this.zLabel.Size = new System.Drawing.Size(19, 20);
+            this.zLabel.TabIndex = 9;
+            this.zLabel.Text = "z:";
+            // 
+            // zTrackBar
+            // 
+            this.zTrackBar.Location = new System.Drawing.Point(-2, 402);
+            this.zTrackBar.Maximum = 20;
+            this.zTrackBar.Minimum = -20;
+            this.zTrackBar.Name = "zTrackBar";
+            this.zTrackBar.Size = new System.Drawing.Size(234, 56);
+            this.zTrackBar.TabIndex = 8;
+            this.zTrackBar.Value = 5;
+            this.zTrackBar.ValueChanged += new System.EventHandler(this.zTrackBar_ValueChanged);
+            // 
+            // colorRadioButton
+            // 
+            this.colorRadioButton.AutoSize = true;
+            this.colorRadioButton.Checked = true;
+            this.colorRadioButton.Location = new System.Drawing.Point(21, 290);
+            this.colorRadioButton.Name = "colorRadioButton";
+            this.colorRadioButton.Size = new System.Drawing.Size(141, 24);
+            this.colorRadioButton.TabIndex = 7;
+            this.colorRadioButton.TabStop = true;
+            this.colorRadioButton.Text = "Interpolate color";
+            this.colorRadioButton.UseVisualStyleBackColor = true;
+            this.colorRadioButton.CheckedChanged += new System.EventHandler(this.colorRadioButton_CheckedChanged);
+            // 
+            // normalRadioButton
+            // 
+            this.normalRadioButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.normalRadioButton.AutoSize = true;
+            this.normalRadioButton.Location = new System.Drawing.Point(21, 320);
+            this.normalRadioButton.Name = "normalRadioButton";
+            this.normalRadioButton.Size = new System.Drawing.Size(205, 24);
+            this.normalRadioButton.TabIndex = 6;
+            this.normalRadioButton.Text = "Interpolate normal vectors";
+            this.normalRadioButton.UseVisualStyleBackColor = true;
+            this.normalRadioButton.CheckedChanged += new System.EventHandler(this.normalRadioButton_CheckedChanged);
             // 
             // kdLabel
             // 
@@ -158,6 +232,24 @@
             this.kdTrackBar.Value = 50;
             this.kdTrackBar.ValueChanged += new System.EventHandler(this.kdTrackBar_ValueChanged);
             // 
+            // animationTimer
+            // 
+            this.animationTimer.Enabled = true;
+            this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // paintTriangulationCheckBox
+            // 
+            this.paintTriangulationCheckBox.AutoSize = true;
+            this.paintTriangulationCheckBox.Checked = true;
+            this.paintTriangulationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.paintTriangulationCheckBox.Location = new System.Drawing.Point(0, 496);
+            this.paintTriangulationCheckBox.Name = "paintTriangulationCheckBox";
+            this.paintTriangulationCheckBox.Size = new System.Drawing.Size(152, 24);
+            this.paintTriangulationCheckBox.TabIndex = 11;
+            this.paintTriangulationCheckBox.Text = "Paint triangulation";
+            this.paintTriangulationCheckBox.UseVisualStyleBackColor = true;
+            this.paintTriangulationCheckBox.CheckedChanged += new System.EventHandler(this.paintTriangulationCheckBox_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -173,6 +265,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.zTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ksTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.kdTrackBar)).EndInit();
@@ -191,5 +284,12 @@
         private TrackBar kdTrackBar;
         private Label kdLabel;
         private Label ksLabel;
+        private RadioButton colorRadioButton;
+        private RadioButton normalRadioButton;
+        private System.Windows.Forms.Timer animationTimer;
+        private Label zLabel;
+        private TrackBar zTrackBar;
+        private CheckBox animationCheckBox;
+        private CheckBox paintTriangulationCheckBox;
     }
 }

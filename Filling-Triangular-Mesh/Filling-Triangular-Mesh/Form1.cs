@@ -20,11 +20,12 @@ namespace Filling_Triangular_Mesh
         float minZ;
         FillPolygon fillPolygon;
         LoadResult result;
+        Vector3 lightSource = new Vector3(1, 0, 0);
         public Form1()
         {
             InitializeComponent();
             result = LoadObjFile("C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
-            _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2);
+            _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             //minX = result.Vertices.Min(x => x.X);
             //minY = result.Vertices.Min(x => x.Y);
@@ -69,18 +70,32 @@ namespace Filling_Triangular_Mesh
             //var triangles = GetTriangles(result);
 
             fillPolygon = new FillPolygon(_drawArea, faces);
-
-            //PaintScene(true);
+            PaintScene();
+            //var timer = new System.Timers.Timer(3000);
+            //timer.Enabled = true;
+            //timer.Elapsed += TimerPaint;
 
         }
 
-        private void PaintScene(bool paintTriangulation = true)
+        private void PaintScene()
         {
             float ks = (float)(this.ksTrackBar.Value / 100.0);
             float kd = (float)(this.kdTrackBar.Value / 100.0);
             int m = this.ksTrackBar.Value;
-            fillPolygon.FillGridWithTriangles(ks, kd, m, Canvas);
-            DrawTriangulation(result);
+            bool interpolateNormalVector = false;
+            if (this.normalRadioButton.Checked == true)
+            {
+                interpolateNormalVector = true;
+            }
+            using (Graphics g = Graphics.FromImage(_drawArea))
+            {
+                g.Clear(Color.LightBlue);
+            }
+            fillPolygon.FillGridWithTriangles(ks, kd, m, interpolateNormalVector, lightSource);
+            if (paintTriangulationCheckBox.Checked)
+            {
+                DrawTriangulation(result);
+            }
             Canvas.Refresh();
 
         }
@@ -163,7 +178,6 @@ namespace Filling_Triangular_Mesh
                 foreach (var p in data.Vertices)
                 {
                     g.FillEllipse(Brushes.Green, (float)p.X * (200) + 300, (float)p.Y * (200) + 250, 2, 2);
-
                 }
             }
         }
@@ -179,19 +193,77 @@ namespace Filling_Triangular_Mesh
 
         private void kdTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            PaintScene(true);
+            PaintScene();
         }
 
         private void ksTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            PaintScene(true);
-
+            PaintScene();
         }
 
         private void mTrackBar_ValueChanged(object sender, EventArgs e)
         {
-            PaintScene(true);
+            PaintScene();
+        }
 
+        private void colorRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            PaintScene();
+        }
+
+        private void normalRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            PaintScene();
+        }
+
+        //double inc = 0.02;
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //if (lightSource.Z >= 2 || lightSource.Z <= -2)
+            //{
+            //    inc = -1 * inc;
+            //}
+            var rse = RotatePoint(lightSource, new PointF(0, 0), 2);
+            lightSource.X = (float)rse.Item1;
+            lightSource.Y = (float)rse.Item2;
+            //lightSource.Z += inc;
+            PaintScene();
+        }
+        (double, double) RotatePoint(Vector3 pointToRotate, PointF centerPoint, double angleInDegrees)
+        {
+            double angleInRadians = angleInDegrees * (Math.PI / 180);
+            double cosTheta = Math.Cos(angleInRadians);
+            double sinTheta = Math.Sin(angleInRadians);
+            return
+                 ((cosTheta * (pointToRotate.X - centerPoint.X) - sinTheta * (pointToRotate.Y - centerPoint.Y) + centerPoint.X),
+                  (sinTheta * (pointToRotate.X - centerPoint.X) + cosTheta * (pointToRotate.Y - centerPoint.Y) + centerPoint.Y));
+        }
+
+        private void zTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            var z = (double)zTrackBar.Value;
+            lightSource.Z = z / 10;
+            if (animationCheckBox.Checked == false)
+            {
+                PaintScene();
+            }
+        }
+
+        private void animationCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (animationCheckBox.Checked)
+            {
+                animationTimer.Start();
+            }
+            else
+            {
+                animationTimer.Stop();
+            }
+        }
+
+        private void paintTriangulationCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            PaintScene();
         }
     }
 }

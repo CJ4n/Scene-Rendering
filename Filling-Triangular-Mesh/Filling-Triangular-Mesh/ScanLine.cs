@@ -82,7 +82,7 @@
 
         public void UpdateX()
         {
-            x = _m == Geometry.Infinity ? Geometry.Infinity : x + _m;
+            x = _m == PointGeometry.Infinity ? PointGeometry.Infinity : x + _m;
         }
 
         public int CompareTo(AETPointer other)
