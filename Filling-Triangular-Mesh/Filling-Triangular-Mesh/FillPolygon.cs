@@ -48,7 +48,7 @@ namespace Filling_Triangular_Mesh
             this.grid = grid;
         }
 
-        public void FillGridByTriangles()
+        public void FillGridWithTriangles(float ks, float kd, int m, PictureBox canvas)
         {
             for (int i = 0; i < grid.Count; ++i)
             {
@@ -58,7 +58,7 @@ namespace Filling_Triangular_Mesh
                 //var triangle = new List<Point> { new Point((int)Math.Round(grid[i].vertices[0].X), (int)Math.Round(grid[i].vertices[0].Y)),
                 //                                 new Point((int)Math.Round(grid[i].vertices[1].X), (int)Math.Round(grid[i].vertices[1].Y)),
                 //                                 new Point((int)Math.Round(grid[i].vertices[2].X), (int)Math.Round(grid[i].vertices[2].Y))};
-                var gen = new ColorGenerator(grid[i]);
+                var gen = new ColorGenerator(grid[i], ks, kd, m);
 
                 FillTriangle(triangle, gen);
 

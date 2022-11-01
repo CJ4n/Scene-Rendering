@@ -18,10 +18,12 @@ namespace Filling_Triangular_Mesh
         float minX;
         float minY;
         float minZ;
+        FillPolygon fillPolygon;
+        LoadResult result;
         public Form1()
         {
             InitializeComponent();
-            var result = LoadObjFile("C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
+            result = LoadObjFile("C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2);
 
             //minX = result.Vertices.Min(x => x.X);
@@ -56,20 +58,30 @@ namespace Filling_Triangular_Mesh
             //    }
             //    return false;
             //}).Count();
-            int count = 0;
-            foreach (var v in result.Vertices)
-            {
-                if (v.Z == aaa)
-                    count++;
-            }
+            //int count = 0;
+            //foreach (var v in result.Vertices)
+            //{
+            //    if (v.Z == aaa)
+            //        count++;
+            //}
             Canvas.Image = _drawArea;
             var faces = GetAllFaces(result);
             //var triangles = GetTriangles(result);
 
-            var fillPolygon = new FillPolygon(_drawArea, faces);
-            fillPolygon.FillGridByTriangles();
-            DrawTriangulation(result);
+            fillPolygon = new FillPolygon(_drawArea, faces);
 
+            //PaintScene(true);
+
+        }
+
+        private void PaintScene(bool paintTriangulation = true)
+        {
+            float ks = (float)(this.ksTrackBar.Value / 100.0);
+            float kd = (float)(this.kdTrackBar.Value / 100.0);
+            int m = this.ksTrackBar.Value;
+            fillPolygon.FillGridWithTriangles(ks, kd, m, Canvas);
+            DrawTriangulation(result);
+            Canvas.Refresh();
 
         }
         private List<MyFace> GetAllFaces(LoadResult data)
@@ -82,9 +94,9 @@ namespace Filling_Triangular_Mesh
                     Vector3 v0 = data.Vertices[f[0].VertexIndex - 1];
                     Vector3 v1 = data.Vertices[f[1].VertexIndex - 1];
                     Vector3 v2 = data.Vertices[f[2].VertexIndex - 1];
-                    Vector3 n0 = data.Normals[f[0].VertexIndex - 1];
-                    Vector3 n1 = data.Normals[f[1].VertexIndex - 1];
-                    Vector3 n2 = data.Normals[f[2].VertexIndex - 1];
+                    Vector3 n0 = data.Normals[f[0].NormalIndex - 1];
+                    Vector3 n1 = data.Normals[f[1].NormalIndex - 1];
+                    Vector3 n2 = data.Normals[f[2].NormalIndex - 1];
                     List<Vector3> normals = new List<Vector3>();
                     normals.Add(n0);
                     normals.Add(n1);
@@ -153,7 +165,6 @@ namespace Filling_Triangular_Mesh
                     g.FillEllipse(Brushes.Green, (float)p.X * (200) + 300, (float)p.Y * (200) + 250, 2, 2);
 
                 }
-                Canvas.Refresh();
             }
         }
 
@@ -166,7 +177,21 @@ namespace Filling_Triangular_Mesh
             return result;
         }
 
+        private void kdTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            PaintScene(true);
+        }
 
+        private void ksTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            PaintScene(true);
 
+        }
+
+        private void mTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            PaintScene(true);
+
+        }
     }
 }

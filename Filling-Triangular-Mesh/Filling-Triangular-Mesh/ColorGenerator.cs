@@ -66,17 +66,17 @@ namespace Filling_Triangular_Mesh
         MyFace f;
 
         //List<MyColor> colorsInVertices;
-        public ColorGenerator(MyFace face)
+        public ColorGenerator(MyFace face, float ks, float kd, int m)
         {
-            m = 100;
+            this.m = m;
             lightColor = new MyColor(0, 1, 0);
             objectColor = new MyColor(1, 1, 0.8);
             //lightVersor = PointGeometry.Normalize(new Vector3(0, 1, 0));
-            lightVersor = new Vector3(0, -1, 0);
+            lightVersor = new Vector3(0, 0, 1);
             //lightVersor = new Vector3(Math.Sqrt(2) / 2, 0, Math.Sqrt(2) / 2);
             V = new Vector3(0, 0, 1);
-            kd = 0.7;
-            ks = 0.3;
+            this.kd = kd;
+            this.ks = ks;
             if (face.ids[0] == 53 && face.ids[1] == 60 && face.ids[2] == 61)
             {
                 int asdads = 3;
