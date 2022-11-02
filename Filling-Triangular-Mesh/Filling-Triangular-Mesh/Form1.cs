@@ -10,8 +10,6 @@ using ObjLoader.Loader.Data;
 using ObjLoader.Loader.Loaders;
 namespace Filling_Triangular_Mesh
 {
-
-
     public partial class Form1 : Form
     {
         private Bitmap _drawArea;
@@ -24,33 +22,10 @@ namespace Filling_Triangular_Mesh
         public Form1()
         {
             InitializeComponent();
-            result = LoadObjFile("C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
+            result = LoadObjFile("C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
-            //minX = result.Vertices.Min(x => x.X);
-            //minY = result.Vertices.Min(x => x.Y);
-            //minZ = result.Vertices.Min(x => x.Z);
-
-            //result.Vertices.All((v) =>
-            //{
-            //    v.X = (float)((v.X - minX) * 300.0 + 100);
-            //    v.Y = (float)((v.Y - minY) * 300.0 + 100);
-            //    v.Z = (float)((v.Z - minZ) * 300.0 + 100);
-            //    return true;
-            //});
-
-            //minX = result.Normals.Min(x => x.X);
-            //minY = result.Normals.Min(x => x.Y);
-            //minZ = result.Normals.Min(x => x.Z);
-            //result.Normals.All((v) =>
-            //{
-            //    v.X = (float)((v.X - minX) * 300.0 + 100);
-            //    v.Y = (float)((v.Y - minY) * 300.0 + 100);
-            //    v.Z = (float)((v.Z - minZ) * 300.0 + 100);
-            //    return true;
-            //});
-
-            var aaa = result.Vertices.Min(x => x.Z);
+            //var aaa = result.Vertices.Min(x => x.Z);
             //var count = result.Vertices.Select(x =>
             //{
             //    if (x.Z == aaa)
@@ -129,32 +104,11 @@ namespace Filling_Triangular_Mesh
             }
             return faces;
         }
-        //private List<List<Point>> GetTriangles(LoadResult data)
-        //{
-        //    List<List<Point>> triangles = new List<List<Point>>();
-        //    foreach (var t in data.Groups)
-        //    {
-        //        foreach (var f in t.Faces)
-        //        {
-        //            var triangle = new List<Point>();
-        //            triangle.Add(ToPoint(data.Vertices[f[0].VertexIndex - 1].X, data.Vertices[f[0].VertexIndex - 1].Y));
-        //            triangle.Add(ToPoint(data.Vertices[f[1].VertexIndex - 1].X, data.Vertices[f[1].VertexIndex - 1].Y));
-        //            triangle.Add(ToPoint(data.Vertices[f[2].VertexIndex - 1].X, data.Vertices[f[2].VertexIndex - 1].Y));
-        //            triangles.Add(triangle);
-        //        }
-        //    }
-        //    return triangles;
-        //}
-
 
         PointF ToPointF(double x, double y)
         {
             return new PointF((float)x, (float)y);
         }
-        //Point ToPoint(double x, double y)
-        //{
-        //    return new Point((int)x, (int)y);
-        //}
         public void DrawTriangulation(LoadResult data)
         {
             using (Graphics g = Graphics.FromImage(_drawArea))

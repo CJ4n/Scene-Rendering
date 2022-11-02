@@ -4557,23 +4557,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\YanPC\\.nuget\\packages\\": {},
+    "C:\\Users\\yanci\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
+      "projectUniqueName": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
       "projectName": "Filling-Triangular-Mesh",
-      "projectPath": "C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
-      "packagesPath": "C:\\Users\\YanPC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\obj\\",
+      "projectPath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
+      "packagesPath": "C:\\Users\\yanci\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\YanPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\yanci\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4588,8 +4588,8 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
-              "projectPath": "C:\\Users\\YanPC\\Desktop\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
+            "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
+              "projectPath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
             }
           }
         }

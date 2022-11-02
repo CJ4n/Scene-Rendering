@@ -54,8 +54,6 @@ namespace Filling_Triangular_Mesh
             bitmap.UnlockBits(bitmapData);
             Graphics g = Graphics.FromImage(bitmap);
             g.DrawImage(bitmap, 0, 0);
-
-            bitmapData = null;
         }
 
         public void FillTriangle(List<Point> triangle, ColorGenerator colorGenerator, byte[] rgbValues)
