@@ -22,7 +22,7 @@ namespace Filling_Triangular_Mesh
         public Form1()
         {
             InitializeComponent();
-            result = LoadObjFile("C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\hemi.obj");
+            result = LoadObjFile("D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj");
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             //var aaa = result.Vertices.Min(x => x.Z);
