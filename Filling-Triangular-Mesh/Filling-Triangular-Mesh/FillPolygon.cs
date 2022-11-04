@@ -7,16 +7,18 @@ namespace Filling_Triangular_Mesh
     public class FillPolygon
     {
         private Bitmap bitmap;
+        private MyColor[,] texture;
         int bitmapWidth, bitmapStride;
 
         private readonly byte[] buffer;
         private readonly List<MyFace> grid;
         System.Drawing.Imaging.BitmapData bitmapData;
 
-        public FillPolygon(Bitmap bitmap, List<MyFace> grid)
+        public FillPolygon(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture)
         {
             this.bitmap = bitmap;
             this.grid = grid;
+            this.texture = texture;
         }
 
         public void FillGridWithTriangles(float ks, float kd, int m, bool interpolateNormalVector, Vector3 lightSource)
@@ -31,24 +33,24 @@ namespace Filling_Triangular_Mesh
 
             bitmapWidth = bitmap.Width;
             bitmapStride = bitmapData.Stride;
-            Parallel.For(0, grid.Count, i =>
-            {
-                var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
-                                                 new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
-                                                 new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-                var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource);
-                FillTriangle(triangle, gen, rgbValues);
-            });
-
-
-            //for (int i = 0; i < grid.Count; ++i)
+            //Parallel.For(0, grid.Count, i =>
             //{
             //    var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
             //                                     new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
             //                                     new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-            //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource);
+            //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
             //    FillTriangle(triangle, gen, rgbValues);
-            //}
+            //});
+
+
+            for (int i = 0; i < grid.Count; ++i)
+            {
+                var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
+                                                 new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
+                                                 new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
+                var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
+                FillTriangle(triangle, gen, rgbValues);
+            }
 
             System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
             bitmap.UnlockBits(bitmapData);

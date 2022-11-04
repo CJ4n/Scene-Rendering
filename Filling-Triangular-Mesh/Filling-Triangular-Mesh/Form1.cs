@@ -8,14 +8,15 @@
 //using System.Windows.Media;
 using ObjLoader.Loader.Data;
 using ObjLoader.Loader.Loaders;
+
 namespace Filling_Triangular_Mesh
 {
     public partial class Form1 : Form
     {
         private Bitmap _drawArea;
-        float minX;
-        float minY;
-        float minZ;
+        //float minX;
+        //float minY;
+        //float minZ;
         FillPolygon fillPolygon;
         LoadResult result;
         Vector3 lightSource = new Vector3(1, 0, 0);
@@ -24,32 +25,46 @@ namespace Filling_Triangular_Mesh
             InitializeComponent();
             result = LoadObjFile("D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj");
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-
-            //var aaa = result.Vertices.Min(x => x.Z);
-            //var count = result.Vertices.Select(x =>
-            //{
-            //    if (x.Z == aaa)
-            //    {
-            //        return true;
-            //    }
-            //    return false;
-            //}).Count();
-            //int count = 0;
-            //foreach (var v in result.Vertices)
-            //{
-            //    if (v.Z == aaa)
-            //        count++;
-            //}
             Canvas.Image = _drawArea;
+            //Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
+            //Graphics g = Graphics.FromImage(bmp);
+            //g.Clear(Color.FromArgb(0, 0, 255));
+            Bitmap in1 = new Bitmap("D:\\JAN_CICHOMSKI\\INNE PLIKI\\TAPETY\\123.jpg");
+            Rectangle cloneRect = new Rectangle(0, 0, _drawArea.Width, _drawArea.Height);
+            Bitmap bmp = in1.Clone(cloneRect, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            //Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
+
+            //Graphics g = Graphics.FromImage(bmp);
+            //LinearGradientBrush lgb = new LinearGradientBrush(new Point(0, 0), new Point(Width, Height), Color.White, Color.Black);
+            //g.FillRectangle(lgb, 0, 0, Width, Height);
+            //bmp.Save("FileName");
+            //lgb.Dispose();
+            //g.Dispose();
+            //bmp.Dispose();
+
+
+
+            var myColorArray = ConvertBitmapToArray(bmp);
+
             var faces = GetAllFaces(result);
-            //var triangles = GetTriangles(result);
 
-            fillPolygon = new FillPolygon(_drawArea, faces);
+            fillPolygon = new FillPolygon(_drawArea, faces, myColorArray);
             PaintScene();
-            //var timer = new System.Timers.Timer(3000);
-            //timer.Enabled = true;
-            //timer.Elapsed += TimerPaint;
+        }
 
+        private MyColor[,] ConvertBitmapToArray(Bitmap bitmap)
+        {
+            MyColor[,] result = new MyColor[bitmap.Width, bitmap.Height];
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    var color = bitmap.GetPixel(x, y);
+                    result[x, y] = new MyColor(color.R / 255.0, color.G / 255.0, color.B / 255.0);
+
+                }
+            }
+            return result;
         }
 
         private void PaintScene()

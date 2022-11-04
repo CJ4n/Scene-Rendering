@@ -48,40 +48,43 @@ namespace Filling_Triangular_Mesh
         }
     }
 
+
     public class ColorGenerator
     {
         double kd;
         double ks;
         int m;
         MyColor lightColor;
-        Vector3 lightVersor;
-        MyColor objectColor;
+        Vector3 lightSourceVersor;
+        //MyColor objectColor;
+        MyColor[,] texture;
         Vector3 V;
         Vector3 v1Color;
         Vector3 v2Color;
         Vector3 v3Color;
         MyFace face;
         bool interpolateNormalVector;
-        public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector, Vector3 lightSource)
+        public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector, Vector3 lightSourceVector, MyColor[,] texture)
         {
             this.kd = kd;
             this.ks = ks;
             this.m = m;
-            this.lightColor = new MyColor(0, 1, 0);
-            this.lightVersor = PointGeometry.Normalize(lightSource);
-            this.objectColor = new MyColor(1, 1, 0.8);
+            this.lightColor = new MyColor(1, 1, 1);
+            this.lightSourceVersor = PointGeometry.Normalize(lightSourceVector);
+            //this.objectColor = new MyColor(1, 1, 0.8);
             this.V = new Vector3(0, 0, 1);
             this.v1Color = GetColorInVetex(face.normals[0]);
             this.v2Color = GetColorInVetex(face.normals[1]);
             this.v3Color = GetColorInVetex(face.normals[2]);
             this.face = face;
             this.interpolateNormalVector = interpolateNormalVector;
+            this.texture = texture;
         }
 
         public Vector3 GetColorInVetex(Vector3 normalVersor)
         {
             double cosVR;
-            Vector3 R = 2 * PointGeometry.DotProduct(normalVersor, lightVersor) * (normalVersor - lightVersor);
+            Vector3 R = 2 * PointGeometry.DotProduct(normalVersor, lightSourceVersor) * (normalVersor - lightSourceVersor);
             if (R.X == 0 && R.Y == 0 && R.Z == 0)
             {
                 cosVR = 1;
@@ -94,11 +97,12 @@ namespace Filling_Triangular_Mesh
             {
                 cosVR = 0;
             }
-            double cosNL = PointGeometry.CosBetweenVectors(normalVersor, lightVersor);
+            double cosNL = PointGeometry.CosBetweenVectors(normalVersor, lightSourceVersor);
             if (cosNL < 0)
             {
                 cosNL = 0;
             }
+            var objectColor = new MyColor(0, 0, 1);
             double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
             double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
             double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
@@ -109,17 +113,91 @@ namespace Filling_Triangular_Mesh
             MyColor myColor;
             if (interpolateNormalVector)
             {
+                //Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
+                //myColor = GetColorInVetex(normalVector);
+                //myColor = GetColorInVetex(normalVector);
+                double cosVR;
                 Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
-                myColor = GetColorInVetex(normalVector);
+                Vector3 R = 2 * PointGeometry.DotProduct(PointGeometry.Normalize(normalVector), lightSourceVersor) *
+                    (PointGeometry.Normalize(normalVector) - lightSourceVersor);
+                if (R.X == 0 && R.Y == 0 && R.Z == 0)
+                {
+                    cosVR = 1;
+                }
+                else
+                {
+                    cosVR = PointGeometry.CosBetweenVectors(V, R);
+                }
+                if (cosVR < 0)
+                {
+                    cosVR = 0;
+                }
+                double cosNL = PointGeometry.CosBetweenVectors(PointGeometry.Normalize(normalVector), lightSourceVersor);
+                if (cosNL < 0)
+                {
+                    cosNL = 0;
+                }
+                var objectColor = texture[x, y];
+                double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
+                double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
+                double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
+                myColor = new MyColor(r, g, b);
             }
             else
             {
                 myColor = BarycentricInterpolation(v1Color, v2Color, v3Color, x, y);
             }
 
+
+
             Color color = Color.FromArgb((int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
             return color;
         }
+
+        //public Color ComputeColor(int x, int y)
+        //{
+        //    MyColor myColor;
+        //    if (interpolateNormalVector)
+        //    {
+        //        //Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
+        //        //myColor = GetColorInVetex(normalVector);
+        //        double cosVR;
+        //        Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
+        //        Vector3 R = 2 * PointGeometry.DotProduct(PointGeometry.Normalize(normalVector), lightSourceVersor) *
+        //            (PointGeometry.Normalize(normalVector) - lightSourceVersor);
+        //        if (R.X == 0 && R.Y == 0 && R.Z == 0)
+        //        {
+        //            cosVR = 1;
+        //        }
+        //        else
+        //        {
+        //            cosVR = PointGeometry.CosBetweenVectors(V, R);
+        //        }
+        //        if (cosVR < 0)
+        //        {
+        //            cosVR = 0;
+        //        }
+        //        double cosNL = PointGeometry.CosBetweenVectors(PointGeometry.Normalize(normalVector), lightSourceVersor);
+        //        if (cosNL < 0)
+        //        {
+        //            cosNL = 0;
+        //        }
+        //        var objectColor = texture[x, y];
+        //        double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
+        //        double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
+        //        double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
+        //        myColor = new MyColor(r, g, b);
+        //    }
+        //    else
+        //    {
+        //        myColor = BarycentricInterpolation(v1Color, v2Color, v3Color, x, y);
+        //    }
+
+
+
+        //    Color color = Color.FromArgb((int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
+        //    return color;
+        //}
 
         public Vector3 BarycentricInterpolation(Vector3 v1, Vector3 v2, Vector3 v3, int x, int y)
         {
