@@ -73,15 +73,15 @@ namespace Filling_Triangular_Mesh
             this.lightSourceVersor = PointGeometry.Normalize(lightSourceVector);
             //this.objectColor = new MyColor(1, 1, 0.8);
             this.V = new Vector3(0, 0, 1);
-            this.v1Color = GetColorInVetex(face.normals[0]);
-            this.v2Color = GetColorInVetex(face.normals[1]);
-            this.v3Color = GetColorInVetex(face.normals[2]);
             this.face = face;
             this.interpolateNormalVector = interpolateNormalVector;
             this.texture = texture;
+            this.v1Color = GetColorInVetex(face.normals[0], 0);
+            this.v2Color = GetColorInVetex(face.normals[1], 1);
+            this.v3Color = GetColorInVetex(face.normals[2], 2);
         }
 
-        public Vector3 GetColorInVetex(Vector3 normalVersor)
+        public Vector3 GetColorInVetex(Vector3 normalVersor, int idx)
         {
             double cosVR;
             Vector3 R = 2 * PointGeometry.DotProduct(normalVersor, lightSourceVersor) * (normalVersor - lightSourceVersor);
@@ -102,7 +102,8 @@ namespace Filling_Triangular_Mesh
             {
                 cosNL = 0;
             }
-            var objectColor = new MyColor(0, 0, 1);
+            //var objectColor = new MyColor(0, 0, 1);
+            var objectColor = texture[(int)face.vertices[idx].X, (int)face.vertices[idx].Y];
             double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
             double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
             double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);

@@ -14,35 +14,21 @@ namespace Filling_Triangular_Mesh
     public partial class Form1 : Form
     {
         private Bitmap _drawArea;
-        //float minX;
-        //float minY;
-        //float minZ;
+        private Bitmap _texture;
         FillPolygon fillPolygon;
         LoadResult result;
         Vector3 lightSource = new Vector3(1, 0, 0);
+        Color selectedColor;
+        string pathToTexture = "C:\\Users\\YanPC\\Downloads\\1234.jpg";
+        string pathToObjFile = "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj";
         public Form1()
         {
             InitializeComponent();
-            result = LoadObjFile("D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj");
+            result = LoadObjFile(pathToObjFile);
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             Canvas.Image = _drawArea;
-            //Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
-            //Graphics g = Graphics.FromImage(bmp);
-            //g.Clear(Color.FromArgb(0, 0, 255));
-            Bitmap in1 = new Bitmap("D:\\JAN_CICHOMSKI\\INNE PLIKI\\TAPETY\\123.jpg");
-            Rectangle cloneRect = new Rectangle(0, 0, _drawArea.Width, _drawArea.Height);
-            Bitmap bmp = in1.Clone(cloneRect, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-            //Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
 
-            //Graphics g = Graphics.FromImage(bmp);
-            //LinearGradientBrush lgb = new LinearGradientBrush(new Point(0, 0), new Point(Width, Height), Color.White, Color.Black);
-            //g.FillRectangle(lgb, 0, 0, Width, Height);
-            //bmp.Save("FileName");
-            //lgb.Dispose();
-            //g.Dispose();
-            //bmp.Dispose();
-
-
+            Bitmap bmp = GetBitampFromFile(pathToTexture);
 
             var myColorArray = ConvertBitmapToArray(bmp);
 
@@ -52,6 +38,14 @@ namespace Filling_Triangular_Mesh
             PaintScene();
         }
 
+        private Bitmap GetBitampFromFile(string path)
+        {
+
+            Bitmap texture = new Bitmap(path);
+            Rectangle cloneRect = new Rectangle(0, 0, Math.Min(_drawArea.Width, texture.Width), Math.Min(_drawArea.Height, texture.Height));
+            Bitmap bmp = texture.Clone(cloneRect, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            return bmp;
+        }
         private MyColor[,] ConvertBitmapToArray(Bitmap bitmap)
         {
             MyColor[,] result = new MyColor[bitmap.Width, bitmap.Height];
@@ -71,7 +65,7 @@ namespace Filling_Triangular_Mesh
         {
             float ks = (float)(this.ksTrackBar.Value / 100.0);
             float kd = (float)(this.kdTrackBar.Value / 100.0);
-            int m = this.ksTrackBar.Value;
+            int m = this.mTrackBar.Value;
             bool interpolateNormalVector = false;
             if (this.normalRadioButton.Checked == true)
             {
@@ -79,7 +73,7 @@ namespace Filling_Triangular_Mesh
             }
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
-                g.Clear(Color.LightBlue);
+                g.Clear(System.Drawing.Color.LightBlue);
             }
             fillPolygon.FillGridWithTriangles(ks, kd, m, interpolateNormalVector, lightSource);
             if (paintTriangulationCheckBox.Checked)
@@ -185,17 +179,11 @@ namespace Filling_Triangular_Mesh
             PaintScene();
         }
 
-        //double inc = 0.02;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //if (lightSource.Z >= 2 || lightSource.Z <= -2)
-            //{
-            //    inc = -1 * inc;
-            //}
             var rse = RotatePoint(lightSource, new PointF(0, 0), 2);
             lightSource.X = (float)rse.Item1;
             lightSource.Y = (float)rse.Item2;
-            //lightSource.Z += inc;
             PaintScene();
         }
         (double, double) RotatePoint(Vector3 pointToRotate, PointF centerPoint, double angleInDegrees)
@@ -233,6 +221,58 @@ namespace Filling_Triangular_Mesh
         private void paintTriangulationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             PaintScene();
+        }
+
+        private void textureColorRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (this.textureColorRadioButton.Checked == false)
+            {
+                return;
+            }
+            var texture = GetBitampFromFile(pathToTexture);
+            var colorArray = ConvertBitmapToArray(texture);
+            fillPolygon.ChangeTexture(colorArray);
+        }
+
+        private void constColorRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            //if (this.constColorRadioButton.Checked == false)
+            //{
+            //    return;
+            //}
+            //Color c;
+            //if (this.colorDialog.ShowDialog() != DialogResult.OK)
+            //{
+            //    return;
+            //}
+            //c = this.colorDialog.Color;
+            //Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
+            //Graphics g = Graphics.FromImage(bmp);
+            //g.Clear(c);
+            //g.Dispose();
+            //var colorArray = ConvertBitmapToArray(bmp);
+            //fillPolygon.ChangeTexture(colorArray);
+        }
+
+        private void constColorRadioButton_Click(object sender, EventArgs e)
+        {
+            if (this.constColorRadioButton.Checked == false)
+            {
+                return;
+            }
+            Color c;
+            if (this.colorDialog.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            c = this.colorDialog.Color;
+            Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
+            Graphics g = Graphics.FromImage(bmp);
+            g.Clear(c);
+            g.Dispose();
+            var colorArray = ConvertBitmapToArray(bmp);
+            fillPolygon.ChangeTexture(colorArray);
+            //constColorRadioButton_CheckedChanged(sender, e);
         }
     }
 }

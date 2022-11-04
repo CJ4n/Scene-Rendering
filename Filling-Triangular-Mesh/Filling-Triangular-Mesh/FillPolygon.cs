@@ -10,7 +10,6 @@ namespace Filling_Triangular_Mesh
         private MyColor[,] texture;
         int bitmapWidth, bitmapStride;
 
-        private readonly byte[] buffer;
         private readonly List<MyFace> grid;
         System.Drawing.Imaging.BitmapData bitmapData;
 
@@ -18,6 +17,10 @@ namespace Filling_Triangular_Mesh
         {
             this.bitmap = bitmap;
             this.grid = grid;
+            this.texture = texture;
+        }
+        public void ChangeTexture(MyColor[,] texture)
+        {
             this.texture = texture;
         }
 
@@ -74,23 +77,18 @@ namespace Filling_Triangular_Mesh
         }
         private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, byte[] rgbValues)
         {
-            //int p = y * bitmapData.Stride;
             int p = y * bitmapStride;
             for (int i = 0; i < xList.Count - 1; ++i)
             {
-                //int endCol = Math.Min(xList[i + 1], bitmap.Width);
                 int endCol = Math.Min(xList[i + 1], bitmapWidth);
                 p += xList[i] * 3;
                 for (int x = xList[i]; x < endCol; ++x)
                 {
-
                     Color color = colorGenerator.ComputeColor(x, y);
                     rgbValues[p] = color.R;
                     rgbValues[p + 1] = color.G;
                     rgbValues[p + 2] = color.B;
                     p += 3;
-
-                    //bitmap.SetPixel(x, y, colorGenerator.ComputeColor(x, y));
                 }
             }
         }
