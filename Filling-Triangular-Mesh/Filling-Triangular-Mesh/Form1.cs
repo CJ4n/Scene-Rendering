@@ -20,12 +20,14 @@ namespace Filling_Triangular_Mesh
         private Bitmap _texture;
         FillPolygon fillPolygon;
         LoadResult result;
-        Vector3 lightSource = new Vector3(300, 0, 0);
+        Vector3 lightSource = new Vector3(600, 0, 900);
+        PointF origin = new PointF(300, 300);
+
         Color selectedColor;
         //string pathToTexture = "C:\\Users\\YanPC\\Downloads\\1234.jpg";
         string pathToTexture = "..\\..\\..\\..\\..\\1234.jpg";
         //string pathToObjFile = "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj";
-        string pathToObjFile = "..\\..\\..\\..\\..\\smoothsphere.obj";
+        string pathToObjFile = "..\\..\\..\\..\\..\\smoothv2.obj";
         public Form1()
         {
             InitializeComponent();
@@ -185,7 +187,7 @@ namespace Filling_Triangular_Mesh
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            var rse = RotatePoint(lightSource, new PointF(0, 0), 2);
+            var rse = RotatePoint(lightSource,origin, 2);
             lightSource.X = (float)rse.Item1;
             lightSource.Y = (float)rse.Item2;
             PaintScene();
@@ -203,7 +205,7 @@ namespace Filling_Triangular_Mesh
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var z = (double)zTrackBar.Value;
-            lightSource.Z = z / 10;
+            lightSource.Z = z;
             if (animationCheckBox.Checked == false)
             {
                 PaintScene();

@@ -82,13 +82,16 @@ namespace Filling_Triangular_Mesh
             this.v3Color = GetColorInVetex(face.normals[2], 2);
         }
 
-        public Vector3 GetColorInVetex(Vector3 normalVersor, int idx)
+        public Vector3 GetColorInVetex( Vector3 normalVersor, int idx)
         {
             double cosVR;
-            Vector3 R = 2 * PointGeometry.DotProduct(normalVersor, lightSourceVersor) * (normalVersor - lightSourceVersor);
+            //double z = FindIntersectionOfPlaneAndLine(face.vertices[0], face.vertices[1], face.vertices[2], (int)face.vertices[idx].X, (int)face.vertices[idx].X);
+            Vector3 L = lightSourceVersor - new Vector3((int)face.vertices[idx].X, (int)face.vertices[idx].Y, (int)face.vertices[idx].Z);
+            L = PointGeometry.Normalize(L);
+            Vector3 R = 2 * PointGeometry.DotProduct(normalVersor, L) * (normalVersor - L);
             if (R.X == 0 && R.Y == 0 && R.Z == 0)
             {
-                cosVR = 1;
+                cosVR = 1;  
             }
             else
             {
@@ -98,7 +101,7 @@ namespace Filling_Triangular_Mesh
             {
                 cosVR = 0;
             }
-            double cosNL = PointGeometry.CosBetweenVectors(normalVersor, lightSourceVersor);
+            double cosNL = PointGeometry.CosBetweenVectors(normalVersor, L);
             if (cosNL < 0)
             {
                 cosNL = 0;
