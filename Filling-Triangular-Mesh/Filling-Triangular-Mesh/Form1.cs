@@ -11,16 +11,21 @@ using ObjLoader.Loader.Loaders;
 
 namespace Filling_Triangular_Mesh
 {
+
+    //skalowanie R,G -> <-1,1>
+    // skalowanie B-> <0,1>
     public partial class Form1 : Form
     {
         private Bitmap _drawArea;
         private Bitmap _texture;
         FillPolygon fillPolygon;
         LoadResult result;
-        Vector3 lightSource = new Vector3(1, 0, 0);
+        Vector3 lightSource = new Vector3(300, 0, 0);
         Color selectedColor;
-        string pathToTexture = "C:\\Users\\YanPC\\Downloads\\1234.jpg";
-        string pathToObjFile = "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj";
+        //string pathToTexture = "C:\\Users\\YanPC\\Downloads\\1234.jpg";
+        string pathToTexture = "..\\..\\..\\..\\..\\1234.jpg";
+        //string pathToObjFile = "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj";
+        string pathToObjFile = "..\\..\\..\\..\\..\\smoothsphere.obj";
         public Form1()
         {
             InitializeComponent();
@@ -55,7 +60,6 @@ namespace Filling_Triangular_Mesh
                 {
                     var color = bitmap.GetPixel(x, y);
                     result[x, y] = new MyColor(color.R / 255.0, color.G / 255.0, color.B / 255.0);
-
                 }
             }
             return result;

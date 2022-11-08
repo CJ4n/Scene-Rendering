@@ -57,7 +57,7 @@ namespace Filling_Triangular_Mesh
         MyColor lightColor;
         Vector3 lightSourceVersor;
         //MyColor objectColor;
-        MyColor[,] texture;
+        MyColor[,] colorMap;
         Vector3 V;
         Vector3 v1Color;
         Vector3 v2Color;
@@ -70,12 +70,13 @@ namespace Filling_Triangular_Mesh
             this.ks = ks;
             this.m = m;
             this.lightColor = new MyColor(1, 1, 1);
-            this.lightSourceVersor = PointGeometry.Normalize(lightSourceVector);
+            //this.lightSourceVersor = PointGeometry.Normalize(lightSourceVector);
+            this.lightSourceVersor = lightSourceVector;
             //this.objectColor = new MyColor(1, 1, 0.8);
             this.V = new Vector3(0, 0, 1);
             this.face = face;
             this.interpolateNormalVector = interpolateNormalVector;
-            this.texture = texture;
+            this.colorMap = texture;
             this.v1Color = GetColorInVetex(face.normals[0], 0);
             this.v2Color = GetColorInVetex(face.normals[1], 1);
             this.v3Color = GetColorInVetex(face.normals[2], 2);
@@ -103,7 +104,7 @@ namespace Filling_Triangular_Mesh
                 cosNL = 0;
             }
             //var objectColor = new MyColor(0, 0, 1);
-            var objectColor = texture[(int)face.vertices[idx].X, (int)face.vertices[idx].Y];
+            var objectColor = colorMap[(int)face.vertices[idx].X, (int)face.vertices[idx].Y];
             double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
             double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
             double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
@@ -118,9 +119,15 @@ namespace Filling_Triangular_Mesh
                 //myColor = GetColorInVetex(normalVector);
                 //myColor = GetColorInVetex(normalVector);
                 double cosVR;
+                double z = FindIntersectionOfPlaneAndLine(face.vertices[0], face.vertices[1], face.vertices[2], x, y);
+                Vector3 L = lightSourceVersor- new Vector3(x, y, z)  ;
+                L=PointGeometry.Normalize(L);
+
                 Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
-                Vector3 R = 2 * PointGeometry.DotProduct(PointGeometry.Normalize(normalVector), lightSourceVersor) *
-                    (PointGeometry.Normalize(normalVector) - lightSourceVersor);
+                Vector3 R = 2 * PointGeometry.DotProduct(PointGeometry.Normalize(normalVector), L) *
+                    (PointGeometry.Normalize(normalVector) - L);
+                //Vector3 R = 2 * PointGeometry.DotProduct(PointGeometry.Normalize(normalVector), lightSourceVersor) *
+                //    (PointGeometry.Normalize(normalVector) - lightSourceVersor);
                 if (R.X == 0 && R.Y == 0 && R.Z == 0)
                 {
                     cosVR = 1;
@@ -133,12 +140,13 @@ namespace Filling_Triangular_Mesh
                 {
                     cosVR = 0;
                 }
-                double cosNL = PointGeometry.CosBetweenVectors(PointGeometry.Normalize(normalVector), lightSourceVersor);
+                double cosNL = PointGeometry.CosBetweenVectors(PointGeometry.Normalize(normalVector), L);
+                //double cosNL = PointGeometry.CosBetweenVectors(PointGeometry.Normalize(normalVector), lightSourceVersor);
                 if (cosNL < 0)
                 {
                     cosNL = 0;
                 }
-                var objectColor = texture[x, y];
+                var objectColor = colorMap[x, y];
                 double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
                 double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
                 double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
