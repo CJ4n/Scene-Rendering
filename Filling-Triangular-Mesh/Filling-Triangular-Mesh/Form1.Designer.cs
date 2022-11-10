@@ -183,7 +183,6 @@
             this.constColorRadioButton.TabIndex = 13;
             this.constColorRadioButton.Text = "Constant Color";
             this.constColorRadioButton.UseVisualStyleBackColor = true;
-            this.constColorRadioButton.CheckedChanged += new System.EventHandler(this.constColorRadioButton_CheckedChanged);
             this.constColorRadioButton.Click += new System.EventHandler(this.constColorRadioButton_Click);
             // 
             // paintTriangulationCheckBox

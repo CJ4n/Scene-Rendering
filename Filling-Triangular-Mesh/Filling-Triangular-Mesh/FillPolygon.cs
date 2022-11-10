@@ -8,16 +8,20 @@ namespace Filling_Triangular_Mesh
     {
         private Bitmap bitmap;
         private MyColor[,] texture;
+        private Bitmap _colors;
         int bitmapWidth, bitmapStride;
 
         private readonly List<MyFace> grid;
         System.Drawing.Imaging.BitmapData bitmapData;
 
-        public FillPolygon(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture)
+        public FillPolygon(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors)
         {
             this.bitmap = bitmap;
             this.grid = grid;
             this.texture = texture;
+            _colors = colors;
+            bitmapWidth = bitmap.Width;
+
         }
         public void ChangeTexture(MyColor[,] texture)
         {
@@ -26,42 +30,39 @@ namespace Filling_Triangular_Mesh
 
         public void FillGridWithTriangles(float ks, float kd, int m, bool interpolateNormalVector, Vector3 lightSource)
         {
-            Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-            bitmapData = bitmap.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, bitmap.PixelFormat);
-            IntPtr ptr = bitmapData.Scan0;
-
-            int bytes = Math.Abs(bitmapData.Stride) * bitmap.Height;
-            byte[] rgbValues = new byte[bytes];
-            System.Runtime.InteropServices.Marshal.Copy(ptr, rgbValues, 0, bytes);
-
-            bitmapWidth = bitmap.Width;
-            bitmapStride = bitmapData.Stride;
-            //Parallel.For(0, grid.Count, i =>
-            //{
-            //    var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
-            //                                     new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
-            //                                     new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-            //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
-            //    FillTriangle(triangle, gen, rgbValues);
-            //});
 
 
-            for (int i = 0; i < grid.Count; ++i)
+            using (var snoop = new BmpPixelSnoop(bitmap))
             {
-                var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
+                using (var cs = new BmpPixelSnoop(_colors))
+                {
+
+                    Parallel.For(0, grid.Count, i =>
+                    {
+                        var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
                                                  new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                                                  new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-                var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
-                FillTriangle(triangle, gen, rgbValues);
-            }
 
-            System.Runtime.InteropServices.Marshal.Copy(rgbValues, 0, ptr, bytes);
-            bitmap.UnlockBits(bitmapData);
-            Graphics g = Graphics.FromImage(bitmap);
-            g.DrawImage(bitmap, 0, 0);
+                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, cs);
+
+                        FillTriangle(triangle, gen, snoop);
+                    });
+
+
+                    //for (int i = 0; i < grid.Count; ++i)
+                    //{
+                    //    var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
+                    //                             new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
+                    //                             new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
+                    //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, cs);
+
+                    //    FillTriangle(triangle, gen, snoop);
+                    //}
+                }
+            }
         }
 
-        public void FillTriangle(List<Point> triangle, ColorGenerator colorGenerator, byte[] rgbValues)
+        private void FillTriangle(List<Point> triangle, ColorGenerator colorGenerator, BmpPixelSnoop snoop)
         {
             var scanLine = new ScanLine(triangle);
 
@@ -72,23 +73,18 @@ namespace Filling_Triangular_Mesh
             //});
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                FillRow(xList, y, colorGenerator, rgbValues);
+                FillRow(xList, y, colorGenerator, snoop);
             }
         }
-        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, byte[] rgbValues)
+        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, BmpPixelSnoop snoop)
         {
-            int p = y * bitmapStride;
             for (int i = 0; i < xList.Count - 1; ++i)
             {
                 int endCol = Math.Min(xList[i + 1], bitmapWidth);
-                p += xList[i] * 3;
                 for (int x = xList[i]; x < endCol; ++x)
                 {
                     Color color = colorGenerator.ComputeColor(x, y);
-                    rgbValues[p] = color.R;
-                    rgbValues[p + 1] = color.G;
-                    rgbValues[p + 2] = color.B;
-                    p += 3;
+                    snoop.SetPixel(x, y, color);
                 }
             }
         }
