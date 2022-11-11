@@ -223,12 +223,12 @@
             // zTrackBar
             // 
             this.zTrackBar.Location = new System.Drawing.Point(1, 287);
-            this.zTrackBar.Maximum = 900;
-            this.zTrackBar.Minimum = -900;
+            this.zTrackBar.Maximum = 1200;
+            this.zTrackBar.Minimum = -1200;
             this.zTrackBar.Name = "zTrackBar";
             this.zTrackBar.Size = new System.Drawing.Size(234, 56);
             this.zTrackBar.TabIndex = 8;
-            this.zTrackBar.Value = 100;
+            this.zTrackBar.Value = 700;
             this.zTrackBar.ValueChanged += new System.EventHandler(this.zTrackBar_ValueChanged);
             // 
             // kdLabel

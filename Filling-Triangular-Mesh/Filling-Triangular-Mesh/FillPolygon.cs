@@ -9,10 +9,8 @@ namespace Filling_Triangular_Mesh
         private Bitmap bitmap;
         private MyColor[,] texture;
         private Bitmap _colors;
-        int bitmapWidth, bitmapStride;
-
+        int bitmapWidth;
         private readonly List<MyFace> grid;
-        System.Drawing.Imaging.BitmapData bitmapData;
 
         public FillPolygon(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors)
         {
@@ -28,36 +26,49 @@ namespace Filling_Triangular_Mesh
             this.texture = texture;
         }
 
-        public void FillGridWithTriangles(float ks, float kd, int m, bool interpolateNormalVector, Vector3 lightSource)
+        public void FillGridWithTriangles(float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, int u)
         {
-
-
             using (var snoop = new BmpPixelSnoop(bitmap))
             {
                 using (var cs = new BmpPixelSnoop(_colors))
                 {
-
-                    Parallel.For(0, grid.Count, i =>
-                    {
-                        var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
+                    if (u == -1)
+                        Parallel.For(0, grid.Count, i =>
+                        {
+                            var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
                                                  new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                                                  new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
 
-                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, cs);
+                            var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
 
-                        FillTriangle(triangle, gen, snoop);
-                    });
+                            FillTriangle(triangle, gen, snoop);
+                        });
 
-
+                    //if (u == -1)
+                    //{
                     //for (int i = 0; i < grid.Count; ++i)
                     //{
                     //    var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
-                    //                             new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
-                    //                             new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
+                    //                         new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
+                    //                         new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
                     //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, cs);
 
                     //    FillTriangle(triangle, gen, snoop);
                     //}
+
+                    //}
+                    else
+                    {
+                        int i = u;
+                        var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
+                                                 new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
+                                                 new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
+                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
+
+                        FillTriangle(triangle, gen, snoop);
+                    }
+
+
                 }
             }
         }
@@ -66,11 +77,6 @@ namespace Filling_Triangular_Mesh
         {
             var scanLine = new ScanLine(triangle);
 
-            //Parallel.ForEach(scanLine.GetIntersectionPoints(), a =>
-            //{
-
-            //    FillRow(a.xList, a.y, colorGenerator, rgbValues);
-            //});
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
                 FillRow(xList, y, colorGenerator, snoop);
