@@ -10,7 +10,7 @@ namespace Filling_Triangular_Mesh
         private MyColor[,] texture;
         private Bitmap _colors;
         int bitmapWidth;
-        private readonly List<MyFace> grid;
+        private List<MyFace> grid;
 
         public FillPolygon(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors)
         {
@@ -24,6 +24,10 @@ namespace Filling_Triangular_Mesh
         public void ChangeTexture(MyColor[,] texture)
         {
             this.texture = texture;
+        }
+        public void ChangeTexture(List<MyFace> grid)
+        {
+            this.grid = grid;
         }
 
         public void FillGridWithTriangles(float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, int u)

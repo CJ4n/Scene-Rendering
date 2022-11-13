@@ -1,12 +1,12 @@
 using ObjLoader.Loader.Data.VertexData;
 namespace ObjLoader.Loader.Data
 {
-    public struct Vector3
+    public class Vector3
     {
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
-        public Vector3(double x, double y, double z) : this()
+        public Vector3(double x, double y, double z)
         {
             X = x;
             Y = y;

@@ -4,21 +4,6 @@
     "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj": {}
   },
   "projects": {
-    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj": {
-      "restore": {
-        "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj",
-        "projectName": "DotNetPixelSnoop",
-        "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj",
-        "frameworks": {
-          "net40": {
-            "projectReferences": {}
-          }
-        }
-      },
-      "frameworks": {
-        "net40": {}
-      }
-    },
     "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -47,9 +32,6 @@
           "net6.0-windows7.0": {
             "targetAlias": "net6.0-windows",
             "projectReferences": {
-              "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj": {
-                "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj"
-              },
               "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
                 "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
               }

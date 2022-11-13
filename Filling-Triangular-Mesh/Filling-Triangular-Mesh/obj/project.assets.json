@@ -1227,15 +1227,6 @@
         "runtime": {
           "bin/placeholder/CjClutter.ObjLoader.dll": {}
         }
-      },
-      "DotNetPixelSnoop/1.0.0": {
-        "type": "project",
-        "compile": {
-          "bin/placeholder/DotNetPixelSnoop.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DotNetPixelSnoop.dll": {}
-        }
       }
     }
   },
@@ -4557,17 +4548,11 @@
       "type": "project",
       "path": "../../ObjLoader-master/source/CjClutter.ObjLoader.Loader/CjClutter.ObjLoader.Loader.csproj",
       "msbuildProject": "../../ObjLoader-master/source/CjClutter.ObjLoader.Loader/CjClutter.ObjLoader.Loader.csproj"
-    },
-    "DotNetPixelSnoop/1.0.0": {
-      "type": "project",
-      "path": "../../DotNetPixelSnoop/DotNetPixelSnoop/DotNetPixelSnoop.csproj",
-      "msbuildProject": "../../DotNetPixelSnoop/DotNetPixelSnoop/DotNetPixelSnoop.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
       "CjClutter.ObjLoader >= 1.0.0",
-      "DotNetPixelSnoop >= 1.0.0",
       "SharpDX.Direct3D9 >= 4.2.0"
     ]
   },
@@ -4603,9 +4588,6 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj": {
-              "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\DotNetPixelSnoop\\DotNetPixelSnoop\\DotNetPixelSnoop.csproj"
-            },
             "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
               "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
             }

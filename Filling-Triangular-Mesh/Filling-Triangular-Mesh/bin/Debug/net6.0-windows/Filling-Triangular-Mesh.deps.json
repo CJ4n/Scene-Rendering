@@ -9,7 +9,6 @@
       "Filling-Triangular-Mesh/1.0.0": {
         "dependencies": {
           "CjClutter.ObjLoader": "1.0.0",
-          "DotNetPixelSnoop": "1.0.0",
           "SharpDX.Direct3D9": "4.2.0"
         },
         "runtime": {
@@ -712,11 +711,6 @@
         "runtime": {
           "CjClutter.ObjLoader.Loader.dll": {}
         }
-      },
-      "DotNetPixelSnoop/1.0.0": {
-        "runtime": {
-          "DotNetPixelSnoop.exe": {}
-        }
       }
     }
   },
@@ -1252,11 +1246,6 @@
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
     },
     "CjClutter.ObjLoader/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "DotNetPixelSnoop/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

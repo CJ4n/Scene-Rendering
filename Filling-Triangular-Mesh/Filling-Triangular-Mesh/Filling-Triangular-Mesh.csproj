@@ -15,7 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DotNetPixelSnoop\DotNetPixelSnoop\DotNetPixelSnoop.csproj" />
     <ProjectReference Include="..\..\ObjLoader-master\source\CjClutter.ObjLoader.Loader\CjClutter.ObjLoader.Loader.csproj" />
   </ItemGroup>
 

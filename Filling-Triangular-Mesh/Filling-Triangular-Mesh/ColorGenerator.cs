@@ -1,7 +1,7 @@
 ﻿using ObjLoader.Loader.Data;
 namespace Filling_Triangular_Mesh
 {
-    public struct MyFace
+    public class MyFace
     {
         public List<Vector3> vertices; // 3 vertices of face
         public List<Vector3> normals; // 3 normals coresponding to vertices
@@ -48,7 +48,6 @@ namespace Filling_Triangular_Mesh
         }
     }
 
-
     public class ColorGenerator
     {
         double kd;
@@ -78,6 +77,10 @@ namespace Filling_Triangular_Mesh
             this.v1Color = GetColorInVetex(0);
             this.v2Color = GetColorInVetex(1);
             this.v3Color = GetColorInVetex(2);
+            if (v3Color.X > 300)
+            {
+                int asdads = 343;
+            }
 
         }
 
@@ -102,6 +105,7 @@ namespace Filling_Triangular_Mesh
             {
                 cosNL = 0;
             }
+
             var objectColor = colorMap[(int)face.vertices[idx].X, (int)face.vertices[idx].Y];
 
             double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
@@ -111,6 +115,10 @@ namespace Filling_Triangular_Mesh
         }
         public Color ComputeColor(int x, int y)
         {
+            if (x == 347 && y == 546)
+            {
+                int adas = 322;
+            }
             MyColor myColor;
             if (interpolateNormalVector)
             {
@@ -140,14 +148,17 @@ namespace Filling_Triangular_Mesh
                 double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
                 double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
                 myColor = new MyColor(r, g, b);
+                Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
+                return color;
             }
             else
             {
                 myColor = BarycentricInterpolation(v1Color, v2Color, v3Color, x, y);
+                Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
+                return color;
             }
 
-            Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
-            return color;
+
         }
 
 
@@ -170,6 +181,7 @@ namespace Filling_Triangular_Mesh
 
         public double TrinagelArea(Vector3 v1, Vector3 v2)
         {
+            // TODO: refactor as crospruduct/2
             double a1 = v1.X;
             double a2 = v1.Y;
             double a3 = v1.Z;
