@@ -50,6 +50,8 @@
             this.kdTrackBar = new System.Windows.Forms.TrackBar();
             this.animationTimer = new System.Windows.Forms.Timer(this.components);
             this.colorDialog = new System.Windows.Forms.ColorDialog();
+            this.selectObjButton = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -93,6 +95,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.selectObjButton);
             this.groupBox1.Controls.Add(this.interpolationGroupBox);
             this.groupBox1.Controls.Add(this.ColorGroupBox);
             this.groupBox1.Controls.Add(this.paintTriangulationCheckBox);
@@ -164,12 +167,10 @@
             // textureColorRadioButton
             // 
             this.textureColorRadioButton.AutoSize = true;
-            this.textureColorRadioButton.Checked = true;
             this.textureColorRadioButton.Location = new System.Drawing.Point(21, 26);
             this.textureColorRadioButton.Name = "textureColorRadioButton";
             this.textureColorRadioButton.Size = new System.Drawing.Size(154, 24);
             this.textureColorRadioButton.TabIndex = 14;
-            this.textureColorRadioButton.TabStop = true;
             this.textureColorRadioButton.Text = "Color from Texture";
             this.textureColorRadioButton.UseVisualStyleBackColor = true;
             this.textureColorRadioButton.CheckedChanged += new System.EventHandler(this.textureColorRadioButton_CheckedChanged);
@@ -177,10 +178,12 @@
             // constColorRadioButton
             // 
             this.constColorRadioButton.AutoSize = true;
+            this.constColorRadioButton.Checked = true;
             this.constColorRadioButton.Location = new System.Drawing.Point(21, 56);
             this.constColorRadioButton.Name = "constColorRadioButton";
             this.constColorRadioButton.Size = new System.Drawing.Size(128, 24);
             this.constColorRadioButton.TabIndex = 13;
+            this.constColorRadioButton.TabStop = true;
             this.constColorRadioButton.Text = "Constant Color";
             this.constColorRadioButton.UseVisualStyleBackColor = true;
             this.constColorRadioButton.Click += new System.EventHandler(this.constColorRadioButton_Click);
@@ -301,7 +304,22 @@
             // animationTimer
             // 
             this.animationTimer.Enabled = true;
+            this.animationTimer.Interval = 50;
             this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // selectObjButton
+            // 
+            this.selectObjButton.Location = new System.Drawing.Point(10, 654);
+            this.selectObjButton.Name = "selectObjButton";
+            this.selectObjButton.Size = new System.Drawing.Size(184, 29);
+            this.selectObjButton.TabIndex = 16;
+            this.selectObjButton.Text = "Select OBJ FIle";
+            this.selectObjButton.UseVisualStyleBackColor = true;
+            this.selectObjButton.Click += new System.EventHandler(this.selectObjButton_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // Form1
             // 
@@ -353,5 +371,7 @@
         private RadioButton constColorRadioButton;
         private GroupBox interpolationGroupBox;
         private GroupBox ColorGroupBox;
+        private Button selectObjButton;
+        private OpenFileDialog openFileDialog1;
     }
 }

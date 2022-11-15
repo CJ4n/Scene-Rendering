@@ -4,7 +4,7 @@
 using ObjLoader.Loader.Data;
 namespace Filling_Triangular_Mesh
 {
-    public class FillPolygon
+    public class PolygonFiller
     {
         private Bitmap bitmap;
         private MyColor[,] texture;
@@ -12,7 +12,7 @@ namespace Filling_Triangular_Mesh
         int bitmapWidth;
         private List<MyFace> grid;
 
-        public FillPolygon(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors)
+        public PolygonFiller(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors)
         {
             this.bitmap = bitmap;
             this.grid = grid;

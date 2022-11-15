@@ -77,23 +77,20 @@ namespace Filling_Triangular_Mesh
             this.v1Color = GetColorInVetex(0);
             this.v2Color = GetColorInVetex(1);
             this.v3Color = GetColorInVetex(2);
-            if (v3Color.X > 300)
-            {
-                int asdads = 343;
-            }
-
         }
 
         public Vector3 GetColorInVetex(int idx)
         {
             Vector3 L = lightSourceVector -
               new Vector3((int)face.vertices[idx].X, (int)face.vertices[idx].Y, (int)face.vertices[idx].Z);
-            L = Utils.Normalize(L);
+            //L =
+                Utils.Normalize(L);
 
-            Vector3 normalVersor = Utils.Normalize(face.normals[idx]);
-
+            //Vector3 normalVersor =
+                Utils.Normalize(face.normals[idx]);
+            Vector3 normalVersor = face.normals[idx];
             Vector3 R = 2 * Utils.DotProduct(normalVersor, L) * normalVersor - L;
-            R = Utils.Normalize(R);
+            //R = Utils.Normalize(R);
 
             double cosVR = Utils.CosBetweenVersors(V, R);
             if (cosVR < 0)
@@ -115,34 +112,33 @@ namespace Filling_Triangular_Mesh
         }
         public Color ComputeColor(int x, int y)
         {
-            if (x == 347 && y == 546)
-            {
-                int adas = 322;
-            }
             MyColor myColor;
             if (interpolateNormalVector)
             {
                 Vector3 XYZ = BarycentricInterpolation(face.vertices[0], face.vertices[1], face.vertices[2], x, y);
 
                 Vector3 L = lightSourceVector - new Vector3(x, y, XYZ.Z);
-                L = Utils.Normalize(L);
+                //L =
+                    Utils.Normalize(L);
 
                 Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
-                normalVector = Utils.Normalize(normalVector);
+                //normalVector = 
+                    Utils.Normalize(normalVector);
 
                 Vector3 R = 2 * Utils.DotProduct(normalVector, L) * normalVector - L;
-                R = Utils.Normalize(R);
+                //R =
+                    Utils.Normalize(R);
 
-                double cosVR = Utils.CosBetweenVersors(V, R);
-                if (cosVR < 0)
-                {
-                    cosVR = 0;
-                }
-                double cosNL = Utils.CosBetweenVersors(normalVector, L);
-                if (cosNL < 0)
-                {
-                    cosNL = 0;
-                }
+                double cosVR =Math.Max(0, Utils.CosBetweenVersors(V, R));
+                //if (cosVR < 0)
+                //{
+                //    cosVR = 0;
+                //}
+                double cosNL =Math.Max(0, Utils.CosBetweenVersors(normalVector, L));
+                //if (cosNL < 0)
+                //{
+                //    cosNL = 0;
+                //}
                 var objectColor = colorMap[x, y];
                 double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
                 double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
@@ -157,20 +153,18 @@ namespace Filling_Triangular_Mesh
                 Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
                 return color;
             }
-
-
         }
 
 
         public Vector3 BarycentricInterpolation(Vector3 v1, Vector3 v2, Vector3 v3, int x, int y)
         {
-            double z = FindIntersectionOfPlaneAndLine(face.vertices[0], face.vertices[1], face.vertices[2], x, y);
-            Vector3 v = new Vector3(x, y, z);
+            //double z = FindIntersectionOfPlaneAndLine(face.vertices[0], face.vertices[1], face.vertices[2], x, y);
+            Vector3 v = new Vector3(x, y, 0);
             var area12 = TrinagelArea(face.vertices[0] - v, face.vertices[1] - v);
             var area23 = TrinagelArea(face.vertices[1] - v, face.vertices[2] - v);
             var area31 = TrinagelArea(face.vertices[2] - v, face.vertices[0] - v);
             var sum = area12 + area23 + area31;
-            var area = TrinagelArea(face.vertices[0] - face.vertices[2], face.vertices[1] - face.vertices[2]);
+            //var area = TrinagelArea(face.vertices[0] - face.vertices[2], face.vertices[1] - face.vertices[2]);
             // why sum!=area????
             //var res = Geometry.IsPointInsidePolygon(new Point(x, y), new List<Point> { new Point((int)vertices[0].X+1, (int)vertices[0].Y+1),
             //new Point((int)vertices[1].X+1, (int)vertices[1].Y+1),
@@ -184,12 +178,16 @@ namespace Filling_Triangular_Mesh
             // TODO: refactor as crospruduct/2
             double a1 = v1.X;
             double a2 = v1.Y;
-            double a3 = v1.Z;
+            //double a3 = 0;
             double b1 = v2.X;
             double b2 = v2.Y;
-            double b3 = v2.Z;
-            Vector3 v = new Vector3(a2 * b3 - b2 * a3, a1 * b3 - b1 * a3, a1 * b2 - b1 * a2);
-            return Utils.Magnitude(v) / 2;
+            //double b3 = 0;
+            //Vector3 v = new Vector3(a2 * b3 - b2 * a3, a1 * b3 - b1 * a3, a1 * b2 - b1 * a2);
+            //return (a1 * b2 - b1 * a2 )/ 2;
+            double Z = a1 * b2 - b1 * a2;
+
+            return Math.Sqrt(Z * Z) / 2;
+            //return Utils.Magnitude(v) / 2;
         }
 
         // Only 'z' is returned
@@ -208,7 +206,7 @@ namespace Filling_Triangular_Mesh
             double z3 = v3.Z;
 
             double W = (x1 * y2 * z3) + (x2 * y3 * z1) + (x3 * y1 * z2) - (z1 * y2 * x3) - (z2 * y3 * x1) - (z3 * y1 * x2);
-            if (W == 0) return 1000;
+            //if (W == 0) return 1000;
             double WA = (y2 * z3) + (y3 * z1) + (y1 * z2) - (z1 * y2) - (z2 * y3) - (z3 * y1);
             double WB = (x1 * z3) + (x2 * z1) + (x3 * z2) - (z1 * x3) - (z2 * x1) - (z3 * x2);
             double WC = (x1 * y2) + (x2 * y3) + (x3 * y1) - (y2 * x3) - (y3 * x1) - (y1 * x2);
