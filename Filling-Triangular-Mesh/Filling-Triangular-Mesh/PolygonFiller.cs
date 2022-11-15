@@ -10,16 +10,17 @@ namespace Filling_Triangular_Mesh
         private MyColor[,] texture;
         private Bitmap _colors;
         int bitmapWidth;
+        private Color lighColor;
         private List<MyFace> grid;
 
-        public PolygonFiller(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors)
+        public PolygonFiller(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors,Color lightColor)
         {
             this.bitmap = bitmap;
             this.grid = grid;
             this.texture = texture;
             _colors = colors;
             bitmapWidth = bitmap.Width;
-
+            lighColor = lightColor;
         }
         public void ChangeTexture(MyColor[,] texture)
         {
@@ -28,6 +29,10 @@ namespace Filling_Triangular_Mesh
         public void ChangeTexture(List<MyFace> grid)
         {
             this.grid = grid;
+        }
+        public void ChangeLighColor(Color color)
+        {
+            this.lighColor = color;
         }
 
         public void FillGridWithTriangles(float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, int u)
@@ -43,7 +48,7 @@ namespace Filling_Triangular_Mesh
                                                  new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                                                  new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
 
-                            var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
+                            var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture,lighColor);
 
                             FillTriangle(triangle, gen, snoop);
                         });
@@ -55,7 +60,7 @@ namespace Filling_Triangular_Mesh
                     //    var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
                     //                         new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                     //                         new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-                    //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, cs);
+                    //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, ,lighColor);
 
                     //    FillTriangle(triangle, gen, snoop);
                     //}
@@ -67,7 +72,7 @@ namespace Filling_Triangular_Mesh
                         var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
                                                  new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                                                  new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture);
+                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture,lighColor);
 
                         FillTriangle(triangle, gen, snoop);
                     }

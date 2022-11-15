@@ -32,6 +32,7 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.selectObjButton = new System.Windows.Forms.Button();
             this.interpolationGroupBox = new System.Windows.Forms.GroupBox();
             this.normalRadioButton = new System.Windows.Forms.RadioButton();
             this.colorRadioButton = new System.Windows.Forms.RadioButton();
@@ -49,9 +50,10 @@
             this.ksTrackBar = new System.Windows.Forms.TrackBar();
             this.kdTrackBar = new System.Windows.Forms.TrackBar();
             this.animationTimer = new System.Windows.Forms.Timer(this.components);
-            this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.selectObjButton = new System.Windows.Forms.Button();
+            this.surfaceColorDialog = new System.Windows.Forms.ColorDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lightColorDialog = new System.Windows.Forms.ColorDialog();
+            this.changeLightColorButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -95,6 +97,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.changeLightColorButton);
             this.groupBox1.Controls.Add(this.selectObjButton);
             this.groupBox1.Controls.Add(this.interpolationGroupBox);
             this.groupBox1.Controls.Add(this.ColorGroupBox);
@@ -115,6 +118,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
+            // 
+            // selectObjButton
+            // 
+            this.selectObjButton.Location = new System.Drawing.Point(10, 654);
+            this.selectObjButton.Name = "selectObjButton";
+            this.selectObjButton.Size = new System.Drawing.Size(184, 29);
+            this.selectObjButton.TabIndex = 16;
+            this.selectObjButton.Text = "Select OBJ FIle";
+            this.selectObjButton.UseVisualStyleBackColor = true;
+            this.selectObjButton.Click += new System.EventHandler(this.selectObjButton_Click);
             // 
             // interpolationGroupBox
             // 
@@ -307,19 +320,19 @@
             this.animationTimer.Interval = 50;
             this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // selectObjButton
-            // 
-            this.selectObjButton.Location = new System.Drawing.Point(10, 654);
-            this.selectObjButton.Name = "selectObjButton";
-            this.selectObjButton.Size = new System.Drawing.Size(184, 29);
-            this.selectObjButton.TabIndex = 16;
-            this.selectObjButton.Text = "Select OBJ FIle";
-            this.selectObjButton.UseVisualStyleBackColor = true;
-            this.selectObjButton.Click += new System.EventHandler(this.selectObjButton_Click);
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // changeLightColorButton
+            // 
+            this.changeLightColorButton.Location = new System.Drawing.Point(2, 711);
+            this.changeLightColorButton.Name = "changeLightColorButton";
+            this.changeLightColorButton.Size = new System.Drawing.Size(175, 29);
+            this.changeLightColorButton.TabIndex = 17;
+            this.changeLightColorButton.Text = "Change Light Color";
+            this.changeLightColorButton.UseVisualStyleBackColor = true;
+            this.changeLightColorButton.Click += new System.EventHandler(this.changeLightColorButton_Click);
             // 
             // Form1
             // 
@@ -366,12 +379,14 @@
         private TrackBar zTrackBar;
         private CheckBox animationCheckBox;
         private CheckBox paintTriangulationCheckBox;
-        private ColorDialog colorDialog;
+        private ColorDialog surfaceColorDialog;
         private RadioButton textureColorRadioButton;
         private RadioButton constColorRadioButton;
         private GroupBox interpolationGroupBox;
         private GroupBox ColorGroupBox;
         private Button selectObjButton;
         private OpenFileDialog openFileDialog1;
+        private ColorDialog lightColorDialog;
+        private Button changeLightColorButton;
     }
 }

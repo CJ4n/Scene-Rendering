@@ -62,13 +62,14 @@ namespace Filling_Triangular_Mesh
         Vector3 v3Color;
         MyFace face;
         bool interpolateNormalVector;
-        public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector, Vector3 lightSourceVector, MyColor[,] texture)
+        public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector,
+            Vector3 lightSourceVector, MyColor[,] texture, Color lightColor)
         {
             this.kd = kd;
             this.ks = ks;
             this.m = m;
 
-            this.lightColor = new MyColor(1, 1, 1);
+            this.lightColor = new MyColor(lightColor.R/255.0, lightColor.G / 255.0, lightColor.B / 255.0);
             this.lightSourceVector = lightSourceVector;
             this.V = new Vector3(0, 0, 1);
             this.face = face;
@@ -81,13 +82,17 @@ namespace Filling_Triangular_Mesh
 
         public Vector3 GetColorInVetex(int idx)
         {
-            Vector3 L = lightSourceVector -
-              new Vector3((int)face.vertices[idx].X, (int)face.vertices[idx].Y, (int)face.vertices[idx].Z);
+            Vector3 L = lightSourceVector
+            -  new Vector3(face.vertices[idx].X, face.vertices[idx].Y, face.vertices[idx].Z);
+
             //L =
+            //L.X -= face.vertices[idx].X;
+            //L.Y -= face.vertices[idx].Y;
+            //L.Z -= face.vertices[idx].Z;
                 Utils.Normalize(L);
 
             //Vector3 normalVersor =
-                Utils.Normalize(face.normals[idx]);
+            Utils.Normalize(face.normals[idx]);
             Vector3 normalVersor = face.normals[idx];
             Vector3 R = 2 * Utils.DotProduct(normalVersor, L) * normalVersor - L;
             //R = Utils.Normalize(R);
