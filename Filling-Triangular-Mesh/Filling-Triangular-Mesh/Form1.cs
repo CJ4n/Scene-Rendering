@@ -307,7 +307,6 @@ namespace Filling_Triangular_Mesh
             {
                 _normalMap = null;
                 _fillPolygon.NormalMap = _normalMap;
-                //this.modifyNormalMapcheckBox.Checked = false ;
             }
             else
             {
