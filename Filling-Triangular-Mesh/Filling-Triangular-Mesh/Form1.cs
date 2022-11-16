@@ -15,7 +15,7 @@ namespace Filling_Triangular_Mesh
         private int _angle = 0;
         private int _radiusIncrement = -10;
         private int _angleIncrement = 3;
-        private int _maxSpiralRadius = 1000;
+        private int _maxSpiralRadius = 2000;
         private int _minSpiralRadious = 40;
 
         private Bitmap _drawArea;
@@ -307,11 +307,15 @@ namespace Filling_Triangular_Mesh
             {
                 _normalMap = null;
                 _fillPolygon.NormalMap = _normalMap;
+                //this.modifyNormalMapcheckBox.Checked = false ;
             }
             else
             {
                 _pathToNormalMap = this.openFileDialog1.FileName;
+                this.modifyNormalMapcheckBox.Checked = true;
+
             }
+            modifyNormalMapcheckBox_CheckedChanged(null, null);
         }
         private void modifyNormalMapcheckBox_CheckedChanged(object sender, EventArgs e)
         {
