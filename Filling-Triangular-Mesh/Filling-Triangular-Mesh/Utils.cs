@@ -1,4 +1,5 @@
 ﻿using ObjLoader.Loader.Data;
+
 namespace Filling_Triangular_Mesh
 {
     public static class Utils
@@ -21,53 +22,13 @@ namespace Filling_Triangular_Mesh
         public static void Normalize(Vector3 v)
         {
             var magnitude = Magnitude(v);
-            //if(magnitude == 0 )
-            //{
-            //    v.X = 0;
-            //    v.Y = 0;
-            //    v.Z = 0;
-
-            //}
             v.X /= magnitude;
             v.Y /= magnitude;
             v.Z /= magnitude;
-            //return new Vector3(v.X / magnitude, v.Y / magnitude, v.Z / magnitude);
         }
         public static bool AreTwoDoublesClose(double a, double b)
         {
             return Math.Abs(a - b) < Utils.Eps;
-        }
-        public static double[,] MultiplyMatrix(double[,] A, double[,] B)
-        {
-            int rA = A.GetLength(0);
-            int cA = A.GetLength(1);
-            int rB = B.GetLength(0);
-            int cB = B.GetLength(1);
-
-            if (cA != rB)
-            {
-                throw new Exception("wrong matrix dimensions!");
-            }
-            else
-            {
-                double temp = 0;
-                double[,] kHasil = new double[rA, cB];
-
-                for (int i = 0; i < rA; i++)
-                {
-                    for (int j = 0; j < cB; j++)
-                    {
-                        temp = 0;
-                        for (int k = 0; k < cA; k++)
-                        {
-                            temp += A[i, k] * B[k, j];
-                        }
-                        kHasil[i, j] = temp;
-                    }
-                }
-
-                return kHasil;
-            }
         }
         public static Vector3 CrossProduct(Vector3 v1, Vector3 v2)
         {

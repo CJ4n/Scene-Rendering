@@ -129,7 +129,7 @@
             this.changeLightColorButton.TabIndex = 17;
             this.changeLightColorButton.Text = "Change Light Color";
             this.changeLightColorButton.UseVisualStyleBackColor = true;
-            this.changeLightColorButton.Click += new System.EventHandler(this.changeLightColorButton_Click);
+            this.changeLightColorButton.Click += new System.EventHandler(this.ChangeLightColorButton_Click);
             // 
             // selectObjButton
             // 
@@ -139,7 +139,7 @@
             this.selectObjButton.TabIndex = 16;
             this.selectObjButton.Text = "Select OBJ FIle";
             this.selectObjButton.UseVisualStyleBackColor = true;
-            this.selectObjButton.Click += new System.EventHandler(this.selectObjButton_Click);
+            this.selectObjButton.Click += new System.EventHandler(this.SelectObjButton_Click);
             // 
             // interpolationGroupBox
             // 
@@ -165,7 +165,7 @@
             this.normalRadioButton.TabStop = true;
             this.normalRadioButton.Text = "Interpolate normal vectors";
             this.normalRadioButton.UseVisualStyleBackColor = true;
-            this.normalRadioButton.CheckedChanged += new System.EventHandler(this.normalRadioButton_CheckedChanged);
+            this.normalRadioButton.CheckedChanged += new System.EventHandler(this.NormalRadioButton_CheckedChanged);
             // 
             // colorRadioButton
             // 
@@ -176,7 +176,7 @@
             this.colorRadioButton.TabIndex = 7;
             this.colorRadioButton.Text = "Interpolate color";
             this.colorRadioButton.UseVisualStyleBackColor = true;
-            this.colorRadioButton.CheckedChanged += new System.EventHandler(this.colorRadioButton_CheckedChanged);
+            this.colorRadioButton.CheckedChanged += new System.EventHandler(this.ColorRadioButton_CheckedChanged);
             // 
             // ColorGroupBox
             // 
@@ -198,7 +198,7 @@
             this.textureColorRadioButton.TabIndex = 14;
             this.textureColorRadioButton.Text = "Color from Texture";
             this.textureColorRadioButton.UseVisualStyleBackColor = true;
-            this.textureColorRadioButton.CheckedChanged += new System.EventHandler(this.textureColorRadioButton_CheckedChanged);
+            this.textureColorRadioButton.CheckedChanged += new System.EventHandler(this.TextureColorRadioButton_CheckedChanged);
             // 
             // constColorRadioButton
             // 
@@ -211,7 +211,7 @@
             this.constColorRadioButton.TabStop = true;
             this.constColorRadioButton.Text = "Constant Color";
             this.constColorRadioButton.UseVisualStyleBackColor = true;
-            this.constColorRadioButton.Click += new System.EventHandler(this.constColorRadioButton_Click);
+            this.constColorRadioButton.Click += new System.EventHandler(this.ConstColorRadioButton_Click);
             // 
             // paintTriangulationCheckBox
             // 
@@ -224,7 +224,7 @@
             this.paintTriangulationCheckBox.TabIndex = 11;
             this.paintTriangulationCheckBox.Text = "Paint triangulation";
             this.paintTriangulationCheckBox.UseVisualStyleBackColor = true;
-            this.paintTriangulationCheckBox.CheckedChanged += new System.EventHandler(this.paintTriangulationCheckBox_CheckedChanged);
+            this.paintTriangulationCheckBox.CheckedChanged += new System.EventHandler(this.PaintTriangulationCheckBox_CheckedChanged);
             // 
             // animationCheckBox
             // 
@@ -237,7 +237,7 @@
             this.animationCheckBox.TabIndex = 10;
             this.animationCheckBox.Text = "Animation";
             this.animationCheckBox.UseVisualStyleBackColor = true;
-            this.animationCheckBox.CheckedChanged += new System.EventHandler(this.animationCheckBox_CheckedChanged);
+            this.animationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
             // 
             // zLabel
             // 
@@ -256,7 +256,7 @@
             this.zTrackBar.Size = new System.Drawing.Size(234, 56);
             this.zTrackBar.TabIndex = 8;
             this.zTrackBar.Value = 700;
-            this.zTrackBar.ValueChanged += new System.EventHandler(this.zTrackBar_ValueChanged);
+            this.zTrackBar.ValueChanged += new System.EventHandler(this.ZTrackBar_ValueChanged);
             // 
             // kdLabel
             // 
@@ -297,7 +297,7 @@
             this.mTrackBar.TabIndex = 2;
             this.mTrackBar.TickFrequency = 10;
             this.mTrackBar.Value = 50;
-            this.mTrackBar.ValueChanged += new System.EventHandler(this.mTrackBar_ValueChanged);
+            this.mTrackBar.ValueChanged += new System.EventHandler(this.MTrackBar_ValueChanged);
             // 
             // ksTrackBar
             // 
@@ -310,7 +310,7 @@
             this.ksTrackBar.TabIndex = 1;
             this.ksTrackBar.TickFrequency = 10;
             this.ksTrackBar.Value = 50;
-            this.ksTrackBar.ValueChanged += new System.EventHandler(this.ksTrackBar_ValueChanged);
+            this.ksTrackBar.ValueChanged += new System.EventHandler(this.KsTrackBar_ValueChanged);
             // 
             // kdTrackBar
             // 
@@ -323,13 +323,13 @@
             this.kdTrackBar.TabIndex = 0;
             this.kdTrackBar.TickFrequency = 10;
             this.kdTrackBar.Value = 50;
-            this.kdTrackBar.ValueChanged += new System.EventHandler(this.kdTrackBar_ValueChanged);
+            this.kdTrackBar.ValueChanged += new System.EventHandler(this.KdTrackBar_ValueChanged);
             // 
             // animationTimer
             // 
             this.animationTimer.Enabled = true;
             this.animationTimer.Interval = 50;
-            this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
+            this.animationTimer.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // openFileDialog1
             // 
@@ -343,7 +343,7 @@
             this.modifyNormalVectorsButton.TabIndex = 18;
             this.modifyNormalVectorsButton.Text = "Modify Normal Vectors";
             this.modifyNormalVectorsButton.UseVisualStyleBackColor = true;
-            this.modifyNormalVectorsButton.Click += new System.EventHandler(this.modifyNormalVectorsButton_Click);
+            this.modifyNormalVectorsButton.Click += new System.EventHandler(this.ModifyNormalVectorsButton_Click);
             // 
             // Form1
             // 

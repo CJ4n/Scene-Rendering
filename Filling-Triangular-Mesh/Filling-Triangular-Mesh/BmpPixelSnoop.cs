@@ -1,8 +1,8 @@
 ﻿using System.Drawing.Imaging;
 
-
 namespace Filling_Triangular_Mesh
 {
+    // Taken from github: https://github.com/kgodden/DotNetPixelSnoop
     unsafe public class BmpPixelSnoop : IDisposable
     {
         // A reference to the bitmap to be wrapped

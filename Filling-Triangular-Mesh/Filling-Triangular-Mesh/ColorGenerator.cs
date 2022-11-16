@@ -1,94 +1,48 @@
 ﻿using ObjLoader.Loader.Data;
+
 namespace Filling_Triangular_Mesh
 {
-    public class MyFace
-    {
-        public List<Vector3> vertices; // 3 vertices of face
-        public List<Vector3> normals; // 3 normals coresponding to vertices
-        public List<int> ids;
-
-        public MyFace(List<Vector3> vertices, List<Vector3> normals, List<int> ids)
-        {
-            this.vertices = vertices;
-            this.normals = normals;
-            this.ids = ids;
-        }
-    }
-    public struct MyColor
-    {
-        public double R;
-        public double G;
-        public double B;
-        public MyColor(double r, double g, double b)
-        {
-
-            if (r > 1)
-            {
-                r = 1;
-            }
-            if (g > 1)
-            {
-                g = 1;
-            }
-            if (b > 1)
-            {
-                b = 1;
-            }
-            if ((r < 0 || r > 1) || (g < 0 || g > 1) || (b < 0 || b > 1))
-            {
-                throw new Exception("color outside of range [0,1]");
-            }
-            R = r;
-            G = g;
-            B = b;
-        }
-        public static implicit operator MyColor(Vector3 x)
-        {
-            return new MyColor(x.X, x.Y, x.Z);
-        }
-    }
-
     public class ColorGenerator
     {
-        double kd;
-        double ks;
-        int m;
-        MyColor lightColor;
-        Vector3 lightSourceVector;
-        MyColor[,] colorMap;
-        Vector3[,] normalMap;
-        Vector3 V;
-        Vector3 v1Color;
-        Vector3 v2Color;
-        Vector3 v3Color;
-        MyFace face;
-        bool interpolateNormalVector;
+        private MyFace _face;
+        private double _ks;
+        private double _kd;
+        private int _m;
+        private bool interpolateNormalVector;
+        private Vector3 lightSourceVector;
+        private MyColor[,] colorMap;
+        private MyColor lightColor;
+        private Vector3[,] normalMap;
+        private Vector3 V;
+        private Vector3 v1Color;
+        private Vector3 v2Color;
+        private Vector3 v3Color;
         public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector,
-            Vector3 lightSourceVector, MyColor[,] texture, Color lightColor, Vector3[,] normalMap=null)
+            Vector3 lightSourceVector, MyColor[,] colorMap, Color lightColor, Vector3[,] normalMap = null)
         {
-            this.kd = kd;
-            this.ks = ks;
-            this.m = m;
-
-            this.lightColor = new MyColor(lightColor.R / 255.0, lightColor.G / 255.0, lightColor.B / 255.0);
-            this.lightSourceVector = lightSourceVector;
-            this.V = new Vector3(0, 0, 1);
-            this.face = face;
+            this._face = face;
+            this._ks = ks;
+            this._kd = kd;
+            this._m = m;
             this.interpolateNormalVector = interpolateNormalVector;
-            this.colorMap = texture;
+            this.lightSourceVector = lightSourceVector;
+            this.colorMap = colorMap;
+            this.lightColor = new MyColor(lightColor.R / 255.0, lightColor.G / 255.0, lightColor.B / 255.0);
             this.normalMap = normalMap;
+            this.V = new Vector3(0, 0, 1);
+
             this.v1Color = GetColorInVetex(0);
             this.v2Color = GetColorInVetex(1);
             this.v3Color = GetColorInVetex(2);
         }
 
-        private Vector3 ModifyNormalVector(Vector3 normalVersor,int x,int y)
+        private Vector3 ModifyNormalVector(Vector3 normalVersor, int x, int y)
         {
             Vector3 Ntextrue = normalMap[x, y];
             Utils.Normalize(Ntextrue);
             Vector3 B;
-            if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0) &&
-                Utils.AreTwoDoublesClose(normalVersor.Z, 1))
+            if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0)
+                && Utils.AreTwoDoublesClose(normalVersor.Z, 1))
             {
                 B = new Vector3(0, 1, 0);
             }
@@ -112,152 +66,89 @@ namespace Filling_Triangular_Mesh
 
         public Vector3 GetColorInVetex(int idx)
         {
-            Vector3 L = lightSourceVector - new Vector3(face.vertices[idx].X, face.vertices[idx].Y, face.vertices[idx].Z);
+            Vector3 L = lightSourceVector - new Vector3(_face.vertices[idx].X, _face.vertices[idx].Y, _face.vertices[idx].Z);
             Utils.Normalize(L);
 
-            Vector3 normalVersor = face.normals[idx];
+            Vector3 normalVersor = _face.normals[idx];
             Utils.Normalize(normalVersor);
 
             if (normalMap != null)
             {
-                normalVersor = ModifyNormalVector(normalVersor, (int)face.vertices[idx].X, (int)face.vertices[idx].Y);
+                normalVersor = ModifyNormalVector(normalVersor, (int)_face.vertices[idx].X, (int)_face.vertices[idx].Y);
             }
             Vector3 R = 2 * Utils.DotProduct(normalVersor, L) * normalVersor - L;
             //R = Utils.Normalize(R);
 
-            double cosVR = Utils.CosBetweenVersors(V, R);
-            if (cosVR < 0)
-            {
-                cosVR = 0;
-            }
-            double cosNL = Utils.CosBetweenVersors(normalVersor, L);
-            if (cosNL < 0)
-            {
-                cosNL = 0;
-            }
+            double cosVR = Math.Max(0, Utils.CosBetweenVersors(V, R));
+            double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVersor, L));
 
-            var objectColor = colorMap[(int)face.vertices[idx].X, (int)face.vertices[idx].Y];
+            var objectColor = colorMap[(int)_face.vertices[idx].X, (int)_face.vertices[idx].Y];
 
-            double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
-            double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
-            double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
+            double r = _kd * lightColor.R * objectColor.R * cosNL + _ks * lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
+            double g = _kd * lightColor.G * objectColor.G * cosNL + _ks * lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
+            double b = _kd * lightColor.B * objectColor.B * cosNL + _ks * lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
             return new Vector3(r, g, b);
+        }
+
+        private Color ComputeColorInterpolateNormalVector(int x, int y)
+        {
+            Vector3 XYZ = BarycentricInterpolation(_face.vertices[0], _face.vertices[1], _face.vertices[2], x, y);
+
+            Vector3 L = lightSourceVector - new Vector3(x, y, XYZ.Z);
+            Utils.Normalize(L);
+
+            Vector3 normalVector = BarycentricInterpolation(_face.normals[0], _face.normals[1], _face.normals[2], x, y);
+
+            Utils.Normalize(normalVector);
+            if (normalMap != null)
+            {
+                normalVector = ModifyNormalVector(normalVector, x, y);
+            }
+
+            Vector3 R = 2 * Utils.DotProduct(normalVector, L) * normalVector - L;
+            //Utils.Normalize(R);
+
+            double cosVR = Math.Max(0, Utils.CosBetweenVersors(V, R));
+            double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, L));
+
+            var objectColor = colorMap[x, y];
+            double r = _kd * lightColor.R * objectColor.R * cosNL + _ks * lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
+            double g = _kd * lightColor.G * objectColor.G * cosNL + _ks * lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
+            double b = _kd * lightColor.B * objectColor.B * cosNL + _ks * lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
+            MyColor myColor = new MyColor(r, g, b);
+            Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
+            return color;
+        }
+        private Color ComputeColorInterpolateColor(int x, int y)
+        {
+            MyColor myColor = BarycentricInterpolation(v1Color, v2Color, v3Color, x, y);
+            Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
+            return color;
         }
         public Color ComputeColor(int x, int y)
         {
-            MyColor myColor;
             if (interpolateNormalVector)
             {
-                Vector3 XYZ = BarycentricInterpolation(face.vertices[0], face.vertices[1], face.vertices[2], x, y);
-
-                Vector3 L = lightSourceVector - new Vector3(x, y, XYZ.Z);
-                //L =
-                Utils.Normalize(L);
-
-                Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
-
-                Vector3 copy = new Vector3(normalVector.X, normalVector.Y, normalVector.Z);
-                //normalVector = 
-                Utils.Normalize(normalVector);
-                if (normalMap != null)
-                {
-                    normalVector = ModifyNormalVector(normalVector, x, y);
-                }
-                Vector3 R = 2 * Utils.DotProduct(normalVector, L) * normalVector - L;
-                //R =
-                Utils.Normalize(R);
-
-                double cosVR = Math.Max(0, Utils.CosBetweenVersors(V, R));
-                double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, L));
-                
-                var objectColor = colorMap[x, y];
-                double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
-                double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);
-                double b = kd * lightColor.B * objectColor.B * cosNL + ks * lightColor.B * objectColor.B * Math.Pow(cosVR, m);
-                myColor = new MyColor(r, g, b);
-                Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
-                return color;
+                return ComputeColorInterpolateNormalVector(x, y);
             }
             else
             {
-                myColor = BarycentricInterpolation(v1Color, v2Color, v3Color, x, y);
-                Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
-                return color;
+                return ComputeColorInterpolateColor(x, y);
             }
         }
-
-
         public Vector3 BarycentricInterpolation(Vector3 v1, Vector3 v2, Vector3 v3, int x, int y)
         {
-            //double z = FindIntersectionOfPlaneAndLine(face.vertices[0], face.vertices[1], face.vertices[2], x, y);
             Vector3 v = new Vector3(x, y, 0);
-            var area12 = TrinagelArea(face.vertices[0] - v, face.vertices[1] - v);
-            var area23 = TrinagelArea(face.vertices[1] - v, face.vertices[2] - v);
-            var area31 = TrinagelArea(face.vertices[2] - v, face.vertices[0] - v);
+            var area12 = TrinagelArea(_face.vertices[0] - v, _face.vertices[1] - v);
+            var area23 = TrinagelArea(_face.vertices[1] - v, _face.vertices[2] - v);
+            var area31 = TrinagelArea(_face.vertices[2] - v, _face.vertices[0] - v);
             var sum = area12 + area23 + area31;
-            //var area = TrinagelArea(face.vertices[0] - face.vertices[2], face.vertices[1] - face.vertices[2]);
-            // why sum!=area????
-            //var res = Geometry.IsPointInsidePolygon(new Point(x, y), new List<Point> { new Point((int)vertices[0].X+1, (int)vertices[0].Y+1),
-            //new Point((int)vertices[1].X+1, (int)vertices[1].Y+1),
-            //new Point((int)vertices[2].X+1, (int)vertices[2].Y+1)});
-            //sum = area;
             return area12 * v3 / sum + area23 * v1 / sum + area31 * v2 / sum;
         }
-
         public double TrinagelArea(Vector3 v1, Vector3 v2)
         {
-            // TODO: refactor as crospruduct/2
-            double a1 = v1.X;
-            double a2 = v1.Y;
-            //double a3 = 0;
-            double b1 = v2.X;
-            double b2 = v2.Y;
-            //double b3 = 0;
-            //Vector3 v = new Vector3(a2 * b3 - b2 * a3, a1 * b3 - b1 * a3, a1 * b2 - b1 * a2);
-            //return (a1 * b2 - b1 * a2 )/ 2;
-            double Z = a1 * b2 - b1 * a2;
-
+            double Z = v1.X * v2.Y - v2.X * v1.Y;
             return Math.Sqrt(Z * Z) / 2;
-            //return Utils.Magnitude(v) / 2;
         }
-
-        // Only 'z' is returned
-        // Find intersestion of plane (v1,v2,v3) - vertices, and line defined
-        // by two points (x0,y0,0) and (x0,y0,1), that is perpendiuclar to (X,Y) plane
-        public double FindIntersectionOfPlaneAndLine(Vector3 v1, Vector3 v2, Vector3 v3, int x0, int y0)
-        {
-            double x1 = v1.X;
-            double y1 = v1.Y;
-            double z1 = v1.Z;
-            double x2 = v2.X;
-            double y2 = v2.Y;
-            double z2 = v2.Z;
-            double x3 = v3.X;
-            double y3 = v3.Y;
-            double z3 = v3.Z;
-
-            double W = (x1 * y2 * z3) + (x2 * y3 * z1) + (x3 * y1 * z2) - (z1 * y2 * x3) - (z2 * y3 * x1) - (z3 * y1 * x2);
-            //if (W == 0) return 1000;
-            double WA = (y2 * z3) + (y3 * z1) + (y1 * z2) - (z1 * y2) - (z2 * y3) - (z3 * y1);
-            double WB = (x1 * z3) + (x2 * z1) + (x3 * z2) - (z1 * x3) - (z2 * x1) - (z3 * x2);
-            double WC = (x1 * y2) + (x2 * y3) + (x3 * y1) - (y2 * x3) - (y3 * x1) - (y1 * x2);
-            double A = WA / W;
-            double B = WB / W;
-            double C = WC / W;
-
-            int a1 = x0;
-            int b1 = y0;
-            int c1 = 0;
-            int a2 = x0;
-            int b2 = y0;
-            int c2 = 1;
-            double t = (-A * a1 - B * b1 + 1) / C / c2;
-
-            double x = a1 + (a2 - a1) * t;
-            double y = b1 + (b2 - b1) * t;
-            double z = c1 + (c2 - c1) * t;
-            return z;
-        }
-
     }
 }

@@ -11,12 +11,10 @@
             AET = new List<AETPointer>();
             this.polygon = polygon;
 
-
             sortedInd = new Stack<int>(polygon.Select((p, i) => new KeyValuePair<Point, int>(p, i)).
                 OrderByDescending(pair => pair.Key.Y).
                 Select(pair => pair.Value));
         }
-
         public IEnumerable<(List<int> xList, int y)> GetIntersectionPoints()
         {
             int yMin = (int)polygon[sortedInd.Peek()].Y;
@@ -63,8 +61,6 @@
             }
         }
     }
-
-
     class AETPointer : IComparable<AETPointer>
     {
         public int yMax;
@@ -77,9 +73,7 @@
             this.x = x;
             this.m = 1.0 / m;
         }
-
         public int X { get => (int)Math.Round(x); }
-
         public void Update()
         {
             x = m == Utils.Infinity ? Utils.Infinity : x + m;
