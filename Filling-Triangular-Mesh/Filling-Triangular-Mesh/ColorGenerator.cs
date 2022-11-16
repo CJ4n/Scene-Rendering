@@ -56,6 +56,7 @@ namespace Filling_Triangular_Mesh
         MyColor lightColor;
         Vector3 lightSourceVector;
         MyColor[,] colorMap;
+        Vector3[,] normalMap;
         Vector3 V;
         Vector3 v1Color;
         Vector3 v2Color;
@@ -63,37 +64,69 @@ namespace Filling_Triangular_Mesh
         MyFace face;
         bool interpolateNormalVector;
         public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector,
-            Vector3 lightSourceVector, MyColor[,] texture, Color lightColor)
+            Vector3 lightSourceVector, MyColor[,] texture, Color lightColor, Vector3[,] normalMap)
         {
             this.kd = kd;
             this.ks = ks;
             this.m = m;
 
-            this.lightColor = new MyColor(lightColor.R/255.0, lightColor.G / 255.0, lightColor.B / 255.0);
+            this.lightColor = new MyColor(lightColor.R / 255.0, lightColor.G / 255.0, lightColor.B / 255.0);
             this.lightSourceVector = lightSourceVector;
             this.V = new Vector3(0, 0, 1);
             this.face = face;
             this.interpolateNormalVector = interpolateNormalVector;
             this.colorMap = texture;
+            this.normalMap = normalMap;
             this.v1Color = GetColorInVetex(0);
             this.v2Color = GetColorInVetex(1);
             this.v3Color = GetColorInVetex(2);
         }
 
+        private Vector3 ModifyNormalVector(Vector3 normalVersor,int x,int y)
+        {
+            Vector3 Ntextrue = normalMap[x, y];
+            //Utils.Normalize(Ntextrue);
+            if(double.IsNaN(Ntextrue.X) || double.IsNaN(Ntextrue.Y) || double.IsNaN(Ntextrue.Z))
+            {
+                return normalVersor;
+            }
+
+            Vector3 B;
+            if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0) &
+                Utils.AreTwoDoublesClose(normalVersor.Y, 1))
+            {
+                B = new Vector3(0, 1, 0);
+            }
+            else
+            {
+                B = Utils.CrossProduct(normalVersor, new Vector3(0, 0, 1));
+            }
+            Utils.Normalize(B);
+            Vector3 T = Utils.CrossProduct(B, normalVersor);
+            Utils.Normalize(T);
+
+            double X = T.X * Ntextrue.X + B.X * Ntextrue.Y + normalVersor.X * Ntextrue.Z;
+            double Y = T.Y * Ntextrue.X + B.Y * Ntextrue.Y + normalVersor.Y * Ntextrue.Z;
+            double Z = T.Z * Ntextrue.X + B.Z * Ntextrue.Y + normalVersor.Z * Ntextrue.Z;
+
+            Vector3 N = new Vector3(X, Y, Z);
+            //Utils.Normalize(N);
+            return N;
+        }
+
         public Vector3 GetColorInVetex(int idx)
         {
-            Vector3 L = lightSourceVector
-            -  new Vector3(face.vertices[idx].X, face.vertices[idx].Y, face.vertices[idx].Z);
+            Vector3 L = lightSourceVector - new Vector3(face.vertices[idx].X, face.vertices[idx].Y, face.vertices[idx].Z);
+            Utils.Normalize(L);
 
-            //L =
-            //L.X -= face.vertices[idx].X;
-            //L.Y -= face.vertices[idx].Y;
-            //L.Z -= face.vertices[idx].Z;
-                Utils.Normalize(L);
-
-            //Vector3 normalVersor =
-            Utils.Normalize(face.normals[idx]);
             Vector3 normalVersor = face.normals[idx];
+            Utils.Normalize(normalVersor);
+
+            normalVersor = ModifyNormalVector(normalVersor,(int) face.vertices[idx].X, (int)face.vertices[idx].Y);
+           
+            //normalVersor = N;
+
+
             Vector3 R = 2 * Utils.DotProduct(normalVersor, L) * normalVersor - L;
             //R = Utils.Normalize(R);
 
@@ -124,26 +157,20 @@ namespace Filling_Triangular_Mesh
 
                 Vector3 L = lightSourceVector - new Vector3(x, y, XYZ.Z);
                 //L =
-                    Utils.Normalize(L);
+                Utils.Normalize(L);
 
                 Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
                 //normalVector = 
-                    Utils.Normalize(normalVector);
+                Utils.Normalize(normalVector);
+                normalVector = ModifyNormalVector(normalVector, x,y);
 
                 Vector3 R = 2 * Utils.DotProduct(normalVector, L) * normalVector - L;
                 //R =
-                    Utils.Normalize(R);
+                Utils.Normalize(R);
 
-                double cosVR =Math.Max(0, Utils.CosBetweenVersors(V, R));
-                //if (cosVR < 0)
-                //{
-                //    cosVR = 0;
-                //}
-                double cosNL =Math.Max(0, Utils.CosBetweenVersors(normalVector, L));
-                //if (cosNL < 0)
-                //{
-                //    cosNL = 0;
-                //}
+                double cosVR = Math.Max(0, Utils.CosBetweenVersors(V, R));
+                double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, L));
+                
                 var objectColor = colorMap[x, y];
                 double r = kd * lightColor.R * objectColor.R * cosNL + ks * lightColor.R * objectColor.R * Math.Pow(cosVR, m);
                 double g = kd * lightColor.G * objectColor.G * cosNL + ks * lightColor.G * objectColor.G * Math.Pow(cosVR, m);

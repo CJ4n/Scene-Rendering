@@ -25,9 +25,9 @@ namespace Filling_Triangular_Mesh
         string pathToObjFile = "..\\..\\..\\..\\..\\smoothv2.obj";
         //string pathToObjFile = "..\\..\\..\\..\\..\\SemiTorus.obj";
 
-        string pathToNormalMap = "..\\..\\..\\..\\..\\1234.jpg";
+        string pathToNormalMap = "..\\..\\..\\..\\..\\Stylized_Fur_002_normal.jpg";
         List<MyFace> faces;
-        double[,] normalMap;
+        Vector3[,] normalMap;
         MyColor[,] myColorArray;
 
         int objectWidth = 600;
@@ -41,11 +41,23 @@ namespace Filling_Triangular_Mesh
             //Bitmap bmp = GetBitampFromFile(pathToTexture);
             Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
             Graphics g = Graphics.FromImage(bmp);
-            g.Clear(Color.FromArgb(255,255,255,255));
+            g.Clear(Color.FromArgb(255, 255, 255, 255));
             g.Dispose();
             _texture = bmp;
             myColorArray = ConvertBitmapToArray(bmp);
 
+            var normalMapBitmap = GetBitampFromFile(pathToNormalMap);
+
+            normalMap = new Vector3[normalMapBitmap.Width, normalMapBitmap.Height];
+            for (int col = 0; col < normalMapBitmap.Width; col++)
+            {
+                for (int row = 0; row < normalMapBitmap.Height; row++)
+                {
+                    normalMap[col, row] = RgbToNormalVectorsArray(normalMapBitmap.GetPixel(col, row));
+
+                }
+            }
+            normalMapBitmap.Dispose();
             GetAndSetObj();
             //ModifyNormalVectors();
             PaintScene();
@@ -54,7 +66,7 @@ namespace Filling_Triangular_Mesh
         {
             result = LoadObjFile(pathToObjFile);
             faces = GetAllFaces(result);
-            fillPolygon = new PolygonFiller(_drawArea, faces, myColorArray, _texture,lighColor);
+            fillPolygon = new PolygonFiller(_drawArea, faces, myColorArray, _texture, lighColor, normalMap);
         }
 
         private Bitmap GetBitampFromFile(string path)
@@ -77,94 +89,49 @@ namespace Filling_Triangular_Mesh
             }
             return result;
         }
-        public Vector3 CrossProduct(Vector3 v1, Vector3 v2)
-        {
-            double a1 = v1.X;
-            double a2 = v1.Y;
-            double a3 = v1.Z;
-            double b1 = v2.X;
-            double b2 = v2.Y;
-            double b3 = v2.Z;
-            Vector3 v = new Vector3(a2 * b3 - b2 * a3, a1 * b3 - b1 * a3, a1 * b2 - b1 * a2);
-            return v;
-        }
 
-        public double[,] RgbToNormalVectorsArray(Color c)
+
+        public Vector3 RgbToNormalVectorsArray(Color c)
         {
-            double[,] a = { { 2.0 * c.R / 255.0 }, { 2.0 * c.G / 255.0 }, { c.B / 255.0 } };
+            Vector3 a = new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
             return a;
         }
 
-        public bool AreTwoDoublesClose(double a, double b)
-        {
-            return Math.Abs(a - b) < Utils.Eps;
-        }
-        public double[,] MultiplyMatrix(double[,] A, double[,] B)
-        {
-            int rA = A.GetLength(0);
-            int cA = A.GetLength(1);
-            int rB = B.GetLength(0);
-            int cB = B.GetLength(1);
 
-            if (cA != rB)
-            {
-                throw new Exception("wrong matrix dimensions!");
-            }
-            else
-            {
-                double temp = 0;
-                double[,] kHasil = new double[rA, cB];
+        //private void ModifyNormalVectors()
+        //{
+        //    var normalMap = GetBitampFromFile(pathToNormalMap);
+        //    for (int f = 0; f < faces.Count(); ++f)
+        //    {
+        //        for (int idx = 0; idx < faces[f].vertices.Count(); ++idx)
+        //        {
+        //            //if (f == 420)
+        //            //{
+        //            //    bool dfd = false;
+        //            //}
+        //            //var aaa = normalMap.GetPixel((int)Math.Round(faces[f].vertices[idx].X), (int)Math.Round(faces[f].vertices[idx].Y));
+        //            double[,] NTexture = RgbToNormalVectorsArray(normalMap.GetPixel((int)Math.Round(faces[f].vertices[idx].X), (int)Math.Round(faces[f].vertices[idx].Y)));
+        //            Vector3 NSurface = faces[f].normals[idx];
+        //            //NSurface =
+        //            Utils.Normalize(NSurface);
+        //            Vector3 B;
+        //            if (AreTwoDoublesClose(NSurface.X, 0) && AreTwoDoublesClose(NSurface.Y, 0) && AreTwoDoublesClose(NSurface.Z, 1))
+        //            {
+        //                B = new Vector3(0, 1, 0);
+        //            }
+        //            else
+        //            {
+        //                B = CrossProduct(NSurface, new Vector3(0, 0, 1));
+        //            }
+        //            Vector3 T = CrossProduct(B, NSurface);
+        //            double[,] M = { { T.X, B.X, NSurface.X }, { T.Y, B.Y, NSurface.Y }, { T.Z, B.Z, NSurface.Z } };
+        //            var newNormalVector = MultiplyMatrix(M, NTexture);
 
-                for (int i = 0; i < rA; i++)
-                {
-                    for (int j = 0; j < cB; j++)
-                    {
-                        temp = 0;
-                        for (int k = 0; k < cA; k++)
-                        {
-                            temp += A[i, k] * B[k, j];
-                        }
-                        kHasil[i, j] = temp;
-                    }
-                }
+        //            //faces[f].normals[idx] = Utils.Normalize(new Vector3(newNormalVector[0, 0], newNormalVector[1, 0], newNormalVector[2, 0]));
 
-                return kHasil;
-            }
-        }
-        private void ModifyNormalVectors()
-        {
-            var normalMap = GetBitampFromFile(pathToNormalMap);
-            for (int f = 0; f < faces.Count(); ++f)
-            {
-                for (int idx = 0; idx < faces[f].vertices.Count(); ++idx)
-                {
-                    //if (f == 420)
-                    //{
-                    //    bool dfd = false;
-                    //}
-                    //var aaa = normalMap.GetPixel((int)Math.Round(faces[f].vertices[idx].X), (int)Math.Round(faces[f].vertices[idx].Y));
-                    double[,] NTexture = RgbToNormalVectorsArray(normalMap.GetPixel((int)Math.Round(faces[f].vertices[idx].X), (int)Math.Round(faces[f].vertices[idx].Y)));
-                    Vector3 NSurface = faces[f].normals[idx];
-                    //NSurface =
-                        Utils.Normalize(NSurface);
-                    Vector3 B;
-                    if (AreTwoDoublesClose(NSurface.X, 0) && AreTwoDoublesClose(NSurface.Y, 0) && AreTwoDoublesClose(NSurface.Z, 1))
-                    {
-                        B = new Vector3(0, 1, 0);
-                    }
-                    else
-                    {
-                        B = CrossProduct(NSurface, new Vector3(0, 0, 1));
-                    }
-                    Vector3 T = CrossProduct(B, NSurface);
-                    double[,] M = { { T.X, B.X, NSurface.X }, { T.Y, B.Y, NSurface.Y }, { T.Z, B.Z, NSurface.Z } };
-                    var newNormalVector = MultiplyMatrix(M, NTexture);
-
-                    //faces[f].normals[idx] = Utils.Normalize(new Vector3(newNormalVector[0, 0], newNormalVector[1, 0], newNormalVector[2, 0]));
-
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         private void PaintScene()
         {
@@ -215,12 +182,12 @@ namespace Filling_Triangular_Mesh
             List<MyFace> faces = new List<MyFace>();
             foreach (var t in data.Groups)
             {
-                 maxX = data.Vertices.Max(x => x.X);
-                 maxY = data.Vertices.Max(x => x.Y);
-                 maxZ = data.Vertices.Max(x => x.Z); 
-                 minX = data.Vertices.Min(x => x.X);
-                 minY = data.Vertices.Min(x => x.Y);
-                 minZ = data.Vertices.Min(x => x.Z);
+                maxX = data.Vertices.Max(x => x.X);
+                maxY = data.Vertices.Max(x => x.Y);
+                maxZ = data.Vertices.Max(x => x.Z);
+                minX = data.Vertices.Min(x => x.X);
+                minY = data.Vertices.Min(x => x.Y);
+                minZ = data.Vertices.Min(x => x.Z);
                 foreach (var f in t.Faces)
                 {
                     Vector3 v0 = data.Vertices[f[0].VertexIndex - 1];
@@ -248,7 +215,7 @@ namespace Filling_Triangular_Mesh
         }
         //Vector3 ScaleVector3FromObjFile(Vector3 v)
         //{
-            //Vector3 vv = new Vector3
+        //Vector3 vv = new Vector3
         //}
         PointF ToPointF(double x, double y)
         {
@@ -334,7 +301,7 @@ namespace Filling_Triangular_Mesh
             double y = r * Math.Sin(angle * Math.PI / 180);
             angle += 3;
             r += inc;
-            
+
             lightSource.X = x + origin.X;
             lightSource.Y = y + origin.Y;
             PaintScene();
@@ -424,7 +391,7 @@ namespace Filling_Triangular_Mesh
         private void changeLightColorButton_Click(object sender, EventArgs e)
         {
             var status = this.lightColorDialog.ShowDialog();
-            if(status!= DialogResult.OK)
+            if (status != DialogResult.OK)
             {
                 return;
             }

@@ -1,0 +1,16 @@
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\bin\Debug\Delaunay.exe.config
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\bin\Debug\Delaunay.exe
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\bin\Debug\Delaunay.pdb
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\DelaunayVoronoi.csproj.AssemblyReference.cache
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\DelaunayVoronoi.csproj.SuggestedBindingRedirects.cache
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\MainWindow.g.cs
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\App.g.cs
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\Delaunay_MarkupCompile.cache
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\Delaunay_MarkupCompile.lref
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\MainWindow.baml
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\Delaunay.g.resources
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\Delaunay.Properties.Resources.resources
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\DelaunayVoronoi.csproj.GenerateResource.cache
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\DelaunayVoronoi.csproj.CoreCompileInputs.cache
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\Delaunay.exe
+C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\DelaunayVoronoi-master\DelaunayVoronoi\obj\Debug\Delaunay.pdb

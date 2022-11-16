@@ -12,8 +12,9 @@ namespace Filling_Triangular_Mesh
         int bitmapWidth;
         private Color lighColor;
         private List<MyFace> grid;
+        Vector3[,] normalMap;
 
-        public PolygonFiller(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors,Color lightColor)
+        public PolygonFiller(Bitmap bitmap, List<MyFace> grid, MyColor[,] texture, Bitmap colors,Color lightColor, Vector3[,] normalMap)
         {
             this.bitmap = bitmap;
             this.grid = grid;
@@ -21,6 +22,7 @@ namespace Filling_Triangular_Mesh
             _colors = colors;
             bitmapWidth = bitmap.Width;
             lighColor = lightColor;
+            this.normalMap = normalMap;
         }
         public void ChangeTexture(MyColor[,] texture)
         {
@@ -48,7 +50,7 @@ namespace Filling_Triangular_Mesh
                                                  new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                                                  new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
 
-                            var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture,lighColor);
+                            var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture,lighColor,normalMap);
 
                             FillTriangle(triangle, gen, snoop);
                         });
@@ -72,7 +74,7 @@ namespace Filling_Triangular_Mesh
                         var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
                                                  new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
                                                  new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture,lighColor);
+                        var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture,lighColor,normalMap);
 
                         FillTriangle(triangle, gen, snoop);
                     }

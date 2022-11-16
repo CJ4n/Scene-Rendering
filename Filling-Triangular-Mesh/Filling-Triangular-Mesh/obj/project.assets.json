@@ -4563,11 +4563,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
+      "projectUniqueName": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
       "projectName": "Filling-Triangular-Mesh",
-      "projectPath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
+      "projectPath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
       "packagesPath": "C:\\Users\\yanci\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\obj\\",
+      "outputPath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -4588,8 +4588,8 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
-              "projectPath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
+            "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
+              "projectPath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
             }
           }
         }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "nAOspqtZlpU1OEYOxQcoRrfY/AhuZByZSHIum6qtJhGqrTMVGGRc/zFMxSKSrEiwAuotk6zuxidrMT3Yu+MzxA==",
+  "dgSpecHash": "YLE32AdS+ooQz7AXO5+hIC3MwEZPCrP5YthPJzTP+0DbgIC24+TreCAv18BCty7vYXwO6k8fOZzvJSQeZVzWCg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\yanci\\Desktop\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
+  "projectFilePath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\yanci\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\yanci\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
