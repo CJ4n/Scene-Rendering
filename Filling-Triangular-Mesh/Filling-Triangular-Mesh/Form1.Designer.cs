@@ -32,6 +32,7 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.changeLightColorButton = new System.Windows.Forms.Button();
             this.selectObjButton = new System.Windows.Forms.Button();
             this.interpolationGroupBox = new System.Windows.Forms.GroupBox();
             this.normalRadioButton = new System.Windows.Forms.RadioButton();
@@ -53,7 +54,6 @@
             this.surfaceColorDialog = new System.Windows.Forms.ColorDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.lightColorDialog = new System.Windows.Forms.ColorDialog();
-            this.changeLightColorButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -118,6 +118,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
+            // 
+            // changeLightColorButton
+            // 
+            this.changeLightColorButton.Location = new System.Drawing.Point(2, 711);
+            this.changeLightColorButton.Name = "changeLightColorButton";
+            this.changeLightColorButton.Size = new System.Drawing.Size(175, 29);
+            this.changeLightColorButton.TabIndex = 17;
+            this.changeLightColorButton.Text = "Change Light Color";
+            this.changeLightColorButton.UseVisualStyleBackColor = true;
+            this.changeLightColorButton.Click += new System.EventHandler(this.changeLightColorButton_Click);
             // 
             // selectObjButton
             // 
@@ -239,8 +249,7 @@
             // zTrackBar
             // 
             this.zTrackBar.Location = new System.Drawing.Point(1, 287);
-            this.zTrackBar.Maximum = 1200;
-            this.zTrackBar.Minimum = -1200;
+            this.zTrackBar.Maximum = 2500;
             this.zTrackBar.Name = "zTrackBar";
             this.zTrackBar.Size = new System.Drawing.Size(234, 56);
             this.zTrackBar.TabIndex = 8;
@@ -323,16 +332,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // changeLightColorButton
-            // 
-            this.changeLightColorButton.Location = new System.Drawing.Point(2, 711);
-            this.changeLightColorButton.Name = "changeLightColorButton";
-            this.changeLightColorButton.Size = new System.Drawing.Size(175, 29);
-            this.changeLightColorButton.TabIndex = 17;
-            this.changeLightColorButton.Text = "Change Light Color";
-            this.changeLightColorButton.UseVisualStyleBackColor = true;
-            this.changeLightColorButton.Click += new System.EventHandler(this.changeLightColorButton_Click);
             // 
             // Form1
             // 

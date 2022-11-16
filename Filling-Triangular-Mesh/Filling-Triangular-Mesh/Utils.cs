@@ -21,6 +21,13 @@ namespace Filling_Triangular_Mesh
         public static void Normalize(Vector3 v)
         {
             var magnitude = Magnitude(v);
+            //if(magnitude == 0 )
+            //{
+            //    v.X = 0;
+            //    v.Y = 0;
+            //    v.Z = 0;
+
+            //}
             v.X /= magnitude;
             v.Y /= magnitude;
             v.Z /= magnitude;

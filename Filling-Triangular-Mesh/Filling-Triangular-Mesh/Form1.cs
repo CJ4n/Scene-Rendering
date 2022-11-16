@@ -11,31 +11,35 @@ namespace Filling_Triangular_Mesh
     public partial class Form1 : Form
     {
         private Bitmap _drawArea;
-        private Bitmap _texture;
-        PolygonFiller fillPolygon;
-        LoadResult result;
-        Vector3 lightSource = new Vector3(1500, 300, 1100);
-        Color lighColor = Color.White;
-        PointF origin = new PointF(300, 300);
+        private Bitmap _color;
+        private PolygonFiller _fillPolygon;
+        private LoadResult _result;
+        private Vector3 _lightSource;
+        int radius = 3000;
+        int angle = 0;
+        int radiusIncrement = -2;
+        int angleIncrement = 3;
+        int maxSpiralRadius = 5000;
+        int minSpiralRadious = 40;
+        private Color _lighColor = Color.White;
+        private PointF _origin = new PointF(300, 300);
 
-        Color selectedColor;
-        //string pathToTexture = "C:\\Users\\YanPC\\Downloads\\1234.jpg";
-        string pathToTexture = "..\\..\\..\\..\\..\\1234.jpg";
-        //string pathToObjFile = "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\hemi.obj";
-        string pathToObjFile = "..\\..\\..\\..\\..\\smoothv2.obj";
-        //string pathToObjFile = "..\\..\\..\\..\\..\\SemiTorus.obj";
+        private string _pathToTexture = "..\\..\\..\\..\\..\\1234.jpg";
+        private string _pathToObjFile = "..\\..\\..\\..\\..\\smoothv2.obj";
+        //string _pathToObjFile = "..\\..\\..\\..\\..\\SemiTorus.obj";
 
-        string pathToNormalMap = "..\\..\\..\\..\\..\\Stylized_Fur_002_normal.jpg";
-        List<MyFace> faces;
-        Vector3[,] normalMap;
-        MyColor[,] myColorArray;
+        private string _pathToNormalMap = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
+        private List<MyFace> _faces;
+        private Vector3[,] _normalMap;
+        private MyColor[,] _myColorArray;
 
-        int objectWidth = 600;
-        int objectHeight = 600;
+        private int _objectWidth = 600;
+        private int _objectHeight = 600;
 
         public Form1()
         {
             InitializeComponent();
+          _lightSource  = new Vector3(radius, 300, 2500);
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Canvas.Image = _drawArea;
             //Bitmap bmp = GetBitampFromFile(pathToTexture);
@@ -43,30 +47,18 @@ namespace Filling_Triangular_Mesh
             Graphics g = Graphics.FromImage(bmp);
             g.Clear(Color.FromArgb(255, 255, 255, 255));
             g.Dispose();
-            _texture = bmp;
-            myColorArray = ConvertBitmapToArray(bmp);
+            _color = bmp;
+            _myColorArray = ConvertBitmapToArray(bmp);
 
-            var normalMapBitmap = GetBitampFromFile(pathToNormalMap);
-
-            normalMap = new Vector3[normalMapBitmap.Width, normalMapBitmap.Height];
-            for (int col = 0; col < normalMapBitmap.Width; col++)
-            {
-                for (int row = 0; row < normalMapBitmap.Height; row++)
-                {
-                    normalMap[col, row] = RgbToNormalVectorsArray(normalMapBitmap.GetPixel(col, row));
-
-                }
-            }
-            normalMapBitmap.Dispose();
+            ModifyNormalVectors();
             GetAndSetObj();
-            //ModifyNormalVectors();
             PaintScene();
         }
         private void GetAndSetObj()
         {
-            result = LoadObjFile(pathToObjFile);
-            faces = GetAllFaces(result);
-            fillPolygon = new PolygonFiller(_drawArea, faces, myColorArray, _texture, lighColor, normalMap);
+            _result = LoadObjFile(_pathToObjFile);
+            _faces = GetAllFaces(_result);
+            _fillPolygon = new PolygonFiller(_drawArea, _faces, _myColorArray, _color, _lighColor, _normalMap);
         }
 
         private Bitmap GetBitampFromFile(string path)
@@ -93,45 +85,24 @@ namespace Filling_Triangular_Mesh
 
         public Vector3 RgbToNormalVectorsArray(Color c)
         {
-            Vector3 a = new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
-            return a;
+            Vector3 v = new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
+            return v;
         }
 
+        private void ModifyNormalVectors()
+        {
+            var normalMapBitmap = GetBitampFromFile(_pathToNormalMap);
 
-        //private void ModifyNormalVectors()
-        //{
-        //    var normalMap = GetBitampFromFile(pathToNormalMap);
-        //    for (int f = 0; f < faces.Count(); ++f)
-        //    {
-        //        for (int idx = 0; idx < faces[f].vertices.Count(); ++idx)
-        //        {
-        //            //if (f == 420)
-        //            //{
-        //            //    bool dfd = false;
-        //            //}
-        //            //var aaa = normalMap.GetPixel((int)Math.Round(faces[f].vertices[idx].X), (int)Math.Round(faces[f].vertices[idx].Y));
-        //            double[,] NTexture = RgbToNormalVectorsArray(normalMap.GetPixel((int)Math.Round(faces[f].vertices[idx].X), (int)Math.Round(faces[f].vertices[idx].Y)));
-        //            Vector3 NSurface = faces[f].normals[idx];
-        //            //NSurface =
-        //            Utils.Normalize(NSurface);
-        //            Vector3 B;
-        //            if (AreTwoDoublesClose(NSurface.X, 0) && AreTwoDoublesClose(NSurface.Y, 0) && AreTwoDoublesClose(NSurface.Z, 1))
-        //            {
-        //                B = new Vector3(0, 1, 0);
-        //            }
-        //            else
-        //            {
-        //                B = CrossProduct(NSurface, new Vector3(0, 0, 1));
-        //            }
-        //            Vector3 T = CrossProduct(B, NSurface);
-        //            double[,] M = { { T.X, B.X, NSurface.X }, { T.Y, B.Y, NSurface.Y }, { T.Z, B.Z, NSurface.Z } };
-        //            var newNormalVector = MultiplyMatrix(M, NTexture);
-
-        //            //faces[f].normals[idx] = Utils.Normalize(new Vector3(newNormalVector[0, 0], newNormalVector[1, 0], newNormalVector[2, 0]));
-
-        //        }
-        //    }
-        //}
+            _normalMap = new Vector3[normalMapBitmap.Width, normalMapBitmap.Height];
+            for (int col = 0; col < normalMapBitmap.Width; col++)
+            {
+                for (int row = 0; row < normalMapBitmap.Height; row++)
+                {
+                    _normalMap[col, row] = RgbToNormalVectorsArray(normalMapBitmap.GetPixel(col, row));
+                }
+            }
+            normalMapBitmap.Dispose();
+        }
 
         private void PaintScene()
         {
@@ -146,39 +117,28 @@ namespace Filling_Triangular_Mesh
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
                 g.Clear(System.Drawing.Color.LightBlue);
-                g.FillEllipse(Brushes.Red, (int)lightSource.X, (int)lightSource.Y, 50, 50);
+                g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
             }
             bool xx = false;
-            if (xx)
-                for (int i = 0; i < faces.Count(); i++)
-                {
-                    fillPolygon.FillGridWithTriangles(0, 1, 1, interpolateNormalVector, lightSource, i);
-                    Canvas.Refresh();
 
-                }
-            else
-                fillPolygon.FillGridWithTriangles(kd, ks, m, interpolateNormalVector, lightSource, -1);
+            _fillPolygon.FillGridWithTriangles(kd, ks, m, interpolateNormalVector, _lightSource, -1);
 
             if (paintTriangulationCheckBox.Checked)
             {
-                DrawTriangulation(result);
+                DrawTriangulation(_result);
             }
-            //using (Graphics g = Graphics.FromImage(_drawArea))
-            //{
-            //    g.FillEllipse(Brushes.Blue, (int)origin.X - 25, (int)origin.Y - 25, 50, 50);
-            //    g.FillEllipse(Brushes.Blue, (int)origin.X - 25 + 300, (int)origin.Y - 25, 50, 50);
-            //}
             Canvas.Refresh();
 
         }
-        float maxX;
-        float maxY;
-        float maxZ;
-        float minX;
-        float minY;
-        float minZ;
+        
         private List<MyFace> GetAllFaces(LoadResult data)
         {
+            float maxX;
+            float maxY;
+            float maxZ;
+            float minX;
+            float minY;
+            float minZ;
             List<MyFace> faces = new List<MyFace>();
             foreach (var t in data.Groups)
             {
@@ -213,10 +173,7 @@ namespace Filling_Triangular_Mesh
             }
             return faces;
         }
-        //Vector3 ScaleVector3FromObjFile(Vector3 v)
-        //{
-        //Vector3 vv = new Vector3
-        //}
+
         PointF ToPointF(double x, double y)
         {
             return new PointF((float)x, (float)y);
@@ -281,29 +238,25 @@ namespace Filling_Triangular_Mesh
         {
             PaintScene();
         }
-        double r = 800;
-        int angle = 0;
-        int inc = -2;
+     
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             //var rse = RotatePoint(lightSource, origin, 3);
-            if (r < 40)
+            if (radius < minSpiralRadious|| radius > maxSpiralRadius)
             {
-                inc = -inc;
+                radiusIncrement = -radiusIncrement;
             }
-            if (inc > 1500)
-            {
-                inc = -inc;
-            }
+           
             //lightSource.X = (float)rse.Item1;
             //lightSource.Y = (float)rse.Item2;
-            double x = r * Math.Cos(angle * Math.PI / 180);
-            double y = r * Math.Sin(angle * Math.PI / 180);
-            angle += 3;
-            r += inc;
+            double x = radius * Math.Cos(angle * Math.PI / 180);
+            double y = radius * Math.Sin(angle * Math.PI / 180);
+            angle += angleIncrement;
+            radius  += radiusIncrement;
 
-            lightSource.X = x + origin.X;
-            lightSource.Y = y + origin.Y;
+            _lightSource.X = x + _origin.X;
+            _lightSource.Y = y + _origin.Y;
             PaintScene();
         }
         (double, double) RotatePoint(Vector3 pointToRotate, PointF centerPoint, double angleInDegrees)
@@ -319,7 +272,7 @@ namespace Filling_Triangular_Mesh
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var z = (double)zTrackBar.Value;
-            lightSource.Z = z;
+            _lightSource.Z = z;
             if (animationCheckBox.Checked == false)
             {
                 PaintScene();
@@ -349,12 +302,10 @@ namespace Filling_Triangular_Mesh
             {
                 return;
             }
-            var texture = GetBitampFromFile(pathToTexture);
+            var texture = GetBitampFromFile(_pathToTexture);
             var colorArray = ConvertBitmapToArray(texture);
-            fillPolygon.ChangeTexture(colorArray);
+            _fillPolygon.ChangeTexture(colorArray);
         }
-
-
         private void constColorRadioButton_Click(object sender, EventArgs e)
         {
             if (this.constColorRadioButton.Checked == false)
@@ -372,9 +323,8 @@ namespace Filling_Triangular_Mesh
             g.Clear(c);
             g.Dispose();
             var colorArray = ConvertBitmapToArray(bmp);
-            fillPolygon.ChangeTexture(colorArray);
+            _fillPolygon.ChangeTexture(colorArray);
         }
-
         private void selectObjButton_Click(object sender, EventArgs e)
         {
             var status = this.openFileDialog1.ShowDialog();
@@ -384,10 +334,9 @@ namespace Filling_Triangular_Mesh
                 return;
             }
 
-            pathToObjFile = this.openFileDialog1.FileName;
+            _pathToObjFile = this.openFileDialog1.FileName;
             GetAndSetObj();
         }
-
         private void changeLightColorButton_Click(object sender, EventArgs e)
         {
             var status = this.lightColorDialog.ShowDialog();
@@ -395,8 +344,8 @@ namespace Filling_Triangular_Mesh
             {
                 return;
             }
-            lighColor = this.lightColorDialog.Color;
-            fillPolygon.ChangeLighColor(lighColor);
+            _lighColor = this.lightColorDialog.Color;
+            _fillPolygon.ChangeLighColor(_lighColor);
         }
     }
 }

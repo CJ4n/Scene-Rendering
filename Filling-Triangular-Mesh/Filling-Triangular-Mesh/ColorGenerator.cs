@@ -85,15 +85,12 @@ namespace Filling_Triangular_Mesh
         private Vector3 ModifyNormalVector(Vector3 normalVersor,int x,int y)
         {
             Vector3 Ntextrue = normalMap[x, y];
-            //Utils.Normalize(Ntextrue);
-            if(double.IsNaN(Ntextrue.X) || double.IsNaN(Ntextrue.Y) || double.IsNaN(Ntextrue.Z))
-            {
-                return normalVersor;
-            }
+            Utils.Normalize(Ntextrue);
+
 
             Vector3 B;
-            if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0) &
-                Utils.AreTwoDoublesClose(normalVersor.Y, 1))
+            if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0) &&
+                Utils.AreTwoDoublesClose(normalVersor.Z, 1))
             {
                 B = new Vector3(0, 1, 0);
             }
@@ -110,7 +107,11 @@ namespace Filling_Triangular_Mesh
             double Z = T.Z * Ntextrue.X + B.Z * Ntextrue.Y + normalVersor.Z * Ntextrue.Z;
 
             Vector3 N = new Vector3(X, Y, Z);
-            //Utils.Normalize(N);
+            //if (double.IsNaN(N.X) || double.IsNaN(N.Y) || double.IsNaN(N.Z))
+            //{
+            //    return normalVersor;
+            //}
+            Utils.Normalize(N);
             return N;
         }
 
@@ -160,6 +161,8 @@ namespace Filling_Triangular_Mesh
                 Utils.Normalize(L);
 
                 Vector3 normalVector = BarycentricInterpolation(face.normals[0], face.normals[1], face.normals[2], x, y);
+
+                Vector3 copy = new Vector3(normalVector.X, normalVector.Y, normalVector.Z);
                 //normalVector = 
                 Utils.Normalize(normalVector);
                 normalVector = ModifyNormalVector(normalVector, x,y);
