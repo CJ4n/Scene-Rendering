@@ -1,6 +1,0 @@
-C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\ObjParser-master\ObjParser\bin\Debug\ObjParser.dll
-C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\ObjParser-master\ObjParser\bin\Debug\ObjParser.pdb
-C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\ObjParser-master\ObjParser\obj\Debug\ObjParser.csproj.AssemblyReference.cache
-C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\ObjParser-master\ObjParser\obj\Debug\ObjParser.csproj.CoreCompileInputs.cache
-C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\ObjParser-master\ObjParser\obj\Debug\ObjParser.dll
-C:\Users\YanPC\Desktop\Filling-Triangular-Mesh\ObjParser-master\ObjParser\obj\Debug\ObjParser.pdb

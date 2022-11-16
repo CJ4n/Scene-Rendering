@@ -30,7 +30,7 @@ namespace Filling_Triangular_Mesh
 
         private string _pathToNormalMap;// = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
         private List<MyFace> _faces;
-        private Vector3[,] _normalMap=null;
+        private Vector3[,] _normalMap = null;
         private MyColor[,] _myColorArray;
 
         private int _objectWidth = 600;
@@ -39,7 +39,7 @@ namespace Filling_Triangular_Mesh
         public Form1()
         {
             InitializeComponent();
-          _lightSource  = new Vector3(radius, 300, 2500);
+            _lightSource = new Vector3(radius, 300, 2500);
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 2, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Canvas.Image = _drawArea;
             //Bitmap bmp = GetBitampFromFile(pathToTexture);
@@ -129,7 +129,7 @@ namespace Filling_Triangular_Mesh
             Canvas.Refresh();
 
         }
-        
+
         private List<MyFace> GetAllFaces(LoadResult data)
         {
             float maxX;
@@ -237,22 +237,22 @@ namespace Filling_Triangular_Mesh
         {
             PaintScene();
         }
-     
+
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             //var rse = RotatePoint(lightSource, origin, 3);
-            if (radius < minSpiralRadious|| radius > maxSpiralRadius)
+            if (radius < minSpiralRadious || radius > maxSpiralRadius)
             {
                 radiusIncrement = -radiusIncrement;
             }
-           
+
             //lightSource.X = (float)rse.Item1;
             //lightSource.Y = (float)rse.Item2;
             double x = radius * Math.Cos(angle * Math.PI / 180);
             double y = radius * Math.Sin(angle * Math.PI / 180);
             angle += angleIncrement;
-            radius  += radiusIncrement;
+            radius += radiusIncrement;
 
             _lightSource.X = x + _origin.X;
             _lightSource.Y = y + _origin.Y;
