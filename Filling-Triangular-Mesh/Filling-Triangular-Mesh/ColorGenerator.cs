@@ -64,7 +64,7 @@ namespace Filling_Triangular_Mesh
         MyFace face;
         bool interpolateNormalVector;
         public ColorGenerator(MyFace face, float ks, float kd, int m, bool interpolateNormalVector,
-            Vector3 lightSourceVector, MyColor[,] texture, Color lightColor, Vector3[,] normalMap)
+            Vector3 lightSourceVector, MyColor[,] texture, Color lightColor, Vector3[,] normalMap=null)
         {
             this.kd = kd;
             this.ks = ks;
@@ -86,8 +86,6 @@ namespace Filling_Triangular_Mesh
         {
             Vector3 Ntextrue = normalMap[x, y];
             Utils.Normalize(Ntextrue);
-
-
             Vector3 B;
             if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0) &&
                 Utils.AreTwoDoublesClose(normalVersor.Z, 1))
@@ -99,6 +97,7 @@ namespace Filling_Triangular_Mesh
                 B = Utils.CrossProduct(normalVersor, new Vector3(0, 0, 1));
             }
             Utils.Normalize(B);
+
             Vector3 T = Utils.CrossProduct(B, normalVersor);
             Utils.Normalize(T);
 
@@ -107,10 +106,6 @@ namespace Filling_Triangular_Mesh
             double Z = T.Z * Ntextrue.X + B.Z * Ntextrue.Y + normalVersor.Z * Ntextrue.Z;
 
             Vector3 N = new Vector3(X, Y, Z);
-            //if (double.IsNaN(N.X) || double.IsNaN(N.Y) || double.IsNaN(N.Z))
-            //{
-            //    return normalVersor;
-            //}
             Utils.Normalize(N);
             return N;
         }
@@ -123,11 +118,10 @@ namespace Filling_Triangular_Mesh
             Vector3 normalVersor = face.normals[idx];
             Utils.Normalize(normalVersor);
 
-            normalVersor = ModifyNormalVector(normalVersor,(int) face.vertices[idx].X, (int)face.vertices[idx].Y);
-           
-            //normalVersor = N;
-
-
+            if (normalMap != null)
+            {
+                normalVersor = ModifyNormalVector(normalVersor, (int)face.vertices[idx].X, (int)face.vertices[idx].Y);
+            }
             Vector3 R = 2 * Utils.DotProduct(normalVersor, L) * normalVersor - L;
             //R = Utils.Normalize(R);
 
@@ -165,8 +159,10 @@ namespace Filling_Triangular_Mesh
                 Vector3 copy = new Vector3(normalVector.X, normalVector.Y, normalVector.Z);
                 //normalVector = 
                 Utils.Normalize(normalVector);
-                normalVector = ModifyNormalVector(normalVector, x,y);
-
+                if (normalMap != null)
+                {
+                    normalVector = ModifyNormalVector(normalVector, x, y);
+                }
                 Vector3 R = 2 * Utils.DotProduct(normalVector, L) * normalVector - L;
                 //R =
                 Utils.Normalize(R);

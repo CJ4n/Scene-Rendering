@@ -54,6 +54,7 @@
             this.surfaceColorDialog = new System.Windows.Forms.ColorDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.lightColorDialog = new System.Windows.Forms.ColorDialog();
+            this.modifyNormalVectorsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -97,6 +98,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.modifyNormalVectorsButton);
             this.groupBox1.Controls.Add(this.changeLightColorButton);
             this.groupBox1.Controls.Add(this.selectObjButton);
             this.groupBox1.Controls.Add(this.interpolationGroupBox);
@@ -121,9 +123,9 @@
             // 
             // changeLightColorButton
             // 
-            this.changeLightColorButton.Location = new System.Drawing.Point(2, 711);
+            this.changeLightColorButton.Location = new System.Drawing.Point(10, 712);
             this.changeLightColorButton.Name = "changeLightColorButton";
-            this.changeLightColorButton.Size = new System.Drawing.Size(175, 29);
+            this.changeLightColorButton.Size = new System.Drawing.Size(200, 29);
             this.changeLightColorButton.TabIndex = 17;
             this.changeLightColorButton.Text = "Change Light Color";
             this.changeLightColorButton.UseVisualStyleBackColor = true;
@@ -133,7 +135,7 @@
             // 
             this.selectObjButton.Location = new System.Drawing.Point(10, 654);
             this.selectObjButton.Name = "selectObjButton";
-            this.selectObjButton.Size = new System.Drawing.Size(184, 29);
+            this.selectObjButton.Size = new System.Drawing.Size(200, 29);
             this.selectObjButton.TabIndex = 16;
             this.selectObjButton.Text = "Select OBJ FIle";
             this.selectObjButton.UseVisualStyleBackColor = true;
@@ -333,6 +335,16 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // modifyNormalVectorsButton
+            // 
+            this.modifyNormalVectorsButton.Location = new System.Drawing.Point(10, 765);
+            this.modifyNormalVectorsButton.Name = "modifyNormalVectorsButton";
+            this.modifyNormalVectorsButton.Size = new System.Drawing.Size(200, 29);
+            this.modifyNormalVectorsButton.TabIndex = 18;
+            this.modifyNormalVectorsButton.Text = "Modify Normal Vectors";
+            this.modifyNormalVectorsButton.UseVisualStyleBackColor = true;
+            this.modifyNormalVectorsButton.Click += new System.EventHandler(this.modifyNormalVectorsButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -387,5 +399,6 @@
         private OpenFileDialog openFileDialog1;
         private ColorDialog lightColorDialog;
         private Button changeLightColorButton;
+        private Button modifyNormalVectorsButton;
     }
 }

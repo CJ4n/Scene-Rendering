@@ -28,9 +28,9 @@ namespace Filling_Triangular_Mesh
         private string _pathToObjFile = "..\\..\\..\\..\\..\\smoothv2.obj";
         //string _pathToObjFile = "..\\..\\..\\..\\..\\SemiTorus.obj";
 
-        private string _pathToNormalMap = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
+        private string _pathToNormalMap;// = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
         private List<MyFace> _faces;
-        private Vector3[,] _normalMap;
+        private Vector3[,] _normalMap=null;
         private MyColor[,] _myColorArray;
 
         private int _objectWidth = 600;
@@ -50,7 +50,6 @@ namespace Filling_Triangular_Mesh
             _color = bmp;
             _myColorArray = ConvertBitmapToArray(bmp);
 
-            ModifyNormalVectors();
             GetAndSetObj();
             PaintScene();
         }
@@ -346,6 +345,20 @@ namespace Filling_Triangular_Mesh
             }
             _lighColor = this.lightColorDialog.Color;
             _fillPolygon.ChangeLighColor(_lighColor);
+        }
+
+        private void modifyNormalVectorsButton_Click(object sender, EventArgs e)
+        {
+            var status = this.openFileDialog1.ShowDialog();
+
+            if (status != DialogResult.OK)
+            {
+                return;
+            }
+
+            _pathToNormalMap = this.openFileDialog1.FileName;
+            ModifyNormalVectors();
+            GetAndSetObj();
         }
     }
 }
