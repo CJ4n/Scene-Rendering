@@ -58,16 +58,6 @@ namespace Filling_Triangular_Mesh
                     var colorGenerator = new ColorGenerator(_faces[i], ks, kd, m, interpolateNormalVector, lightSource, _colorMap, _lighColor, _normalMap);
                     FillPolygon(polygon, colorGenerator, snoop);
                 });
-
-                //for (int i = 0; i < grid.Count; ++i)
-                //{
-                //    var triangle = new List<Point> { new Point((int)grid[i].vertices[0].X, (int)grid[i].vertices[0].Y),
-                //                         new Point((int)grid[i].vertices[1].X, (int)grid[i].vertices[1].Y),
-                //                         new Point((int)grid[i].vertices[2].X, (int)grid[i].vertices[2].Y)};
-                //    var gen = new ColorGenerator(grid[i], ks, kd, m, interpolateNormalVector, lightSource, texture, ,lighColor);
-
-                //    FillTriangle(triangle, gen, snoop);
-                //}
             }
         }
 

@@ -34,10 +34,10 @@ namespace Filling_Triangular_Mesh
             {
                 b = 1;
             }
-            if ((r < 0 || r > 1) || (g < 0 || g > 1) || (b < 0 || b > 1))
-            {
-                throw new Exception("color outside of range [0,1]");
-            }
+            //if ((r < 0 || r > 1) || (g < 0 || g > 1) || (b < 0 || b > 1))
+            //{
+            //    throw new Exception("color outside of range [0,1]");
+            //}
             R = r;
             G = g;
             B = b;

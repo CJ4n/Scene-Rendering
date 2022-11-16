@@ -5,17 +5,17 @@ namespace Filling_Triangular_Mesh
 {
     public partial class Form1 : Form
     {
-        private string _pathToColorMap = "..\\..\\..\\..\\..\\1234.jpg";
-        private string _pathToObjFile = "..\\..\\..\\..\\..\\smoothv2.obj";
+        private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
+        private string _pathToObjFile = "..\\..\\..\\..\\..\\SemiSphere.obj";
         private string _pathToNormalMap = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
 
         private Vector3 _lightSource;
         private PointF _origin = new PointF(300, 300);
-        private int _radius = 3000;
+        private int _radius = 1000;
         private int _angle = 0;
-        private int _radiusIncrement = -2;
+        private int _radiusIncrement = -10;
         private int _angleIncrement = 3;
-        private int _maxSpiralRadius = 5000;
+        private int _maxSpiralRadius = 1000;
         private int _minSpiralRadious = 40;
 
         private Bitmap _drawArea;
