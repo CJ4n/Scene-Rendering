@@ -1,82 +1,85 @@
 ﻿namespace Filling_Triangular_Mesh
 {
-    class ScanLine
+    public class ScanLine
     {
-        private readonly List<AETPointer> AET;
-        private readonly Stack<int> sortedInd;
-        private readonly List<Point> polygon;
+        private List<AETPointer> _AET;
+        private Stack<int> _sortedIdx;
+        private List<Point> _polygon;
 
         public ScanLine(List<Point> polygon)
         {
-            AET = new List<AETPointer>();
-            this.polygon = polygon;
+            _AET = new List<AETPointer>();
+            this._polygon = polygon;
 
-            sortedInd = new Stack<int>(polygon.Select((p, i) => new KeyValuePair<Point, int>(p, i)).
+            _sortedIdx = new Stack<int>(polygon.Select((point, idx) => new KeyValuePair<Point, int>(point, idx)).
                 OrderByDescending(pair => pair.Key.Y).
                 Select(pair => pair.Value));
         }
-        public IEnumerable<(List<int> xList, int y)> GetIntersectionPoints()
+        public List<(List<int>, int)> GetIntersectionPoints()
         {
-            int yMin = (int)polygon[sortedInd.Peek()].Y;
-            int yMax = (int)polygon[sortedInd.Last()].Y;
+            List<(List<int> xList, int y)> outList = new List<(List<int>, int)>();
+            int yMin = (int)_polygon[_sortedIdx.Peek()].Y;
+            int yMax = (int)_polygon[_sortedIdx.Last()].Y;
             var mockPointer = new AETPointer(0, 0, 0);
+
             for (int y = yMin + 1; y <= yMax; ++y)
             {
-                while (sortedInd.Count > 0 && polygon[sortedInd.Peek()].Y == y - 1)
+                while (_sortedIdx.Count > 0 && _polygon[_sortedIdx.Peek()].Y == y - 1)
                 {
-                    var ind = sortedInd.Pop();
-                    var current = polygon[ind];
-                    var prev = polygon[(ind - 1 + polygon.Count) % polygon.Count];
-                    if (prev.Y > current.Y)
+                    var idx = _sortedIdx.Pop();
+                    var currentPoint = _polygon[idx];
+                    var prevPoint = _polygon[(idx - 1 + _polygon.Count) % _polygon.Count];
+                    if (prevPoint.Y > currentPoint.Y)
                     {
-                        AET.Add(new AETPointer(prev.Y, current.X, Utils.Slope(current, prev)));
+                        _AET.Add(new AETPointer(prevPoint.Y, currentPoint.X, Utils.Slope(currentPoint, prevPoint)));
                     }
-                    else if (prev.Y < current.Y)
+                    else if (prevPoint.Y < currentPoint.Y)
                     {
-                        mockPointer.x = prev.X;
-                        mockPointer.yMax = (int)prev.Y;
-                        AET.Remove(mockPointer);
+                        mockPointer.x = prevPoint.X;
+                        mockPointer.yMax = (int)prevPoint.Y;
+                        _AET.Remove(mockPointer);
                     }
 
-                    var next = polygon[(ind + 1) % polygon.Count];
-                    if (next.Y > current.Y)
+                    var nextPoint = _polygon[(idx + 1) % _polygon.Count];
+                    if (nextPoint.Y > currentPoint.Y)
                     {
-                        AET.Add(new AETPointer(next.Y, current.X, Utils.Slope(current, next)));
+                        _AET.Add(new AETPointer(nextPoint.Y, currentPoint.X, Utils.Slope(currentPoint, nextPoint)));
                     }
-                    else if (next.Y < current.Y)
+                    else if (nextPoint.Y < currentPoint.Y)
                     {
-                        mockPointer.x = next.X;
-                        mockPointer.yMax = (int)next.Y;
-                        AET.Remove(mockPointer);
+                        mockPointer.x = nextPoint.X;
+                        mockPointer.yMax = (int)nextPoint.Y;
+                        _AET.Remove(mockPointer);
                     }
                 }
 
-                yield return (AET.Select(ptr => ptr.X).OrderBy(x => x).ToList(), y);
+                outList.Add((_AET.Select(ptr => ptr.X).OrderBy(x => x).ToList(), y));
 
-                AET.RemoveAll((ptr) => ptr.yMax <= y);
-                foreach (var ptr in AET)
+                _AET.RemoveAll((ptr) => ptr.yMax <= y);
+                foreach (var ptr in _AET)
                 {
                     ptr.Update();
                 }
             }
+            return outList;
         }
     }
-    class AETPointer : IComparable<AETPointer>
+    public class AETPointer : IComparable<AETPointer>
     {
         public int yMax;
         public double x;
-        public double m;
+        private double _slope;
 
-        public AETPointer(double yMax, double x, double m)
+        public AETPointer(double yMax, double x, double slope)
         {
             this.yMax = (int)yMax;
             this.x = x;
-            this.m = 1.0 / m;
+            this._slope = 1.0 / slope;
         }
         public int X { get => (int)Math.Round(x); }
         public void Update()
         {
-            x = m == Utils.Infinity ? Utils.Infinity : x + m;
+            x = _slope == Utils.Infinity ? Utils.Infinity : x + _slope;
         }
         public int CompareTo(AETPointer other)
         {

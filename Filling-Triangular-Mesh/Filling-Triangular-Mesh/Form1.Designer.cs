@@ -32,13 +32,15 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.modifyNormalMapcheckBox = new System.Windows.Forms.CheckBox();
+            this.loadNormalMapButton = new System.Windows.Forms.Button();
             this.changeLightColorButton = new System.Windows.Forms.Button();
-            this.selectObjButton = new System.Windows.Forms.Button();
+            this.loadObjFileButton = new System.Windows.Forms.Button();
             this.interpolationGroupBox = new System.Windows.Forms.GroupBox();
             this.normalRadioButton = new System.Windows.Forms.RadioButton();
             this.colorRadioButton = new System.Windows.Forms.RadioButton();
             this.ColorGroupBox = new System.Windows.Forms.GroupBox();
-            this.textureColorRadioButton = new System.Windows.Forms.RadioButton();
+            this.bitmapColorRadioButton = new System.Windows.Forms.RadioButton();
             this.constColorRadioButton = new System.Windows.Forms.RadioButton();
             this.paintTriangulationCheckBox = new System.Windows.Forms.CheckBox();
             this.animationCheckBox = new System.Windows.Forms.CheckBox();
@@ -54,7 +56,6 @@
             this.surfaceColorDialog = new System.Windows.Forms.ColorDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.lightColorDialog = new System.Windows.Forms.ColorDialog();
-            this.modifyNormalVectorsButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -98,9 +99,10 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.modifyNormalVectorsButton);
+            this.groupBox1.Controls.Add(this.modifyNormalMapcheckBox);
+            this.groupBox1.Controls.Add(this.loadNormalMapButton);
             this.groupBox1.Controls.Add(this.changeLightColorButton);
-            this.groupBox1.Controls.Add(this.selectObjButton);
+            this.groupBox1.Controls.Add(this.loadObjFileButton);
             this.groupBox1.Controls.Add(this.interpolationGroupBox);
             this.groupBox1.Controls.Add(this.ColorGroupBox);
             this.groupBox1.Controls.Add(this.paintTriangulationCheckBox);
@@ -121,25 +123,46 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
             // 
+            // modifyNormalMapcheckBox
+            // 
+            this.modifyNormalMapcheckBox.AutoSize = true;
+            this.modifyNormalMapcheckBox.Location = new System.Drawing.Point(10, 811);
+            this.modifyNormalMapcheckBox.Name = "modifyNormalMapcheckBox";
+            this.modifyNormalMapcheckBox.Size = new System.Drawing.Size(222, 24);
+            this.modifyNormalMapcheckBox.TabIndex = 19;
+            this.modifyNormalMapcheckBox.Text = "Use Modifed Normal Vectors";
+            this.modifyNormalMapcheckBox.UseVisualStyleBackColor = true;
+            this.modifyNormalMapcheckBox.CheckedChanged += new System.EventHandler(this.modifyNormalMapcheckBox_CheckedChanged);
+            // 
+            // loadNormalMapButton
+            // 
+            this.loadNormalMapButton.Location = new System.Drawing.Point(10, 765);
+            this.loadNormalMapButton.Name = "loadNormalMapButton";
+            this.loadNormalMapButton.Size = new System.Drawing.Size(216, 29);
+            this.loadNormalMapButton.TabIndex = 18;
+            this.loadNormalMapButton.Text = "Load Normal Map";
+            this.loadNormalMapButton.UseVisualStyleBackColor = true;
+            this.loadNormalMapButton.Click += new System.EventHandler(this.loadNormalMapButton_Click);
+            // 
             // changeLightColorButton
             // 
             this.changeLightColorButton.Location = new System.Drawing.Point(10, 712);
             this.changeLightColorButton.Name = "changeLightColorButton";
-            this.changeLightColorButton.Size = new System.Drawing.Size(200, 29);
+            this.changeLightColorButton.Size = new System.Drawing.Size(216, 29);
             this.changeLightColorButton.TabIndex = 17;
             this.changeLightColorButton.Text = "Change Light Color";
             this.changeLightColorButton.UseVisualStyleBackColor = true;
-            this.changeLightColorButton.Click += new System.EventHandler(this.ChangeLightColorButton_Click);
+            this.changeLightColorButton.Click += new System.EventHandler(this.changeLightColorButton_Click);
             // 
-            // selectObjButton
+            // loadObjFileButton
             // 
-            this.selectObjButton.Location = new System.Drawing.Point(10, 654);
-            this.selectObjButton.Name = "selectObjButton";
-            this.selectObjButton.Size = new System.Drawing.Size(200, 29);
-            this.selectObjButton.TabIndex = 16;
-            this.selectObjButton.Text = "Select OBJ FIle";
-            this.selectObjButton.UseVisualStyleBackColor = true;
-            this.selectObjButton.Click += new System.EventHandler(this.SelectObjButton_Click);
+            this.loadObjFileButton.Location = new System.Drawing.Point(10, 654);
+            this.loadObjFileButton.Name = "loadObjFileButton";
+            this.loadObjFileButton.Size = new System.Drawing.Size(216, 29);
+            this.loadObjFileButton.TabIndex = 16;
+            this.loadObjFileButton.Text = "Load OBJ FIle";
+            this.loadObjFileButton.UseVisualStyleBackColor = true;
+            this.loadObjFileButton.Click += new System.EventHandler(this.loadObjFileButton_Click);
             // 
             // interpolationGroupBox
             // 
@@ -160,27 +183,27 @@
             this.normalRadioButton.Checked = true;
             this.normalRadioButton.Location = new System.Drawing.Point(18, 26);
             this.normalRadioButton.Name = "normalRadioButton";
-            this.normalRadioButton.Size = new System.Drawing.Size(205, 24);
+            this.normalRadioButton.Size = new System.Drawing.Size(209, 24);
             this.normalRadioButton.TabIndex = 6;
             this.normalRadioButton.TabStop = true;
-            this.normalRadioButton.Text = "Interpolate normal vectors";
+            this.normalRadioButton.Text = "Interpolate Normal Vectors";
             this.normalRadioButton.UseVisualStyleBackColor = true;
-            this.normalRadioButton.CheckedChanged += new System.EventHandler(this.NormalRadioButton_CheckedChanged);
+            this.normalRadioButton.CheckedChanged += new System.EventHandler(this.normalRadioButton_CheckedChanged);
             // 
             // colorRadioButton
             // 
             this.colorRadioButton.AutoSize = true;
             this.colorRadioButton.Location = new System.Drawing.Point(18, 56);
             this.colorRadioButton.Name = "colorRadioButton";
-            this.colorRadioButton.Size = new System.Drawing.Size(141, 24);
+            this.colorRadioButton.Size = new System.Drawing.Size(143, 24);
             this.colorRadioButton.TabIndex = 7;
-            this.colorRadioButton.Text = "Interpolate color";
+            this.colorRadioButton.Text = "Interpolate Color";
             this.colorRadioButton.UseVisualStyleBackColor = true;
-            this.colorRadioButton.CheckedChanged += new System.EventHandler(this.ColorRadioButton_CheckedChanged);
+            this.colorRadioButton.CheckedChanged += new System.EventHandler(this.colorRadioButton_CheckedChanged);
             // 
             // ColorGroupBox
             // 
-            this.ColorGroupBox.Controls.Add(this.textureColorRadioButton);
+            this.ColorGroupBox.Controls.Add(this.bitmapColorRadioButton);
             this.ColorGroupBox.Controls.Add(this.constColorRadioButton);
             this.ColorGroupBox.Location = new System.Drawing.Point(2, 452);
             this.ColorGroupBox.Name = "ColorGroupBox";
@@ -189,29 +212,29 @@
             this.ColorGroupBox.TabStop = false;
             this.ColorGroupBox.Text = "Color";
             // 
-            // textureColorRadioButton
+            // bitmapColorRadioButton
             // 
-            this.textureColorRadioButton.AutoSize = true;
-            this.textureColorRadioButton.Location = new System.Drawing.Point(21, 26);
-            this.textureColorRadioButton.Name = "textureColorRadioButton";
-            this.textureColorRadioButton.Size = new System.Drawing.Size(154, 24);
-            this.textureColorRadioButton.TabIndex = 14;
-            this.textureColorRadioButton.Text = "Color from Texture";
-            this.textureColorRadioButton.UseVisualStyleBackColor = true;
-            this.textureColorRadioButton.CheckedChanged += new System.EventHandler(this.TextureColorRadioButton_CheckedChanged);
+            this.bitmapColorRadioButton.AutoSize = true;
+            this.bitmapColorRadioButton.Checked = true;
+            this.bitmapColorRadioButton.Location = new System.Drawing.Point(21, 26);
+            this.bitmapColorRadioButton.Name = "bitmapColorRadioButton";
+            this.bitmapColorRadioButton.Size = new System.Drawing.Size(156, 24);
+            this.bitmapColorRadioButton.TabIndex = 14;
+            this.bitmapColorRadioButton.TabStop = true;
+            this.bitmapColorRadioButton.Text = "Color From Bitmap";
+            this.bitmapColorRadioButton.UseVisualStyleBackColor = true;
+            this.bitmapColorRadioButton.Click += new System.EventHandler(this.bitmapColorRadioButton_Click);
             // 
             // constColorRadioButton
             // 
             this.constColorRadioButton.AutoSize = true;
-            this.constColorRadioButton.Checked = true;
             this.constColorRadioButton.Location = new System.Drawing.Point(21, 56);
             this.constColorRadioButton.Name = "constColorRadioButton";
             this.constColorRadioButton.Size = new System.Drawing.Size(128, 24);
             this.constColorRadioButton.TabIndex = 13;
-            this.constColorRadioButton.TabStop = true;
             this.constColorRadioButton.Text = "Constant Color";
             this.constColorRadioButton.UseVisualStyleBackColor = true;
-            this.constColorRadioButton.Click += new System.EventHandler(this.ConstColorRadioButton_Click);
+            this.constColorRadioButton.Click += new System.EventHandler(this.constColorRadioButton_Click);
             // 
             // paintTriangulationCheckBox
             // 
@@ -220,11 +243,11 @@
             this.paintTriangulationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.paintTriangulationCheckBox.Location = new System.Drawing.Point(10, 571);
             this.paintTriangulationCheckBox.Name = "paintTriangulationCheckBox";
-            this.paintTriangulationCheckBox.Size = new System.Drawing.Size(152, 24);
+            this.paintTriangulationCheckBox.Size = new System.Drawing.Size(154, 24);
             this.paintTriangulationCheckBox.TabIndex = 11;
-            this.paintTriangulationCheckBox.Text = "Paint triangulation";
+            this.paintTriangulationCheckBox.Text = "Paint Triangulation";
             this.paintTriangulationCheckBox.UseVisualStyleBackColor = true;
-            this.paintTriangulationCheckBox.CheckedChanged += new System.EventHandler(this.PaintTriangulationCheckBox_CheckedChanged);
+            this.paintTriangulationCheckBox.CheckedChanged += new System.EventHandler(this.paintTriangulationCheckBox_CheckedChanged);
             // 
             // animationCheckBox
             // 
@@ -237,7 +260,7 @@
             this.animationCheckBox.TabIndex = 10;
             this.animationCheckBox.Text = "Animation";
             this.animationCheckBox.UseVisualStyleBackColor = true;
-            this.animationCheckBox.CheckedChanged += new System.EventHandler(this.AnimationCheckBox_CheckedChanged);
+            this.animationCheckBox.CheckedChanged += new System.EventHandler(this.animationCheckBox_CheckedChanged);
             // 
             // zLabel
             // 
@@ -256,7 +279,7 @@
             this.zTrackBar.Size = new System.Drawing.Size(234, 56);
             this.zTrackBar.TabIndex = 8;
             this.zTrackBar.Value = 700;
-            this.zTrackBar.ValueChanged += new System.EventHandler(this.ZTrackBar_ValueChanged);
+            this.zTrackBar.ValueChanged += new System.EventHandler(this.zTrackBar_ValueChanged);
             // 
             // kdLabel
             // 
@@ -297,7 +320,7 @@
             this.mTrackBar.TabIndex = 2;
             this.mTrackBar.TickFrequency = 10;
             this.mTrackBar.Value = 50;
-            this.mTrackBar.ValueChanged += new System.EventHandler(this.MTrackBar_ValueChanged);
+            this.mTrackBar.ValueChanged += new System.EventHandler(this.mTrackBar_ValueChanged);
             // 
             // ksTrackBar
             // 
@@ -310,7 +333,7 @@
             this.ksTrackBar.TabIndex = 1;
             this.ksTrackBar.TickFrequency = 10;
             this.ksTrackBar.Value = 50;
-            this.ksTrackBar.ValueChanged += new System.EventHandler(this.KsTrackBar_ValueChanged);
+            this.ksTrackBar.ValueChanged += new System.EventHandler(this.ksTrackBar_ValueChanged);
             // 
             // kdTrackBar
             // 
@@ -323,27 +346,17 @@
             this.kdTrackBar.TabIndex = 0;
             this.kdTrackBar.TickFrequency = 10;
             this.kdTrackBar.Value = 50;
-            this.kdTrackBar.ValueChanged += new System.EventHandler(this.KdTrackBar_ValueChanged);
+            this.kdTrackBar.ValueChanged += new System.EventHandler(this.kdTrackBar_ValueChanged);
             // 
             // animationTimer
             // 
             this.animationTimer.Enabled = true;
             this.animationTimer.Interval = 50;
-            this.animationTimer.Tick += new System.EventHandler(this.Timer1_Tick);
+            this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // modifyNormalVectorsButton
-            // 
-            this.modifyNormalVectorsButton.Location = new System.Drawing.Point(10, 765);
-            this.modifyNormalVectorsButton.Name = "modifyNormalVectorsButton";
-            this.modifyNormalVectorsButton.Size = new System.Drawing.Size(200, 29);
-            this.modifyNormalVectorsButton.TabIndex = 18;
-            this.modifyNormalVectorsButton.Text = "Modify Normal Vectors";
-            this.modifyNormalVectorsButton.UseVisualStyleBackColor = true;
-            this.modifyNormalVectorsButton.Click += new System.EventHandler(this.ModifyNormalVectorsButton_Click);
             // 
             // Form1
             // 
@@ -391,14 +404,15 @@
         private CheckBox animationCheckBox;
         private CheckBox paintTriangulationCheckBox;
         private ColorDialog surfaceColorDialog;
-        private RadioButton textureColorRadioButton;
+        private RadioButton bitmapColorRadioButton;
         private RadioButton constColorRadioButton;
         private GroupBox interpolationGroupBox;
         private GroupBox ColorGroupBox;
-        private Button selectObjButton;
+        private Button loadObjFileButton;
         private OpenFileDialog openFileDialog1;
         private ColorDialog lightColorDialog;
         private Button changeLightColorButton;
-        private Button modifyNormalVectorsButton;
+        private Button loadNormalMapButton;
+        private CheckBox modifyNormalMapcheckBox;
     }
 }

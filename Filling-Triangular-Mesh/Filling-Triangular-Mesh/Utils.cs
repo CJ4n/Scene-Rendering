@@ -45,6 +45,11 @@ namespace Filling_Triangular_Mesh
         {
             return Math.Abs(p1.X - p2.X) < Utils.Eps ? Utils.Infinity : (double)(p2.Y - p1.Y) / (double)(p2.X - p1.X);
         }
+        public static double TrinagelArea(Vector3 v1, Vector3 v2)
+        {
+            double Z = v1.X * v2.Y - v2.X * v1.Y;
+            return Math.Sqrt(Z * Z) / 2;
+        }
     }
 }
 

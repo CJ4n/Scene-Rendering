@@ -16,11 +16,11 @@ namespace Filling_Triangular_Mesh
             get { return _colorMap; }
             set { _colorMap = value; }
         }
-        private Color lighColor;
+        private Color _lighColor;
         public Color LighColor
         {
-            get { return lighColor; }
-            set { lighColor = value; }
+            get { return _lighColor; }
+            set { _lighColor = value; }
         }
         private List<MyFace> _faces;
         public List<MyFace> Faces
@@ -42,21 +42,21 @@ namespace Filling_Triangular_Mesh
             this._faces = faces;
             this._colorMap = colorMap;
             _bitmapWidth = drawarea.Width;
-            lighColor = lightColor;
+            _lighColor = lightColor;
             this._normalMap = normalMap;
         }
 
-        public void FillGridWithTriangles(float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource)
+        public void FillEachFace(float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource)
         {
             using (var snoop = new BmpPixelSnoop(_drawarea))
             {
                 Parallel.For(0, _faces.Count, i =>
                 {
-                    var triangle = new List<Point> { new Point((int)_faces[i].vertices[0].X, (int)_faces[i].vertices[0].Y),
+                    var polygon = new List<Point> { new Point((int)_faces[i].vertices[0].X, (int)_faces[i].vertices[0].Y),
                                                  new Point((int)_faces[i].vertices[1].X, (int)_faces[i].vertices[1].Y),
                                                  new Point((int)_faces[i].vertices[2].X, (int)_faces[i].vertices[2].Y)};
-                    var gen = new ColorGenerator(_faces[i], ks, kd, m, interpolateNormalVector, lightSource, _colorMap, lighColor, _normalMap);
-                    FillTriangle(triangle, gen, snoop);
+                    var colorGenerator = new ColorGenerator(_faces[i], ks, kd, m, interpolateNormalVector, lightSource, _colorMap, _lighColor, _normalMap);
+                    FillPolygon(polygon, colorGenerator, snoop);
                 });
 
                 //for (int i = 0; i < grid.Count; ++i)
@@ -71,9 +71,9 @@ namespace Filling_Triangular_Mesh
             }
         }
 
-        private void FillTriangle(List<Point> triangle, ColorGenerator colorGenerator, BmpPixelSnoop snoop)
+        private void FillPolygon(List<Point> polygon, ColorGenerator colorGenerator, BmpPixelSnoop snoop)
         {
-            var scanLine = new ScanLine(triangle);
+            var scanLine = new ScanLine(polygon);
 
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
