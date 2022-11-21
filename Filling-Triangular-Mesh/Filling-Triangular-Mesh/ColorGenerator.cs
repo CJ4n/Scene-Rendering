@@ -120,7 +120,6 @@ namespace Filling_Triangular_Mesh
 
             Vector3 normalVector = BarycentricInterpolation(_face.normals[0], _face.normals[1], _face.normals[2], x, y);
             Utils.Normalize(normalVector);
-
             if (_normalMap != null)
             {
                 normalVector = ModifyNormalVector(normalVector, x, y);
