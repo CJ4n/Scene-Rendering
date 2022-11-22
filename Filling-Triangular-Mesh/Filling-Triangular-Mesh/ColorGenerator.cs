@@ -128,7 +128,7 @@ namespace Filling_Triangular_Mesh
             _R.X = 2 * dotProduct * normalVector.X - _L.X;
             _R.Y = 2 * dotProduct * normalVector.Y - _L.Y;
             _R.Z = 2 * dotProduct * normalVector.Z - _L.Z;
-            //Utils.Normalize(R);
+            //Utils.Normalize(_R);
 
             double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
             double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, _L));
@@ -137,6 +137,9 @@ namespace Filling_Triangular_Mesh
             double r = _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
             double g = _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
             double b = _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
+            r = Math.Min(r, 1);
+            g = Math.Min(g, 1);
+            b = Math.Min(b, 1);
             Color color = Color.FromArgb(255, (int)(r * 255), (int)(g * 255), (int)(b * 255));
             return color;
         }
