@@ -32,6 +32,9 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.kaLabel = new System.Windows.Forms.Label();
+            this.kaTrackBar = new System.Windows.Forms.TrackBar();
             this.modifyNormalMapcheckBox = new System.Windows.Forms.CheckBox();
             this.loadNormalMapButton = new System.Windows.Forms.Button();
             this.changeLightColorButton = new System.Windows.Forms.Button();
@@ -62,6 +65,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kaTrackBar)).BeginInit();
             this.interpolationGroupBox.SuspendLayout();
             this.ColorGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.zTrackBar)).BeginInit();
@@ -99,6 +103,9 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.kaLabel);
+            this.groupBox1.Controls.Add(this.kaTrackBar);
             this.groupBox1.Controls.Add(this.modifyNormalMapcheckBox);
             this.groupBox1.Controls.Add(this.loadNormalMapButton);
             this.groupBox1.Controls.Add(this.changeLightColorButton);
@@ -122,6 +129,36 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(31, 918);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(112, 24);
+            this.checkBox1.TabIndex = 22;
+            this.checkBox1.Text = "Paint cloude";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
+            // kaLabel
+            // 
+            this.kaLabel.AutoSize = true;
+            this.kaLabel.Location = new System.Drawing.Point(6, 839);
+            this.kaLabel.Name = "kaLabel";
+            this.kaLabel.Size = new System.Drawing.Size(27, 20);
+            this.kaLabel.TabIndex = 21;
+            this.kaLabel.Text = "ka:";
+            // 
+            // kaTrackBar
+            // 
+            this.kaTrackBar.Location = new System.Drawing.Point(1, 862);
+            this.kaTrackBar.Maximum = 100;
+            this.kaTrackBar.Name = "kaTrackBar";
+            this.kaTrackBar.Size = new System.Drawing.Size(130, 56);
+            this.kaTrackBar.TabIndex = 20;
+            this.kaTrackBar.Value = 10;
+            this.kaTrackBar.ValueChanged += new System.EventHandler(this.kaTrackBar_ValueChanged);
             // 
             // modifyNormalMapcheckBox
             // 
@@ -373,6 +410,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.kaTrackBar)).EndInit();
             this.interpolationGroupBox.ResumeLayout(false);
             this.interpolationGroupBox.PerformLayout();
             this.ColorGroupBox.ResumeLayout(false);
@@ -414,5 +452,8 @@
         private Button changeLightColorButton;
         private Button loadNormalMapButton;
         private CheckBox modifyNormalMapcheckBox;
+        private TrackBar kaTrackBar;
+        private Label kaLabel;
+        private CheckBox checkBox1;
     }
 }

@@ -40,8 +40,53 @@ namespace Filling_Triangular_Mesh
             var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
             _colorMap = ConvertBitmapToArray(colorMapBitmap);
             GetAndSetObj();
+            InitCloude();
+            InitShadow();
             PaintScene();
         }
+
+        PolygonFiller cloudGenerator;
+        MyColor[,] cloudeColorMap;
+        List<Point> cloude;
+        int zCloude = 350;
+        private void InitCloude()
+        {
+            var colorMapBitmapCloude = new Bitmap(_drawArea.Width, _drawArea.Height);
+            using (Graphics g = Graphics.FromImage(colorMapBitmapCloude))
+            {
+                g.Clear(Color.Blue);
+            }
+            cloudeColorMap = ConvertBitmapToArray(colorMapBitmapCloude);
+            cloudGenerator = new PolygonFiller(_drawArea, null, cloudeColorMap, _lighColor, null);
+            cloude = new List<Point>();
+            cloude.Add(new Point(250, 200));
+            cloude.Add(new Point(100, 500));
+            cloude.Add(new Point(300, 500));
+            cloude.Add(new Point(400, 200));
+            cloude.Add(new Point(200, 100));
+
+        }
+        PolygonFiller shadowGenerator;
+        MyColor[,] shadowColorMap;
+        List<Point> shadow;
+        private void InitShadow()
+        {
+            var colorMapBitmapShadow = new Bitmap(_drawArea.Width, _drawArea.Height);
+            using (Graphics g = Graphics.FromImage(colorMapBitmapShadow))
+            {
+                var ambient =(int) ((double)kaTrackBar.Value/100.0*255.0);
+                g.Clear(Color.FromArgb(255,ambient,ambient, ambient));
+            }
+            shadowColorMap = ConvertBitmapToArray(colorMapBitmapShadow);
+            shadowGenerator = new PolygonFiller(_drawArea, null, shadowColorMap, _lighColor, null);
+            //cloude = new List<Point>();
+            //cloude.Add(new Point(100, 200));
+            //cloude.Add(new Point(100, 500));
+            //cloude.Add(new Point(300, 500));
+            //cloude.Add(new Point(400, 200));
+            //cloude.Add(new Point(200, 100));
+        }
+
         private void GetAndSetObj()
         {
             var _result = LoadObjFile();
@@ -88,10 +133,55 @@ namespace Filling_Triangular_Mesh
             }
             normalMapBitmap.Dispose();
         }
+
+        private void PaintCloude()
+        {
+
+            float ks = (float)(this.ksTrackBar.Value / 100.0);
+            float kd = (float)(this.kdTrackBar.Value / 100.0);
+            float ka = (float)(this.kaTrackBar.Value / 100.0);
+            int m = this.mTrackBar.Value;
+            bool interpolateNormalVector = this.normalRadioButton.Checked;
+
+            cloudGenerator.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, cloude);
+            PaintShadow();
+        }
+
+        private void PaintShadow()
+        {
+            float ks = (float)(this.ksTrackBar.Value / 100.0);
+            float kd = (float)(this.kdTrackBar.Value / 100.0);
+            float ka = (float)(this.kaTrackBar.Value / 100.0);
+            int m = this.mTrackBar.Value;
+            bool interpolateNormalVector = this.normalRadioButton.Checked;
+
+            List<Point> shadow = new List<Point>();
+            foreach (var c in cloude)
+            {
+                double hs = _lightSource.Z;
+                double hc = zCloude;
+                int x = (int)(_lightSource.X + hs / hc * (-_lightSource.X + c.X));
+                int y = (int)(_lightSource.Y + hs / hc * (-_lightSource.Y + c.Y));
+                //double x = _lightSource.X - c.X;
+                //double y = _lightSource.Y - c.Y;
+                //var mag = Math.Sqrt(x * x + y * y);
+                //x = x / mag;
+                //y = y / mag;
+                //double B = _lightSource.Z - zCloude;
+                //double P = mag * B / _lightSource.Z;
+                //int X = (int)(x * P);
+                //int Y = (int)(y * P);
+
+                shadow.Add(new Point(x,y));
+            }
+            shadowGenerator.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, shadow);
+        }
+        bool paintCloude = true;
         private void PaintScene()
         {
             float ks = (float)(this.ksTrackBar.Value / 100.0);
             float kd = (float)(this.kdTrackBar.Value / 100.0);
+            float ka = (float)(this.kaTrackBar.Value / 100.0);
             int m = this.mTrackBar.Value;
             bool interpolateNormalVector = this.normalRadioButton.Checked;
 
@@ -100,7 +190,7 @@ namespace Filling_Triangular_Mesh
                 g.Clear(Color.LightBlue);
             }
 
-            _fillPolygon.FillEachFace(kd, ks, m, interpolateNormalVector, _lightSource);
+            _fillPolygon.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource);
 
             if (paintTriangulationCheckBox.Checked)
             {
@@ -110,6 +200,8 @@ namespace Filling_Triangular_Mesh
             {
                 g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
             }
+            if(paintCloude)
+            PaintCloude();
             Canvas.Refresh();
         }
         private List<MyFace> GetAllFaces(LoadResult data)
@@ -205,6 +297,7 @@ namespace Filling_Triangular_Mesh
         {
             PaintScene();
         }
+        private int cloudIncremetn = 5;
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
@@ -219,6 +312,16 @@ namespace Filling_Triangular_Mesh
 
             _lightSource.X = x + _origin.X;
             _lightSource.Y = y + _origin.Y;
+
+            for (int i = 0; i < cloude.Count(); i++)
+            {
+                var p = new Point(cloude[i].X + cloudIncremetn, cloude[i].Y);
+                cloude[i] = p;
+            }
+            if (cloude[0].X < 30|| cloude[0].X > 1000)
+            {
+                cloudIncremetn = -cloudIncremetn;
+            }
             PaintScene();
         }
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
@@ -330,6 +433,27 @@ namespace Filling_Triangular_Mesh
                 _normalMap = null;
             }
             _fillPolygon.NormalMap = _normalMap;
+        }
+
+        private void kaTrackBar_ValueChanged(object sender, EventArgs e)
+        {
+            this.kaLabel.Text = "ka: " + this.kaTrackBar.Value.ToString();
+            //InitShadow();
+
+            var colorMapBitmapShadow = new Bitmap(_drawArea.Width, _drawArea.Height);
+            using (Graphics g = Graphics.FromImage(colorMapBitmapShadow))
+            {
+                var ambient = (int)((double)kaTrackBar.Value / 100.0 * 255.0);
+                g.Clear(Color.FromArgb(255, ambient, ambient, ambient));
+            }
+            shadowColorMap = ConvertBitmapToArray(colorMapBitmapShadow);
+            shadowGenerator.ColorMap = shadowColorMap;
+            PaintScene();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            paintCloude = !paintCloude;
         }
     }
 }
