@@ -98,7 +98,6 @@ namespace Filling_Triangular_Mesh
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
                 g.Clear(Color.LightBlue);
-                g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
             }
 
             _fillPolygon.FillEachFace(kd, ks, m, interpolateNormalVector, _lightSource);
@@ -106,6 +105,10 @@ namespace Filling_Triangular_Mesh
             if (paintTriangulationCheckBox.Checked)
             {
                 DrawTriangulation();
+            }
+            using (Graphics g = Graphics.FromImage(_drawArea))
+            {
+                g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
             }
             Canvas.Refresh();
         }
