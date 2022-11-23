@@ -1,4 +1,4 @@
-# Filling-Triangular-Mesh
+# Scene-Rendering-With-Raycasting
 
 Trackers: kd, ks, m change light reflection model parameters.
 Tracker z changes hight of the light source
