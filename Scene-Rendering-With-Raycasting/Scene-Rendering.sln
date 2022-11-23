@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scene-Rendering", "Scene-Rendering\Scene-Rendering.csproj", "{77DEB925-B4F0-487B-A331-622ADBF7D0CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CjClutter.ObjLoader.Loader", "..\ObjLoader-master\source\CjClutter.ObjLoader.Loader\CjClutter.ObjLoader.Loader.csproj", "{678EBEC3-0EED-4587-B924-8694BA226DE3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77DEB925-B4F0-487B-A331-622ADBF7D0CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77DEB925-B4F0-487B-A331-622ADBF7D0CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77DEB925-B4F0-487B-A331-622ADBF7D0CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77DEB925-B4F0-487B-A331-622ADBF7D0CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{678EBEC3-0EED-4587-B924-8694BA226DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{678EBEC3-0EED-4587-B924-8694BA226DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{678EBEC3-0EED-4587-B924-8694BA226DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{678EBEC3-0EED-4587-B924-8694BA226DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7002157-33C9-4F37-8183-96AFC394664E}
+	EndGlobalSection
+EndGlobal
