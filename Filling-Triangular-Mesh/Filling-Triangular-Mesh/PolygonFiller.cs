@@ -1,6 +1,6 @@
 ﻿using ObjLoader.Loader.Data;
 
-namespace Filling_Triangular_Mesh
+namespace SceneRendering
 {
     public class PolygonFiller
     {
@@ -97,7 +97,7 @@ namespace Filling_Triangular_Mesh
                     Color color;
                     if (colorGenerator == null)
                     {
-                        if (x < 0 || y < 0||x>=_bitmapWidth||y>=_bitmapHeight)
+                        if (x < 0 || y < 0 || x >= _bitmapWidth || y >= _bitmapHeight)
                         {
                             return;
                         }

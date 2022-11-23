@@ -1,6 +1,6 @@
 ﻿using System.Drawing.Imaging;
 
-namespace Filling_Triangular_Mesh
+namespace SceneRendering
 {
     // Taken from github: https://github.com/kgodden/DotNetPixelSnoop
     unsafe public class BmpPixelSnoop : IDisposable

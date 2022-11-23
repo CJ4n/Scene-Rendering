@@ -1,7 +1,7 @@
 using ObjLoader.Loader.Data;
 using ObjLoader.Loader.Loaders;
 
-namespace Filling_Triangular_Mesh
+namespace SceneRendering
 {
     public partial class Form1 : Form
     {
@@ -74,8 +74,8 @@ namespace Filling_Triangular_Mesh
             var colorMapBitmapShadow = new Bitmap(_drawArea.Width, _drawArea.Height);
             using (Graphics g = Graphics.FromImage(colorMapBitmapShadow))
             {
-                var ambient =(int) ((double)kaTrackBar.Value/100.0*255.0);
-                g.Clear(Color.FromArgb(255,ambient,ambient, ambient));
+                var ambient = (int)((double)kaTrackBar.Value / 100.0 * 255.0);
+                g.Clear(Color.FromArgb(255, ambient, ambient, ambient));
             }
             shadowColorMap = ConvertBitmapToArray(colorMapBitmapShadow);
             shadowGenerator = new PolygonFiller(_drawArea, null, shadowColorMap, _lighColor, null);
@@ -172,7 +172,7 @@ namespace Filling_Triangular_Mesh
                 //int X = (int)(x * P);
                 //int Y = (int)(y * P);
 
-                shadow.Add(new Point(x,y));
+                shadow.Add(new Point(x, y));
             }
             shadowGenerator.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, shadow);
         }
@@ -200,8 +200,8 @@ namespace Filling_Triangular_Mesh
             {
                 g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
             }
-            if(paintCloude)
-            PaintCloude();
+            if (paintCloude)
+                PaintCloude();
             Canvas.Refresh();
         }
         private List<MyFace> GetAllFaces(LoadResult data)
@@ -318,7 +318,7 @@ namespace Filling_Triangular_Mesh
                 var p = new Point(cloude[i].X + cloudIncremetn, cloude[i].Y);
                 cloude[i] = p;
             }
-            if (cloude[0].X < 30|| cloude[0].X > 1000)
+            if (cloude[0].X < 30 || cloude[0].X > 1000)
             {
                 cloudIncremetn = -cloudIncremetn;
             }

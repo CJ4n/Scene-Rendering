@@ -1,4 +1,4 @@
-﻿namespace Filling_Triangular_Mesh
+﻿namespace SceneRendering
 {
     public class ScanLine
     {

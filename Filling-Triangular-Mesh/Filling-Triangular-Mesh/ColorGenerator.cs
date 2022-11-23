@@ -1,6 +1,6 @@
 ﻿using ObjLoader.Loader.Data;
 
-namespace Filling_Triangular_Mesh
+namespace SceneRendering
 {
     public class ColorGenerator
     {
@@ -21,7 +21,7 @@ namespace Filling_Triangular_Mesh
         private Vector3 _R; // for memrory allocation optimazation purpose
         private Vector3 _L; // for memrory allocation optimazation purpose
 
-        public ColorGenerator(MyFace face,float ka, float ks, float kd, int m, bool interpolateNormalVector,
+        public ColorGenerator(MyFace face, float ka, float ks, float kd, int m, bool interpolateNormalVector,
             Vector3 lightSourceVector, MyColor[,] colorMap, Color lightColor, Vector3[,] normalMap = null)
         {
             this._face = face;
@@ -106,9 +106,9 @@ namespace Filling_Triangular_Mesh
 
             var objectColor = _colorMap[(int)_face.vertices[idx].X, (int)_face.vertices[idx].Y];
 
-            double r =_ka+ _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
-            double g =_ka+ _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
-            double b =_ka+ _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
+            double r = _ka + _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
+            double g = _ka + _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
+            double b = _ka + _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
             return new Vector3(r, g, b);
         }
         private Color ComputeColorInterpolateNormalVector(int x, int y)
@@ -136,9 +136,9 @@ namespace Filling_Triangular_Mesh
             double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, _L));
 
             var objectColor = _colorMap[x, y];
-            double r =_ka+ _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
-            double g =_ka+ _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
-            double b =_ka+ _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
+            double r = _ka + _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
+            double g = _ka + _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
+            double b = _ka + _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
             r = Math.Min(r, 1);
             g = Math.Min(g, 1);
             b = Math.Min(b, 1);

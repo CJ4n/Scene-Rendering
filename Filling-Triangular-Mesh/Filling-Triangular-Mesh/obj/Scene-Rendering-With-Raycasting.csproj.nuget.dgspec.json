@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj": {}
+    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Scene-Rendering-With-Raycasting.csproj": {}
   },
   "projects": {
-    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj": {
+    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Scene-Rendering-With-Raycasting.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
-        "projectName": "Filling-Triangular-Mesh",
-        "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh.csproj",
+        "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Scene-Rendering-With-Raycasting.csproj",
+        "projectName": "Scene-Rendering-With-Raycasting",
+        "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Scene-Rendering-With-Raycasting.csproj",
         "packagesPath": "C:\\Users\\YanPC\\.nuget\\packages\\",
         "outputPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\Filling-Triangular-Mesh\\obj\\",
         "projectStyle": "PackageReference",

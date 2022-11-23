@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Filling-Triangular-Mesh", "Filling-Triangular-Mesh\Filling-Triangular-Mesh.csproj", "{77DEB925-B4F0-487B-A331-622ADBF7D0CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scene-Rendering-With-Raycasting", "Filling-Triangular-Mesh\Scene-Rendering-With-Raycasting.csproj", "{77DEB925-B4F0-487B-A331-622ADBF7D0CA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CjClutter.ObjLoader.Loader", "..\ObjLoader-master\source\CjClutter.ObjLoader.Loader\CjClutter.ObjLoader.Loader.csproj", "{678EBEC3-0EED-4587-B924-8694BA226DE3}"
 EndProject

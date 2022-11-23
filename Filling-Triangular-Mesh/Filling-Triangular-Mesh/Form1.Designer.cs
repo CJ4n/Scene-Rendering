@@ -1,4 +1,4 @@
-﻿namespace Filling_Triangular_Mesh
+﻿namespace SceneRendering
 {
     partial class Form1
     {

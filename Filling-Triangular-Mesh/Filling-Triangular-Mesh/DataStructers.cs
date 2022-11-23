@@ -1,6 +1,6 @@
 ﻿using ObjLoader.Loader.Data;
 
-namespace Filling_Triangular_Mesh
+namespace SceneRendering
 {
     public class MyFace
     {
