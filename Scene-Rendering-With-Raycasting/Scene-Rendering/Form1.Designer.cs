@@ -32,7 +32,9 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.clearSceneButton = new System.Windows.Forms.Button();
+            this.paintObjectsCheckBox = new System.Windows.Forms.CheckBox();
+            this.paintCloudeCheckBox = new System.Windows.Forms.CheckBox();
             this.kaLabel = new System.Windows.Forms.Label();
             this.modifyNormalMapcheckBox = new System.Windows.Forms.CheckBox();
             this.loadNormalMapButton = new System.Windows.Forms.Button();
@@ -103,7 +105,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Controls.Add(this.clearSceneButton);
+            this.groupBox1.Controls.Add(this.paintObjectsCheckBox);
+            this.groupBox1.Controls.Add(this.paintCloudeCheckBox);
             this.groupBox1.Controls.Add(this.kaLabel);
             this.groupBox1.Controls.Add(this.modifyNormalMapcheckBox);
             this.groupBox1.Controls.Add(this.loadNormalMapButton);
@@ -130,18 +134,41 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
             // 
-            // checkBox1
+            // clearSceneButton
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Checked = true;
-            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox1.Location = new System.Drawing.Point(10, 631);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(112, 24);
-            this.checkBox1.TabIndex = 22;
-            this.checkBox1.Text = "Paint cloude";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.clearSceneButton.Location = new System.Drawing.Point(12, 896);
+            this.clearSceneButton.Name = "clearSceneButton";
+            this.clearSceneButton.Size = new System.Drawing.Size(210, 29);
+            this.clearSceneButton.TabIndex = 24;
+            this.clearSceneButton.Text = "Clear Scene";
+            this.clearSceneButton.UseVisualStyleBackColor = true;
+            this.clearSceneButton.Click += new System.EventHandler(this.clearSceneButton_Click);
+            // 
+            // paintObjectsCheckBox
+            // 
+            this.paintObjectsCheckBox.AutoSize = true;
+            this.paintObjectsCheckBox.Checked = true;
+            this.paintObjectsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.paintObjectsCheckBox.Location = new System.Drawing.Point(10, 661);
+            this.paintObjectsCheckBox.Name = "paintObjectsCheckBox";
+            this.paintObjectsCheckBox.Size = new System.Drawing.Size(115, 24);
+            this.paintObjectsCheckBox.TabIndex = 23;
+            this.paintObjectsCheckBox.Text = "Paint objects";
+            this.paintObjectsCheckBox.UseVisualStyleBackColor = true;
+            this.paintObjectsCheckBox.CheckedChanged += new System.EventHandler(this.paintObjectsCheckBox_CheckedChanged);
+            // 
+            // paintCloudeCheckBox
+            // 
+            this.paintCloudeCheckBox.AutoSize = true;
+            this.paintCloudeCheckBox.Checked = true;
+            this.paintCloudeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.paintCloudeCheckBox.Location = new System.Drawing.Point(10, 631);
+            this.paintCloudeCheckBox.Name = "paintCloudeCheckBox";
+            this.paintCloudeCheckBox.Size = new System.Drawing.Size(112, 24);
+            this.paintCloudeCheckBox.TabIndex = 22;
+            this.paintCloudeCheckBox.Text = "Paint cloude";
+            this.paintCloudeCheckBox.UseVisualStyleBackColor = true;
+            this.paintCloudeCheckBox.CheckedChanged += new System.EventHandler(this.paintCloudeCheckBox_CheckedChanged);
             // 
             // kaLabel
             // 
@@ -155,7 +182,7 @@
             // modifyNormalMapcheckBox
             // 
             this.modifyNormalMapcheckBox.AutoSize = true;
-            this.modifyNormalMapcheckBox.Location = new System.Drawing.Point(10, 661);
+            this.modifyNormalMapcheckBox.Location = new System.Drawing.Point(10, 691);
             this.modifyNormalMapcheckBox.Name = "modifyNormalMapcheckBox";
             this.modifyNormalMapcheckBox.Size = new System.Drawing.Size(222, 24);
             this.modifyNormalMapcheckBox.TabIndex = 19;
@@ -165,7 +192,7 @@
             // 
             // loadNormalMapButton
             // 
-            this.loadNormalMapButton.Location = new System.Drawing.Point(10, 808);
+            this.loadNormalMapButton.Location = new System.Drawing.Point(6, 824);
             this.loadNormalMapButton.Name = "loadNormalMapButton";
             this.loadNormalMapButton.Size = new System.Drawing.Size(216, 29);
             this.loadNormalMapButton.TabIndex = 18;
@@ -175,7 +202,7 @@
             // 
             // changeLightColorButton
             // 
-            this.changeLightColorButton.Location = new System.Drawing.Point(10, 754);
+            this.changeLightColorButton.Location = new System.Drawing.Point(6, 780);
             this.changeLightColorButton.Name = "changeLightColorButton";
             this.changeLightColorButton.Size = new System.Drawing.Size(216, 29);
             this.changeLightColorButton.TabIndex = 17;
@@ -185,7 +212,7 @@
             // 
             // loadObjFileButton
             // 
-            this.loadObjFileButton.Location = new System.Drawing.Point(10, 701);
+            this.loadObjFileButton.Location = new System.Drawing.Point(6, 735);
             this.loadObjFileButton.Name = "loadObjFileButton";
             this.loadObjFileButton.Size = new System.Drawing.Size(216, 29);
             this.loadObjFileButton.TabIndex = 16;
@@ -461,6 +488,8 @@
         private CheckBox modifyNormalMapcheckBox;
         private TrackBar kaTrackBar;
         private Label kaLabel;
-        private CheckBox checkBox1;
+        private CheckBox paintCloudeCheckBox;
+        private CheckBox paintObjectsCheckBox;
+        private Button clearSceneButton;
     }
 }

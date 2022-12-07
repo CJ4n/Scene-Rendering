@@ -48,7 +48,7 @@ namespace SceneRendering
             this._normalMap = normalMap;
         }
 
-        public void FillEachFace(float ka, float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource)
+        public void FillEachFace(float ka, float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, int objectIdx = 0)
         {
             using (var snoop = new BmpPixelSnoop(_drawarea))
             {
@@ -58,7 +58,7 @@ namespace SceneRendering
                                                  new Point((int)_faces[i].vertices[1].X, (int)_faces[i].vertices[1].Y),
                                                  new Point((int)_faces[i].vertices[2].X, (int)_faces[i].vertices[2].Y)};
                     var colorGenerator = new ColorGenerator(_faces[i], ka, ks, kd, m, interpolateNormalVector, lightSource, _colorMap, _lighColor, _normalMap);
-                    FillPolygon(polygon, colorGenerator, snoop);
+                    FillPolygon(polygon, colorGenerator, snoop, objectIdx);
                 });
             }
         }
@@ -67,40 +67,35 @@ namespace SceneRendering
         {
             using (var snoop = new BmpPixelSnoop(_drawarea))
             {
-                //Parallel.For(0, _faces.Count, i =>
-                //{
-                //var polygon = new List<Point> { new Point((int)_faces[i].vertices[0].X, (int)_faces[i].vertices[0].Y),
-                //                             new Point((int)_faces[i].vertices[1].X, (int)_faces[i].vertices[1].Y),
-                //                             new Point((int)_faces[i].vertices[2].X, (int)_faces[i].vertices[2].Y)};
-                //var colorGenerator = new ColorGenerator(null, ka, ks, kd, m, interpolateNormalVector, lightSource, _colorMap, _lighColor, _normalMap);
-                FillPolygon(polygon, null, snoop);
-                //});
+                FillPolygon(polygon, null, snoop, 0);
             }
         }
 
-        private void FillPolygon(List<Point> polygon, ColorGenerator colorGenerator, BmpPixelSnoop snoop)
+        private void FillPolygon(List<Point> polygon, ColorGenerator colorGenerator, BmpPixelSnoop snoop, int objectIdx)
         {
             var scanLine = new ScanLine(polygon);
 
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                FillRow(xList, y, colorGenerator, snoop);
+                FillRow(xList, y, colorGenerator, snoop, objectIdx);
             }
         }
-        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, BmpPixelSnoop snoop)
+        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, BmpPixelSnoop snoop, int objectIdx)
         {
             for (int i = 0; i < xList.Count - 1; ++i)
             {
                 int endCol = Math.Min(xList[i + 1], _bitmapWidth);
                 for (int x = xList[i]; x < endCol; ++x)
                 {
+                    if (x < 0 || y < 0 ||
+                        x + objectIdx * Constants.Offset + Constants.XOffset >= _bitmapWidth ||
+                        y + Constants.YOffset >= _bitmapHeight)
+                    {
+                        return;
+                    }
                     Color color;
                     if (colorGenerator == null)
                     {
-                        if (x < 0 || y < 0 || x >= _bitmapWidth || y >= _bitmapHeight)
-                        {
-                            return;
-                        }
                         var tmp = _colorMap[x, y];
                         color = Color.FromArgb(255, (int)(tmp.R * 255), (int)(tmp.G * 255), (int)(tmp.B * 255));
                     }
@@ -108,7 +103,7 @@ namespace SceneRendering
                     {
                         color = colorGenerator.ComputeColor(x, y);
                     }
-                    snoop.SetPixel(x, y, color);
+                    snoop.SetPixel(x + objectIdx * Constants.Offset + Constants.XOffset, y + Constants.YOffset, color);
                 }
             }
         }

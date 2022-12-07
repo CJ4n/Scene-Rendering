@@ -54,6 +54,27 @@ namespace SceneRendering
             double Z = (v1.X - p.X) * (v2.Y - p.Y) - (v2.X - p.X) * (v1.Y - p.Y);
             return Math.Sqrt(Z * Z) / 2;
         }
+
+        public static MyColor[,] ConvertBitmapToArray(Bitmap bitmap)
+        {
+            MyColor[,] result = new MyColor[bitmap.Width, bitmap.Height];
+            for (int x = 0; x < bitmap.Width; x++)
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    var color = bitmap.GetPixel(x, y);
+                    result[x, y] = new MyColor(color.R / 255.0, color.G / 255.0, color.B / 255.0);
+                }
+            }
+            return result;
+        }
+        public static Vector3 RgbToNormalVectorsArray(Color c)
+        {
+            Vector3 v = new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
+            return v;
+        }
+
+
     }
 }
 

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "QoUwu8D3oSlcg8xL6CvYEGACUsRD05aKn3nuEuuxM+VAW+glqcsWuyfZjIFgJllcAJhFEyu3OQt5eeaBepN9aQ==",
+  "dgSpecHash": "HI4zZZNDxk+17gYptQcusoCVjcwFe6zS4ouuoDPUriaGHVoTm551zr43EO6NxbUndpQeqWbQ8zBT8wOtC3TVwA==",
   "success": true,
-  "projectFilePath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Filling-Triangular-Mesh\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+  "projectFilePath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\YanPC\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\YanPC\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
