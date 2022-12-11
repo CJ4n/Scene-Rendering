@@ -1,5 +1,5 @@
-using ObjLoader.Loader.Data;
 using ObjLoader.Loader.Loaders;
+using Vector3 = ObjLoader.Loader.Data.Vector3;
 
 namespace SceneRendering
 {
@@ -13,7 +13,8 @@ namespace SceneRendering
         //4. poczytaæ o system.numerics: matrix 4x4, point4d, itp
 
         private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
-        private string _pathToObjFile = "..\\..\\..\\..\\..\\SemiSphere.obj";
+        private string _pathToObjFile = "..\\..\\..\\..\\..\\fulltorust.obj";
+        private string _pathToObjFileSecond = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToNormalMap = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
 
         private List<string> _pathsToObjFiles = new List<string>();
@@ -54,6 +55,7 @@ namespace SceneRendering
             Canvas.Image = _drawArea;
 
             _pathsToObjFiles.Add(_pathToObjFile);
+            _pathsToObjFiles.Add(_pathToObjFileSecond);
 
             var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
             _colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);

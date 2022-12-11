@@ -147,8 +147,6 @@
             // paintObjectsCheckBox
             // 
             this.paintObjectsCheckBox.AutoSize = true;
-            this.paintObjectsCheckBox.Checked = true;
-            this.paintObjectsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.paintObjectsCheckBox.Location = new System.Drawing.Point(10, 661);
             this.paintObjectsCheckBox.Name = "paintObjectsCheckBox";
             this.paintObjectsCheckBox.Size = new System.Drawing.Size(115, 24);
@@ -160,8 +158,6 @@
             // paintCloudeCheckBox
             // 
             this.paintCloudeCheckBox.AutoSize = true;
-            this.paintCloudeCheckBox.Checked = true;
-            this.paintCloudeCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.paintCloudeCheckBox.Location = new System.Drawing.Point(10, 631);
             this.paintCloudeCheckBox.Name = "paintCloudeCheckBox";
             this.paintCloudeCheckBox.Size = new System.Drawing.Size(112, 24);
@@ -308,8 +304,6 @@
             // animationCheckBox
             // 
             this.animationCheckBox.AutoSize = true;
-            this.animationCheckBox.Checked = true;
-            this.animationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.animationCheckBox.Location = new System.Drawing.Point(10, 601);
             this.animationCheckBox.Name = "animationCheckBox";
             this.animationCheckBox.Size = new System.Drawing.Size(100, 24);
