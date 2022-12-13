@@ -1,5 +1,6 @@
 using ObjLoader.Loader.Loaders;
 using Vector3 = ObjLoader.Loader.Data.Vector3;
+using System.Numerics;
 
 namespace SceneRendering
 {
@@ -194,19 +195,63 @@ namespace SceneRendering
 
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
+                var rotationMat =
+                        System.Numerics.Matrix4x4.CreateRotationX((float)(Constants.Angle * Math.PI / 180.0));
                 int idx = 0;
                 foreach (var faces in _listOfObjects)
                 {
-                    var ToPointF = (double x, double y) =>
+                    var ToPointF = (double x, double y, double z) =>
                     {
-                        return new PointF((float)x + Constants.XOffset + idx * Constants.Offset, (float)y + Constants.YOffset);
+
+                        System.Numerics.Vector4 p;
+                        p.X = (float)x;
+                        p.Y = (float)y;
+                        p.Z = (float)z;
+                        p.W = 1;
+                        p = Vector4.Transform(p, rotationMat);
+
+
+                        System.Numerics.Vector3 camPosition, camTarget, camUpVec;
+                        camPosition.X = (float)this.xNumericUpDown.Value;
+                        camPosition.Y = (float)this.yNumericUpDown.Value;
+                        camPosition.Z = (float)this.zNumericUpDown.Value;
+
+                        camTarget.X = 0;
+                        camTarget.Y = 0;
+                        camTarget.Z = 0;
+
+                        camUpVec.X = 0;
+                        camUpVec.Y = 0;
+                        camUpVec.Z = 1;
+
+                        var viewMat = Matrix4x4.CreateLookAt(camPosition, camTarget, camUpVec);
+                        p = Vector4.Transform(p, viewMat);
+
+
+                        float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
+                        fieldOfView = (float)(60.0 * Math.PI / 180.0);
+                        aspecetRatio = _drawArea.Width / _drawArea.Height;
+                        nearPlaneDist = 10;
+                        farPlaneDist = 1000;
+                        var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
+                        p = Vector4.Transform(p, perspectiveMat);
+
+                        p.X /= p.W;
+                        p.Y /= p.W;
+                        p.X = (p.X + 1) / 2 * _drawArea.Width;
+                        p.Y = (p.Y + 1) / 2 * _drawArea.Height;
+
+
+                        return new PointF((float)p.X + Constants.XOffset + (float)0.1 *idx * Constants.Offset,
+                            (float)p.Y + Constants.YOffset);
                     };
                     foreach (var f in faces)
                     {
                         Pen pen = new Pen(Brushes.Black, 1);
-                        g.DrawLine(pen, ToPointF(f.vertices[0].X, f.vertices[0].Y), ToPointF(f.vertices[1].X, f.vertices[1].Y));
-                        g.DrawLine(pen, ToPointF(f.vertices[1].X, f.vertices[1].Y), ToPointF(f.vertices[2].X, f.vertices[2].Y));
-                        g.DrawLine(pen, ToPointF(f.vertices[2].X, f.vertices[2].Y), ToPointF(f.vertices[0].X, f.vertices[0].Y));
+
+                        g.DrawLine(pen, ToPointF(f.vertices[0].X, f.vertices[0].Y, f.vertices[0].Z), ToPointF(f.vertices[1].X, f.vertices[1].Y, f.vertices[1].Z));
+                        g.DrawLine(pen, ToPointF(f.vertices[1].X, f.vertices[1].Y, f.vertices[1].Z), ToPointF(f.vertices[2].X, f.vertices[2].Y, f.vertices[2].Z));
+                        g.DrawLine(pen, ToPointF(f.vertices[2].X, f.vertices[2].Y, f.vertices[2].Z), ToPointF(f.vertices[0].X, f.vertices[0].Y, f.vertices[0].Z));
                     }
                     idx++;
                 }
@@ -262,7 +307,7 @@ namespace SceneRendering
             double y = _radius * Math.Sin(_angle * Math.PI / 180);
             _angle += _angleIncrement;
             _radius += _radiusIncrement;
-
+            Constants.Angle += 5;
             _lightSource.X = x + _origin.X;
             _lightSource.Y = y + _origin.Y;
 
@@ -411,7 +456,6 @@ namespace SceneRendering
             }
             PaintScene();
         }
-
         private void kaTrackBar_ValueChanged(object sender, EventArgs e)
         {
             this.kaLabel.Text = "ka: " + this.kaTrackBar.Value.ToString();
@@ -507,5 +551,7 @@ namespace SceneRendering
             _polygonFillers.Clear();
             _listOfObjects.Clear();
         }
+
+      
     }
 }

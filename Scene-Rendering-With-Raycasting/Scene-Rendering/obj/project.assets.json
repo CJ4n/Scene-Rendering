@@ -4557,23 +4557,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\YanPC\\.nuget\\packages\\": {},
+    "C:\\Users\\yanci\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+      "projectUniqueName": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
       "projectName": "Scene-Rendering",
-      "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
-      "packagesPath": "C:\\Users\\YanPC\\.nuget\\packages\\",
-      "outputPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\obj\\",
+      "projectPath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+      "packagesPath": "C:\\Users\\yanci\\.nuget\\packages\\",
+      "outputPath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\YanPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\yanci\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4588,8 +4588,8 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
-              "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
+            "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
+              "projectPath": "C:\\JAN CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
             }
           }
         }

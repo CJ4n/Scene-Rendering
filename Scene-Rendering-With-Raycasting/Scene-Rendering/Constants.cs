@@ -8,5 +8,7 @@
         static public int YOffset = 150;
 
         static public int Offset = ObjectBasicDim + XOffset;
+
+        static public float Angle=0;
     }
 }
