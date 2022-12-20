@@ -279,6 +279,8 @@
             // paintObjectsCheckBox
             // 
             this.paintObjectsCheckBox.AutoSize = true;
+            this.paintObjectsCheckBox.Checked = true;
+            this.paintObjectsCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.paintObjectsCheckBox.Location = new System.Drawing.Point(10, 661);
             this.paintObjectsCheckBox.Name = "paintObjectsCheckBox";
             this.paintObjectsCheckBox.Size = new System.Drawing.Size(115, 24);
@@ -436,6 +438,8 @@
             // animationCheckBox
             // 
             this.animationCheckBox.AutoSize = true;
+            this.animationCheckBox.Checked = true;
+            this.animationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.animationCheckBox.Location = new System.Drawing.Point(10, 601);
             this.animationCheckBox.Name = "animationCheckBox";
             this.animationCheckBox.Size = new System.Drawing.Size(100, 24);
@@ -547,6 +551,7 @@
             // 
             // animationTimer
             // 
+            this.animationTimer.Enabled = true;
             this.animationTimer.Interval = 50;
             this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
