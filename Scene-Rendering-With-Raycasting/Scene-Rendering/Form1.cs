@@ -106,13 +106,6 @@ namespace SceneRendering
             {
                 DrawTriangulation();
             }
-            if (this.paintObjectsCheckBox.Checked)
-            {
-                //using (Graphics g = Graphics.FromImage(_drawArea))
-                //{
-                //    g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
-                //}
-            }
             if (this.paintCloudeCheckBox.Checked)
             {
                 PaintCloude();
@@ -164,44 +157,6 @@ namespace SceneRendering
             normalMapBitmap.Dispose();
         }
 
-        //private void PaintScene2()
-        //{
-        //    float ks = (float)(this.ksTrackBar.Value / 100.0);
-        //    float kd = (float)(this.kdTrackBar.Value / 100.0);
-        //    float ka = (float)(this.kaTrackBar.Value / 100.0);
-        //    int m = this.mTrackBar.Value;
-        //    bool interpolateNormalVector = this.normalRadioButton.Checked;
-
-        //    using (Graphics g = Graphics.FromImage(_drawArea))
-        //    {
-        //        g.Clear(Color.LightBlue);
-        //    }
-        //    if (this.paintObjectsCheckBox.Checked)
-        //    {
-        //        int idx = 0;
-        //        foreach (var polygonFiler in _polygonFillers)
-        //        {
-
-        //            polygonFiler.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, idx++);
-        //        }
-        //    }
-        //    if (paintTriangulationCheckBox.Checked)
-        //    {
-        //        DrawTriangulation();
-        //    }
-        //    if (this.paintObjectsCheckBox.Checked)
-        //    {
-        //        using (Graphics g = Graphics.FromImage(_drawArea))
-        //        {
-        //            g.FillEllipse(Brushes.Red, (int)_lightSource.X, (int)_lightSource.Y, 50, 50);
-        //        }
-        //    }
-        //    if (this.paintCloudeCheckBox.Checked)
-        //    {
-        //        PaintCloude();
-        //    }
-        //    Canvas.Refresh();
-        //}
         private List<MyFace> GetAllFaces(LoadResult data, int idx)
         {
             float maxX = data.Vertices.Max(x => x.X);
