@@ -1,4 +1,4 @@
-﻿using ObjLoader.Loader.Data;
+﻿using Vector3 = ObjLoader.Loader.Data.Vector3;
 
 namespace SceneRendering
 {
@@ -47,8 +47,7 @@ namespace SceneRendering
             _lighColor = lightColor;
             this._normalMap = normalMap;
         }
-
-        public void FillEachFace(float ka, float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, int objectIdx = 0)
+        public void FillEachFace(float ka, float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, double[,] ZBuffer)
         {
             using (var snoop = new BmpPixelSnoop(_drawarea))
             {
@@ -58,7 +57,7 @@ namespace SceneRendering
                                                  new Point((int)_faces[i].vertices[1].X, (int)_faces[i].vertices[1].Y),
                                                  new Point((int)_faces[i].vertices[2].X, (int)_faces[i].vertices[2].Y)};
                     var colorGenerator = new ColorGenerator(_faces[i], ka, ks, kd, m, interpolateNormalVector, lightSource, _colorMap, _lighColor, _normalMap);
-                    FillPolygon(polygon, colorGenerator, snoop, objectIdx);
+                    FillPolygon(polygon, colorGenerator, snoop, ZBuffer);
                 });
             }
         }
@@ -67,45 +66,52 @@ namespace SceneRendering
         {
             using (var snoop = new BmpPixelSnoop(_drawarea))
             {
-                FillPolygon(polygon, null, snoop, 0);
+                FillPolygon(polygon, null, snoop, null);
             }
         }
 
-        private void FillPolygon(List<Point> polygon, ColorGenerator colorGenerator, BmpPixelSnoop snoop, int objectIdx)
+        private void FillPolygon(List<Point> polygon, ColorGenerator colorGenerator, BmpPixelSnoop snoop, double[,] ZBuffer)
         {
             var scanLine = new ScanLine(polygon);
 
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                FillRow(xList, y, colorGenerator, snoop, objectIdx);
+                FillRow(xList, y, colorGenerator, snoop, ZBuffer);
             }
         }
-        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, BmpPixelSnoop snoop, int objectIdx)
+
+
+        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator, BmpPixelSnoop snoop, double[,] ZBuffer)
         {
             for (int i = 0; i < xList.Count - 1; ++i)
             {
                 int endCol = Math.Min(xList[i + 1], _bitmapWidth);
                 for (int x = xList[i]; x < endCol; ++x)
                 {
-                    if (x < 0 || y < 0 ||
-                        x + objectIdx * Constants.Offset + Constants.XOffset >= _bitmapWidth ||
-                        y + Constants.YOffset >= _bitmapHeight)
+                    if (x < 0 || y < 0 || x >= _bitmapWidth || y >= _bitmapHeight)
                     {
                         return;
                     }
-                    Color color;
                     if (colorGenerator == null)
                     {
                         var tmp = _colorMap[x, y];
-                        color = Color.FromArgb(255, (int)(tmp.R * 255), (int)(tmp.G * 255), (int)(tmp.B * 255));
+                        Color color = Color.FromArgb(255, (int)(tmp.R * 255), (int)(tmp.G * 255), (int)(tmp.B * 255));
+                        snoop.SetPixel(x, y, color);
+                        return;
                     }
                     else
                     {
-                        color = colorGenerator.ComputeColor(x, y);
+                        double z = colorGenerator.ZValue(x, y);
+                        if (z <= ZBuffer[x, y])
+                        {
+                            Color color = colorGenerator.ComputeColor(x, y);
+                            snoop.SetPixel(x, y, color);
+                            ZBuffer[x, y] = z;
+                        }
                     }
-                    snoop.SetPixel(x + objectIdx * Constants.Offset + Constants.XOffset, y + Constants.YOffset, color);
                 }
             }
         }
     }
 }
+

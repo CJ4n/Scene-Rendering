@@ -84,6 +84,11 @@ namespace SceneRendering
         }
         private Vector3 GetColorInVetex(int idx)
         {
+
+            if ((int)_face.vertices[idx].X < 0 || (int)_face.vertices[idx].Y < 0)
+            {
+                return new Vector3(0, 0, 0);
+            }
             _L.X = _lightSourcePoint.X - _face.vertices[idx].X;
             _L.Y = _lightSourcePoint.Y - _face.vertices[idx].Y;
             _L.Z = _lightSourcePoint.Z - _face.vertices[idx].Z;
@@ -151,6 +156,12 @@ namespace SceneRendering
             Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
             return color;
         }
+
+        public double ZValue(int x, int y)
+        {
+            return BarycentricInterpolation(_face.vertices[0], _face.vertices[1], _face.vertices[2], x, y).Z;
+        }
+
         private Vector3 BarycentricInterpolation(Vector3 v1, Vector3 v2, Vector3 v3, int x, int y)
         {
             Vector3 v = new Vector3(x, y, 0);

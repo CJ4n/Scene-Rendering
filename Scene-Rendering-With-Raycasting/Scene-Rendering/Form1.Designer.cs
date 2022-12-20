@@ -32,6 +32,10 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.xNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.zNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.yNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -65,10 +69,6 @@
             this.surfaceColorDialog = new System.Windows.Forms.ColorDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.lightColorDialog = new System.Windows.Forms.ColorDialog();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -153,6 +153,42 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 902);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(39, 20);
+            this.label4.TabIndex = 32;
+            this.label4.Text = "FOV:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(23, 1006);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(21, 20);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "Z:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(23, 975);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(20, 20);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "Y:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(23, 947);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(21, 20);
+            this.label1.TabIndex = 29;
+            this.label1.Text = "X:";
             // 
             // xNumericUpDown
             // 
@@ -511,49 +547,12 @@
             // 
             // animationTimer
             // 
-            this.animationTimer.Enabled = true;
             this.animationTimer.Interval = 50;
             this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 947);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(21, 20);
-            this.label1.TabIndex = 29;
-            this.label1.Text = "X:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 975);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(20, 20);
-            this.label2.TabIndex = 30;
-            this.label2.Text = "Y:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 1006);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(21, 20);
-            this.label3.TabIndex = 31;
-            this.label3.Text = "Z:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 902);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 20);
-            this.label4.TabIndex = 32;
-            this.label4.Text = "FOV:";
             // 
             // Form1
             // 
