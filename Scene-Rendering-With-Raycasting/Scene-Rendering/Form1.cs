@@ -6,8 +6,6 @@ namespace SceneRendering
 {
     public partial class Form1 : Form
     {
-
-
         private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
         private string _pathToObjFile = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToObjFileSecond = "..\\..\\..\\..\\..\\fulltorust.obj";
@@ -32,15 +30,6 @@ namespace SceneRendering
         private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
 
-
-        private PolygonFiller cloudGenerator;
-        private MyColor[,] cloudeColorMap;
-        private List<Point> cloude;
-        private int zCloude = 250;
-
-        private PolygonFiller shadowGenerator;
-        private MyColor[,] shadowColorMap;
-
         public Form1()
         {
             InitializeComponent();
@@ -58,12 +47,8 @@ namespace SceneRendering
             var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
             _colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);
             GetAndSetObj();
-            InitCloude();
-            InitShadow();
             PaintScene();
         }
-
-
 
         double[,] ZBuffer;
         void zBuffer()
@@ -105,10 +90,6 @@ namespace SceneRendering
             if (paintTriangulationCheckBox.Checked)
             {
                 DrawTriangulation();
-            }
-            if (this.paintCloudeCheckBox.Checked)
-            {
-                PaintCloude();
             }
             Canvas.Refresh();
         }
@@ -354,7 +335,6 @@ namespace SceneRendering
             }
         }
 
-        private int cloudIncremetn = 5;
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
@@ -370,15 +350,6 @@ namespace SceneRendering
             _lightSource.X = x + _origin.X;
             _lightSource.Y = y + _origin.Y;
 
-            for (int i = 0; i < cloude.Count(); i++)
-            {
-                var p = new Point(cloude[i].X + cloudIncremetn, cloude[i].Y);
-                cloude[i] = p;
-            }
-            if (cloude[0].X < 30 || cloude[0].X > 1000)
-            {
-                cloudIncremetn = -cloudIncremetn;
-            }
             PaintScene();
         }
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
@@ -526,80 +497,10 @@ namespace SceneRendering
                 var ambient = (int)((double)kaTrackBar.Value / 100.0 * 255.0);
                 g.Clear(Color.FromArgb(255, ambient, ambient, ambient));
             }
-            shadowColorMap = Utils.ConvertBitmapToArray(colorMapBitmapShadow);
-            shadowGenerator.ColorMap = shadowColorMap;
             PaintScene();
-        }
-        private void InitCloude()
-        {
-            var colorMapBitmapCloude = new Bitmap(_drawArea.Width, _drawArea.Height);
-            using (Graphics g = Graphics.FromImage(colorMapBitmapCloude))
-            {
-                g.Clear(Color.Blue);
-            }
-            cloudeColorMap = Utils.ConvertBitmapToArray(colorMapBitmapCloude);
-            cloudGenerator = new PolygonFiller(_drawArea, null, cloudeColorMap, _lighColor, null);
-            cloude = new List<Point>();
-            cloude.Add(new Point(250, 200));
-            cloude.Add(new Point(100, 500));
-            cloude.Add(new Point(300, 500));
-            cloude.Add(new Point(400, 200));
-            cloude.Add(new Point(200, 100));
-        }
-
-        private void InitShadow()
-        {
-            var colorMapBitmapShadow = new Bitmap(_drawArea.Width, _drawArea.Height);
-            using (Graphics g = Graphics.FromImage(colorMapBitmapShadow))
-            {
-                var ambient = (int)((double)kaTrackBar.Value / 100.0 * 255.0);
-                g.Clear(Color.FromArgb(255, ambient, ambient, ambient));
-            }
-            shadowColorMap = Utils.ConvertBitmapToArray(colorMapBitmapShadow);
-            shadowGenerator = new PolygonFiller(_drawArea, null, shadowColorMap, _lighColor, null);
-        }
-        private void PaintCloude()
-        {
-            float ks = (float)(this.ksTrackBar.Value / 100.0);
-            float kd = (float)(this.kdTrackBar.Value / 100.0);
-            float ka = (float)(this.kaTrackBar.Value / 100.0);
-            int m = this.mTrackBar.Value;
-            bool interpolateNormalVector = this.normalRadioButton.Checked;
-
-            cloudGenerator.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, cloude);
-            PaintShadow();
-        }
-        private void PaintShadow()
-        {
-            if (zCloude > _lightSource.Z)
-            {
-                return;
-            }
-            float ks = (float)(this.ksTrackBar.Value / 100.0);
-            float kd = (float)(this.kdTrackBar.Value / 100.0);
-            float ka = (float)(this.kaTrackBar.Value / 100.0);
-            int m = this.mTrackBar.Value;
-            bool interpolateNormalVector = this.normalRadioButton.Checked;
-
-            List<Point> shadow = new List<Point>();
-            foreach (var c in cloude)
-            {
-                double hs = _lightSource.Z;
-                double hc = zCloude;
-                int x = (int)(_lightSource.X + hs / hc * (-_lightSource.X + c.X));
-                int y = (int)(_lightSource.Y + hs / hc * (-_lightSource.Y + c.Y));
-
-                shadow.Add(new Point(x, y));
-            }
-            shadowGenerator.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, shadow);
         }
 
         private void paintObjectsCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            PaintScene();
-        }
-
-        private void paintCloudeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             PaintScene();
         }
@@ -611,7 +512,5 @@ namespace SceneRendering
             _listOfObjects.Clear();
             _listOfObjectsCOPY.Clear();
         }
-
-
     }
 }

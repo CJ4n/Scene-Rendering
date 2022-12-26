@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj": {}
+    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj": {}
   },
   "projects": {
-    "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
+    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj",
+        "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj",
         "projectName": "CjClutter.ObjLoader",
-        "projectPath": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj",
+        "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj",
         "packagesPath": "C:\\Users\\YanPC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\obj\\",
+        "outputPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,18 +50,18 @@
               "autoReferenced": true
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.307\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj": {
+    "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+        "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
         "projectName": "Scene-Rendering",
-        "projectPath": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+        "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
         "packagesPath": "C:\\Users\\YanPC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\obj\\",
+        "outputPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -82,8 +82,8 @@
           "net6.0-windows7.0": {
             "targetAlias": "net6.0-windows",
             "projectReferences": {
-              "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
-                "projectPath": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
+              "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
+                "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
               }
             }
           }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "79A5TRoNABdoFWaJuBvjcM+f5Dc55rJwK6GEvO2Ju47l/TZEZ1ksxfauOo/igjCy1A76e8+do8UuZd7sqn56CA==",
+  "dgSpecHash": "nZzwpRufUoA3kMts5l2G54/SxDVMFiqUtKwje80iBKPJumdkct5P3V8pfgICN3bB+HOpxmvhWuc8L7mRoEoAsw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\YanPC\\Desktop\\lab3dGK\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+  "projectFilePath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\YanPC\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\YanPC\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",

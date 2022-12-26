@@ -42,7 +42,6 @@
             this.FOVTrackBar = new System.Windows.Forms.TrackBar();
             this.clearSceneButton = new System.Windows.Forms.Button();
             this.paintObjectsCheckBox = new System.Windows.Forms.CheckBox();
-            this.paintCloudeCheckBox = new System.Windows.Forms.CheckBox();
             this.kaLabel = new System.Windows.Forms.Label();
             this.modifyNormalMapcheckBox = new System.Windows.Forms.CheckBox();
             this.loadNormalMapButton = new System.Windows.Forms.Button();
@@ -127,7 +126,6 @@
             this.groupBox1.Controls.Add(this.FOVTrackBar);
             this.groupBox1.Controls.Add(this.clearSceneButton);
             this.groupBox1.Controls.Add(this.paintObjectsCheckBox);
-            this.groupBox1.Controls.Add(this.paintCloudeCheckBox);
             this.groupBox1.Controls.Add(this.kaLabel);
             this.groupBox1.Controls.Add(this.modifyNormalMapcheckBox);
             this.groupBox1.Controls.Add(this.loadNormalMapButton);
@@ -288,17 +286,6 @@
             this.paintObjectsCheckBox.Text = "Paint objects";
             this.paintObjectsCheckBox.UseVisualStyleBackColor = true;
             this.paintObjectsCheckBox.CheckedChanged += new System.EventHandler(this.paintObjectsCheckBox_CheckedChanged);
-            // 
-            // paintCloudeCheckBox
-            // 
-            this.paintCloudeCheckBox.AutoSize = true;
-            this.paintCloudeCheckBox.Location = new System.Drawing.Point(10, 631);
-            this.paintCloudeCheckBox.Name = "paintCloudeCheckBox";
-            this.paintCloudeCheckBox.Size = new System.Drawing.Size(112, 24);
-            this.paintCloudeCheckBox.TabIndex = 22;
-            this.paintCloudeCheckBox.Text = "Paint cloude";
-            this.paintCloudeCheckBox.UseVisualStyleBackColor = true;
-            this.paintCloudeCheckBox.CheckedChanged += new System.EventHandler(this.paintCloudeCheckBox_CheckedChanged);
             // 
             // kaLabel
             // 
@@ -622,7 +609,6 @@
         private CheckBox modifyNormalMapcheckBox;
         private TrackBar kaTrackBar;
         private Label kaLabel;
-        private CheckBox paintCloudeCheckBox;
         private CheckBox paintObjectsCheckBox;
         private Button clearSceneButton;
         private NumericUpDown xNumericUpDown;
