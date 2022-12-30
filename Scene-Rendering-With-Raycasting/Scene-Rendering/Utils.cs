@@ -42,12 +42,11 @@ namespace SceneRendering
             double b1 = v2.X;
             double b2 = v2.Y;
             double b3 = v2.Z;
-            Vector3 v = new Vector3(a2 * b3 - b2 * a3, a1 * b3 - b1 * a3, a1 * b2 - b1 * a2);
-            return v;
+            return new Vector3(a2 * b3 - b2 * a3, a1 * b3 - b1 * a3, a1 * b2 - b1 * a2); ;
         }
-        public static double Slope(PointF p1, PointF p2)
+        public static double Slope(Vector3 p1, Vector3 p2)
         {
-            return Math.Abs(p1.X - p2.X) < Utils.Eps ? Utils.Infinity : (double)(p2.Y - p1.Y) / (double)(p2.X - p1.X);
+            return Math.Abs((int)p1.X - (int)p2.X) < Utils.Eps ? Utils.Infinity : (double)((int)p2.Y - (int)p1.Y) / (double)((int)p2.X - (int)p1.X);
         }
         public static double TrinagelArea(Vector3 v1, Vector3 v2, Vector3 p)
         {
@@ -70,8 +69,7 @@ namespace SceneRendering
         }
         public static Vector3 RgbToNormalVectorsArray(Color c)
         {
-            Vector3 v = new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
-            return v;
+            return new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
         }
 
 

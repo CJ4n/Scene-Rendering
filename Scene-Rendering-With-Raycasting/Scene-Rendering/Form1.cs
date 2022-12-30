@@ -30,6 +30,8 @@ namespace SceneRendering
         private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
 
+        double[,] ZBuffer;
+
         public Form1()
         {
             InitializeComponent();
@@ -49,8 +51,6 @@ namespace SceneRendering
             GetAndSetObj();
             PaintScene();
         }
-
-        double[,] ZBuffer;
         void zBuffer()
         {
             using (Graphics g = Graphics.FromImage(_drawArea))
@@ -63,8 +63,6 @@ namespace SceneRendering
                     ZBuffer[x, y] = double.MaxValue;
                 }
         }
-
-
         private void PaintScene()
         {
             zBuffer();
@@ -93,9 +91,6 @@ namespace SceneRendering
             }
             Canvas.Refresh();
         }
-
-
-
         private void GetAndSetObj()
         {
             _polygonFillers.Clear();
@@ -122,22 +117,6 @@ namespace SceneRendering
             bitmap.Dispose();
             return bmp;
         }
-
-        private void ModifyNormalVectors()
-        {
-            var normalMapBitmap = GetBitampFromFile(_pathToNormalMap);
-
-            _normalMap = new Vector3[normalMapBitmap.Width, normalMapBitmap.Height];
-            for (int col = 0; col < normalMapBitmap.Width; col++)
-            {
-                for (int row = 0; row < normalMapBitmap.Height; row++)
-                {
-                    _normalMap[col, row] = Utils.RgbToNormalVectorsArray(normalMapBitmap.GetPixel(col, row));
-                }
-            }
-            normalMapBitmap.Dispose();
-        }
-
         private List<MyFace> GetAllFaces(LoadResult data, int idx)
         {
             float maxX = data.Vertices.Max(x => x.X);
@@ -186,7 +165,6 @@ namespace SceneRendering
             }
             return faces;
         }
-
         private void DrawTriangulation()
         {
 
@@ -247,7 +225,51 @@ namespace SceneRendering
         {
             PaintScene();
         }
+        private void rotatePoint(List<Vector3> v, List<Vector3> original, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat)
+        {
+            for (int i = 0; i < original.Count; i++)
+            {
+                System.Numerics.Vector4 p;
+                p.X = (float)original[i].X;
+                p.Y = (float)original[i].Y;
+                p.Z = (float)original[i].Z;
+                p.W = 1;
+                p = Vector4.Transform(p, rotationMat);
+                p = Vector4.Transform(p, viewMat);
+                p = Vector4.Transform(p, perspectiveMat);
+                p.X /= p.W;
+                p.Y /= p.W;
+                p.Z /= p.W;
+                if (p.X < -1) p.X = -1;
+                if (p.Y < -1) p.Y = -1;
+                if (p.Z < -1) p.Z = -1;
 
+                if (p.X > 1) p.X = 1;
+                if (p.Y > 1) p.Y = 1;
+                if (p.Z > 1) p.Z = 1;
+                p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
+                p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
+                p.Z = (p.Z + 1) / 2 * (3000 - 1);
+
+                v[i].X = p.X;
+                v[i].Y = p.Y;
+                v[i].Z = p.Z;
+            }
+        }
+        private void rotateNormalVector(List<Vector3> v, List<Vector3> original, Matrix4x4 rotationMat)
+        {
+            for (int i = 0; i < original.Count; i++)
+            {
+                System.Numerics.Vector3 p;
+                p.X = (float)original[i].X;
+                p.Y = (float)original[i].Y;
+                p.Z = (float)original[i].Z;
+                var after = System.Numerics.Vector3.TransformNormal(p, rotationMat);
+                v[i].X = after.X;
+                v[i].Y = after.Y;
+                v[i].Z = after.Z;
+            }
+        }
         void RotateScene()
         {
             var rotationMat =
@@ -265,7 +287,6 @@ namespace SceneRendering
             camUpVec.X = 0;
             camUpVec.Y = 0;
             camUpVec.Z = 1;
-
             var viewMat = Matrix4x4.CreateLookAt(camPosition, camTarget, camUpVec);
             float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
             fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
@@ -276,80 +297,35 @@ namespace SceneRendering
             int idx = 0;
             for (int faces = 0; faces < _listOfObjects.Count; faces++)
             {
-                var rotatePoint = (Vector3 v, Vector3 original) =>
-                {
-
-                    System.Numerics.Vector4 p;
-                    p.X = (float)original.X;
-                    p.Y = (float)original.Y;
-                    p.Z = (float)original.Z;
-                    p.W = 1;
-                    p = Vector4.Transform(p, rotationMat);
-                    p = Vector4.Transform(p, viewMat);
-                    p = Vector4.Transform(p, perspectiveMat);
-
-                    p.X /= p.W;
-                    p.Y /= p.W;
-                    p.Z /= p.W;
-                    if (p.X < -1) p.X = -1;
-                    if (p.Y < -1) p.Y = -1;
-                    if (p.Z < -1) p.Z = -1;
-
-                    if (p.X > 1) p.X = 1;
-                    if (p.Y > 1) p.Y = 1;
-                    if (p.Z > 1) p.Z = 1;
-                    p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
-                    p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
-                    p.Z = (p.Z + 1) / 2 * (3000 - 1);
-
-
-                    v.X = p.X;
-                    v.Y = p.Y;
-                    v.Z = p.Z;
-
-                };
-
-                var rotateNormalVector = (Vector3 v, Vector3 original) =>
-                {
-                    System.Numerics.Vector3 p;
-                    p.X = (float)original.X;
-                    p.Y = (float)original.Y;
-                    p.Z = (float)original.Z;
-                    var after = System.Numerics.Vector3.TransformNormal(p, rotationMat);
-                    v.X = after.X;
-                    v.Y = after.Y;
-                    v.Z = after.Z;
-                };
                 for (int f = 0; f < _listOfObjects[faces].Count; f++)
                 {
-
-                    rotatePoint(_listOfObjects[faces][f].vertices[0], _listOfObjectsCOPY[faces][f].vertices[0]);
-                    rotatePoint(_listOfObjects[faces][f].vertices[1], _listOfObjectsCOPY[faces][f].vertices[1]);
-                    rotatePoint(_listOfObjects[faces][f].vertices[2], _listOfObjectsCOPY[faces][f].vertices[2]);
-                    rotateNormalVector(_listOfObjects[faces][f].normals[0], _listOfObjectsCOPY[faces][f].normals[0]);
-                    rotateNormalVector(_listOfObjects[faces][f].normals[1], _listOfObjectsCOPY[faces][f].normals[1]);
-                    rotateNormalVector(_listOfObjects[faces][f].normals[2], _listOfObjectsCOPY[faces][f].normals[2]);
+                    rotatePoint(_listOfObjects[faces][f].vertices, _listOfObjectsCOPY[faces][f].vertices, rotationMat, viewMat, perspectiveMat);
+                    rotateNormalVector(_listOfObjects[faces][f].normals, _listOfObjectsCOPY[faces][f].normals, rotationMat);
                 }
                 _polygonFillers[idx].Faces = _listOfObjects[faces];
                 idx++;
             }
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
+            if (this.animateLightCheckBox.Checked)
             {
-                _radiusIncrement = -_radiusIncrement;
+                if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
+                {
+                    _radiusIncrement = -_radiusIncrement;
+                }
+
+                double x = _radius * Math.Cos(_angle * Math.PI / 180);
+                double y = _radius * Math.Sin(_angle * Math.PI / 180);
+                _angle += _angleIncrement;
+                _radius += _radiusIncrement;
+                _lightSource.X = x + _origin.X;
+                _lightSource.Y = y + _origin.Y;
             }
-
-            double x = _radius * Math.Cos(_angle * Math.PI / 180);
-            double y = _radius * Math.Sin(_angle * Math.PI / 180);
-            _angle += _angleIncrement;
-            _radius += _radiusIncrement;
-            Constants.Angle += 5;
-            _lightSource.X = x + _origin.X;
-            _lightSource.Y = y + _origin.Y;
-
+            if (this.animateObjectCheckBox.Checked)
+            {
+                Constants.Angle += 3;
+            }
             PaintScene();
         }
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
@@ -358,21 +334,21 @@ namespace SceneRendering
             _lightSource.Z = z;
             this.zLabel.Text = "z: " + this.zTrackBar.Value.ToString();
 
-            if (animationCheckBox.Checked == false)
+            if (animateObjectCheckBox.Checked == false)
             {
                 PaintScene();
             }
         }
         private void animationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (animationCheckBox.Checked)
-            {
-                animationTimer.Start();
-            }
-            else
-            {
-                animationTimer.Stop();
-            }
+            //if (animationCheckBox.Checked)
+            //{
+            //    animationTimer.Start();
+            //}
+            //else
+            //{
+            //    animationTimer.Stop();
+            //}
         }
         private void paintTriangulationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -450,42 +426,6 @@ namespace SceneRendering
             }
             PaintScene();
         }
-        private void loadNormalMapButton_Click(object sender, EventArgs e)
-        {
-            var status = this.openFileDialog1.ShowDialog();
-            if (status != DialogResult.OK)
-            {
-                _normalMap = null;
-                foreach (var polygonFiller in _polygonFillers)
-                {
-                    polygonFiller.NormalMap = _normalMap;
-                }
-            }
-            else
-            {
-                _pathToNormalMap = this.openFileDialog1.FileName;
-                this.modifyNormalMapcheckBox.Checked = true;
-
-            }
-            modifyNormalMapcheckBox_CheckedChanged(null, null);
-            PaintScene();
-        }
-        private void modifyNormalMapcheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (this.modifyNormalMapcheckBox.Checked)
-            {
-                ModifyNormalVectors();
-            }
-            else
-            {
-                _normalMap = null;
-            }
-            foreach (var polygonFiller in _polygonFillers)
-            {
-                polygonFiller.NormalMap = _normalMap;
-            }
-            PaintScene();
-        }
         private void kaTrackBar_ValueChanged(object sender, EventArgs e)
         {
             this.kaLabel.Text = "ka: " + this.kaTrackBar.Value.ToString();
@@ -499,12 +439,10 @@ namespace SceneRendering
             }
             PaintScene();
         }
-
         private void paintObjectsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             PaintScene();
         }
-
         private void clearSceneButton_Click(object sender, EventArgs e)
         {
             _pathsToObjFiles.Clear();

@@ -32,6 +32,7 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.animateLightCheckBox = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -43,8 +44,6 @@
             this.clearSceneButton = new System.Windows.Forms.Button();
             this.paintObjectsCheckBox = new System.Windows.Forms.CheckBox();
             this.kaLabel = new System.Windows.Forms.Label();
-            this.modifyNormalMapcheckBox = new System.Windows.Forms.CheckBox();
-            this.loadNormalMapButton = new System.Windows.Forms.Button();
             this.changeLightColorButton = new System.Windows.Forms.Button();
             this.loadObjFileButton = new System.Windows.Forms.Button();
             this.interpolationGroupBox = new System.Windows.Forms.GroupBox();
@@ -54,7 +53,7 @@
             this.bitmapColorRadioButton = new System.Windows.Forms.RadioButton();
             this.constColorRadioButton = new System.Windows.Forms.RadioButton();
             this.paintTriangulationCheckBox = new System.Windows.Forms.CheckBox();
-            this.animationCheckBox = new System.Windows.Forms.CheckBox();
+            this.animateObjectCheckBox = new System.Windows.Forms.CheckBox();
             this.zLabel = new System.Windows.Forms.Label();
             this.zTrackBar = new System.Windows.Forms.TrackBar();
             this.kdLabel = new System.Windows.Forms.Label();
@@ -116,6 +115,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.animateLightCheckBox);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
@@ -127,14 +127,12 @@
             this.groupBox1.Controls.Add(this.clearSceneButton);
             this.groupBox1.Controls.Add(this.paintObjectsCheckBox);
             this.groupBox1.Controls.Add(this.kaLabel);
-            this.groupBox1.Controls.Add(this.modifyNormalMapcheckBox);
-            this.groupBox1.Controls.Add(this.loadNormalMapButton);
             this.groupBox1.Controls.Add(this.changeLightColorButton);
             this.groupBox1.Controls.Add(this.loadObjFileButton);
             this.groupBox1.Controls.Add(this.interpolationGroupBox);
             this.groupBox1.Controls.Add(this.ColorGroupBox);
             this.groupBox1.Controls.Add(this.paintTriangulationCheckBox);
-            this.groupBox1.Controls.Add(this.animationCheckBox);
+            this.groupBox1.Controls.Add(this.animateObjectCheckBox);
             this.groupBox1.Controls.Add(this.zLabel);
             this.groupBox1.Controls.Add(this.zTrackBar);
             this.groupBox1.Controls.Add(this.kdLabel);
@@ -151,6 +149,18 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
+            // 
+            // animateLightCheckBox
+            // 
+            this.animateLightCheckBox.AutoSize = true;
+            this.animateLightCheckBox.Checked = true;
+            this.animateLightCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.animateLightCheckBox.Location = new System.Drawing.Point(9, 630);
+            this.animateLightCheckBox.Name = "animateLightCheckBox";
+            this.animateLightCheckBox.Size = new System.Drawing.Size(121, 24);
+            this.animateLightCheckBox.TabIndex = 33;
+            this.animateLightCheckBox.Text = "Animate light";
+            this.animateLightCheckBox.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -296,27 +306,6 @@
             this.kaLabel.TabIndex = 21;
             this.kaLabel.Text = "ka:";
             // 
-            // modifyNormalMapcheckBox
-            // 
-            this.modifyNormalMapcheckBox.AutoSize = true;
-            this.modifyNormalMapcheckBox.Location = new System.Drawing.Point(10, 691);
-            this.modifyNormalMapcheckBox.Name = "modifyNormalMapcheckBox";
-            this.modifyNormalMapcheckBox.Size = new System.Drawing.Size(222, 24);
-            this.modifyNormalMapcheckBox.TabIndex = 19;
-            this.modifyNormalMapcheckBox.Text = "Use Modifed Normal Vectors";
-            this.modifyNormalMapcheckBox.UseVisualStyleBackColor = true;
-            this.modifyNormalMapcheckBox.CheckedChanged += new System.EventHandler(this.modifyNormalMapcheckBox_CheckedChanged);
-            // 
-            // loadNormalMapButton
-            // 
-            this.loadNormalMapButton.Location = new System.Drawing.Point(6, 824);
-            this.loadNormalMapButton.Name = "loadNormalMapButton";
-            this.loadNormalMapButton.Size = new System.Drawing.Size(216, 29);
-            this.loadNormalMapButton.TabIndex = 18;
-            this.loadNormalMapButton.Text = "Load Normal Map";
-            this.loadNormalMapButton.UseVisualStyleBackColor = true;
-            this.loadNormalMapButton.Click += new System.EventHandler(this.loadNormalMapButton_Click);
-            // 
             // changeLightColorButton
             // 
             this.changeLightColorButton.Location = new System.Drawing.Point(6, 780);
@@ -422,18 +411,18 @@
             this.paintTriangulationCheckBox.UseVisualStyleBackColor = true;
             this.paintTriangulationCheckBox.CheckedChanged += new System.EventHandler(this.paintTriangulationCheckBox_CheckedChanged);
             // 
-            // animationCheckBox
+            // animateObjectCheckBox
             // 
-            this.animationCheckBox.AutoSize = true;
-            this.animationCheckBox.Checked = true;
-            this.animationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.animationCheckBox.Location = new System.Drawing.Point(10, 601);
-            this.animationCheckBox.Name = "animationCheckBox";
-            this.animationCheckBox.Size = new System.Drawing.Size(100, 24);
-            this.animationCheckBox.TabIndex = 10;
-            this.animationCheckBox.Text = "Animation";
-            this.animationCheckBox.UseVisualStyleBackColor = true;
-            this.animationCheckBox.CheckedChanged += new System.EventHandler(this.animationCheckBox_CheckedChanged);
+            this.animateObjectCheckBox.AutoSize = true;
+            this.animateObjectCheckBox.Checked = true;
+            this.animateObjectCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.animateObjectCheckBox.Location = new System.Drawing.Point(10, 601);
+            this.animateObjectCheckBox.Name = "animateObjectCheckBox";
+            this.animateObjectCheckBox.Size = new System.Drawing.Size(146, 24);
+            this.animateObjectCheckBox.TabIndex = 10;
+            this.animateObjectCheckBox.Text = "Animation object";
+            this.animateObjectCheckBox.UseVisualStyleBackColor = true;
+            this.animateObjectCheckBox.CheckedChanged += new System.EventHandler(this.animationCheckBox_CheckedChanged);
             // 
             // zLabel
             // 
@@ -594,7 +583,7 @@
         private System.Windows.Forms.Timer animationTimer;
         private Label zLabel;
         private TrackBar zTrackBar;
-        private CheckBox animationCheckBox;
+        private CheckBox animateObjectCheckBox;
         private CheckBox paintTriangulationCheckBox;
         private ColorDialog surfaceColorDialog;
         private RadioButton bitmapColorRadioButton;
@@ -605,8 +594,6 @@
         private OpenFileDialog openFileDialog1;
         private ColorDialog lightColorDialog;
         private Button changeLightColorButton;
-        private Button loadNormalMapButton;
-        private CheckBox modifyNormalMapcheckBox;
         private TrackBar kaTrackBar;
         private Label kaLabel;
         private CheckBox paintObjectsCheckBox;
@@ -619,5 +606,6 @@
         private Label label3;
         private Label label2;
         private Label label1;
+        private CheckBox animateLightCheckBox;
     }
 }

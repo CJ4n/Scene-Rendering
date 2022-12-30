@@ -1,17 +1,19 @@
-﻿namespace SceneRendering
+﻿using ObjLoader.Loader.Data;
+
+namespace SceneRendering
 {
     public class ScanLine
     {
         private List<AETPointer> _AET;
         private Stack<int> _sortedIdx;
-        private List<Point> _polygon;
+        private List<Vector3> _polygon;
 
-        public ScanLine(List<Point> polygon)
+        public ScanLine(List<Vector3> polygon)
         {
             _AET = new List<AETPointer>();
             this._polygon = polygon;
 
-            _sortedIdx = new Stack<int>(polygon.Select((point, idx) => new KeyValuePair<Point, int>(point, idx)).
+            _sortedIdx = new Stack<int>(polygon.Select((point, idx) => new KeyValuePair<Vector3, int>(point, idx)).
                 OrderByDescending(pair => pair.Key.Y).
                 Select(pair => pair.Value));
         }
@@ -24,7 +26,7 @@
 
             for (int y = yMin + 1; y <= yMax; ++y)
             {
-                while (_sortedIdx.Count > 0 && _polygon[_sortedIdx.Peek()].Y == y - 1)
+                while (_sortedIdx.Count > 0 && (int)_polygon[_sortedIdx.Peek()].Y == y - 1)
                 {
                     var idx = _sortedIdx.Pop();
                     var currentPoint = _polygon[idx];
