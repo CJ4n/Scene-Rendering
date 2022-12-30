@@ -51,14 +51,19 @@ namespace SceneRendering
         {
             using (var snoop = new BmpPixelSnoop(_drawarea))
             {
-                Parallel.For(0, _faces.Count, i =>
+
+
+                for (int i = 0; i < _faces.Count; i++)
                 {
+                    //Parallel.For(0, _faces.Count, i =>
+                    //{
                     var polygon = new List<Point> { new Point((int)_faces[i].vertices[0].X, (int)_faces[i].vertices[0].Y),
                                                  new Point((int)_faces[i].vertices[1].X, (int)_faces[i].vertices[1].Y),
                                                  new Point((int)_faces[i].vertices[2].X, (int)_faces[i].vertices[2].Y)};
                     var colorGenerator = new ColorGenerator(_faces[i], ka, ks, kd, m, interpolateNormalVector, lightSource, _colorMap, _lighColor, _normalMap);
                     FillPolygon(polygon, colorGenerator, snoop, ZBuffer);
-                });
+                    //});
+                }
             }
         }
 
@@ -73,6 +78,8 @@ namespace SceneRendering
         private void FillPolygon(List<Point> polygon, ColorGenerator colorGenerator, BmpPixelSnoop snoop, double[,] ZBuffer)
         {
             var scanLine = new ScanLine(polygon);
+
+            Parallel.ForEach(scanLine.GetIntersectionPoints(), xList => { FillRow(xList.Item1, xList.Item2, colorGenerator, snoop, ZBuffer); });
 
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
