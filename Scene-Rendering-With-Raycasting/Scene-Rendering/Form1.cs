@@ -32,9 +32,20 @@ namespace SceneRendering
 
         double[,] ZBuffer;
 
+        // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
+        private List<System.Numerics.Vector3> _camPositions;
+        private List<System.Numerics.Vector3> _camTargerts;
+        private int curCameraIdx_ = 0;
+
         public Form1()
         {
             InitializeComponent();
+
+            _camPositions = new List<System.Numerics.Vector3>();
+            _camTargerts = new List<System.Numerics.Vector3>();
+
+            _camPositions.Add(new System.Numerics.Vector3(0, 0, 0));
+            _camTargerts.Add(new System.Numerics.Vector3(0, 0, 0));
             this.zLabel.Text = "z: " + this.zTrackBar.Value.ToString();
             this.mLabel.Text = "m: " + this.mTrackBar.Value.ToString();
             this.ksLabel.Text = "ks: " + (this.ksTrackBar.Value / 100.0).ToString();
@@ -270,6 +281,9 @@ namespace SceneRendering
                 v[i].Z = after.Z;
             }
         }
+
+
+
         void RotateScene()
         {
             var rotationMat =
