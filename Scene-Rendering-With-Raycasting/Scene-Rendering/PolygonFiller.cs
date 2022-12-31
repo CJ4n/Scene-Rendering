@@ -86,6 +86,10 @@ namespace SceneRendering
                 for (int x = xList[i]; x < endCol; ++x)
                 {
                     double z = colorGenerator.ZValue(x, y);
+                    if (x < 0 || y < 0 || x >= _bitmapWidth || y >= +_bitmapHeight)
+                    {
+                        continue;
+                    }
                     if (z <= ZBuffer[x, y])
                     {
                         Color color = colorGenerator.ComputeColor(x, y);
