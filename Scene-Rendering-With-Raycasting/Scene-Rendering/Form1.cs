@@ -7,19 +7,16 @@ namespace SceneRendering
     public partial class Form1 : Form
     {
         //TODO:
-        // 1. zrobiæ ³adny uklad wspolzednych
         // 2. dodaæ nowe kamery
         // 3. pozwoliæ na rózne skalowanie róznych obiektów
         // 4. rózne kolory/tekstóry róznych obiektów
 
+        // paths to files
+        private List<string> _pathsToObjFiles = new List<string>();
         private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
         private string _pathToObjFile = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToObjFileSecond = "..\\..\\..\\..\\..\\fulltorust.obj";
-        private string _pathToPlaneObj = "..\\..\\..\\..\\..\\plane.obj";
-
-        //private string _pathToNormalMap = "..\\..\\..\\..\\..\\brickwall_normal.jpg";
-
-        private List<string> _pathsToObjFiles = new List<string>();
+        private string _pathToPlaneObj = "..\\..\\..\\..\\..\\coords.obj";
 
         private Vector3 _lightSource = new Vector3(1000, 300, 2500);
         private PointF _origin = new PointF(Constants.ObjectBasicDim / 2, Constants.ObjectBasicDim / 2);
@@ -38,40 +35,80 @@ namespace SceneRendering
         private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
 
-        double[,] ZBuffer;
+        private double[,] _zBuffer;
 
+        private List<System.Numerics.Vector3> _objectCenter = new List<System.Numerics.Vector3>();
+
+        //cameras 
         // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
         private List<System.Numerics.Vector3> _camPositions = new List<System.Numerics.Vector3>();
         private List<System.Numerics.Vector3> _camTargerts = new List<System.Numerics.Vector3>();
-        private int curCameraIdx_ = 0;
+        private int _curCameraIdx = 0;
 
+
+        // behavior fo objects
         private List<bool> _animateObject = new List<bool>();
-
+        private List<int> _objectScale = new List<int>();
         public Form1()
         {
             InitializeComponent();
 
-            _camPositions.Add(new System.Numerics.Vector3(0, 0, 0));
-            _camTargerts.Add(new System.Numerics.Vector3(0, 0, 0));
             this.zLabel.Text = "z: " + this.zTrackBar.Value.ToString();
             this.mLabel.Text = "m: " + this.mTrackBar.Value.ToString();
             this.ksLabel.Text = "ks: " + (this.ksTrackBar.Value / 100.0).ToString();
             this.kdLabel.Text = "kd: " + (this.kdTrackBar.Value / 100.0).ToString();
+
             _drawArea = new Bitmap(Canvas.Width * 1, Canvas.Height * 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             Canvas.Image = _drawArea;
-            ZBuffer = new double[Canvas.Width, Canvas.Height];
+
+            _zBuffer = new double[Canvas.Width, Canvas.Height];
 
             _pathsToObjFiles.Add(_pathToObjFile);
             _animateObject.Add(true);
+            _objectScale.Add(Constants.ObjectBasicDim);
+
             _pathsToObjFiles.Add(_pathToObjFileSecond);
             _animateObject.Add(false);
+            _objectScale.Add(Constants.ObjectBasicDim);
+
             _pathsToObjFiles.Add(_pathToPlaneObj);
             _animateObject.Add(false);
+            _objectScale.Add(Constants.ObjectBasicDim * 5);
+
+
+
 
             var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
             _colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);
             GetAndSetObj();
+
+            _objectCenter.Add(GetObjectsCenter(0));
+            _objectCenter.Add(GetObjectsCenter(1));
+            _objectCenter.Add(GetObjectsCenter(2));
+
+            _camPositions.Add(new System.Numerics.Vector3(0, 0, 0));
+            _camTargerts.Add(_objectCenter[0]);
+
+
             PaintScene();
+        }
+
+        System.Numerics.Vector3 GetObjectsCenter(int objectIdx)
+        {
+            double x = 0, y = 0, z = 0;
+            int count = 0;
+            foreach (var face in _listOfObjectsCOPY[objectIdx])
+            {
+                foreach (var vertex in face.vertices)
+                {
+                    x += vertex.X;
+                    y += vertex.Y;
+                    z += vertex.Z;
+                }
+                count++;
+            }
+
+            return new System.Numerics.Vector3((float)x / count, (float)y / count, (float)z / count);
         }
         void zBuffer()
         {
@@ -82,7 +119,7 @@ namespace SceneRendering
             for (int x = 0; x < Canvas.Width; x++)
                 for (int y = 0; y < Canvas.Height; y++)
                 {
-                    ZBuffer[x, y] = double.MaxValue;
+                    _zBuffer[x, y] = double.MaxValue;
                 }
         }
         private void PaintScene()
@@ -104,7 +141,7 @@ namespace SceneRendering
                 foreach (var polygonFiler in _polygonFillers)
                 {
 
-                    polygonFiler.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, ZBuffer);
+                    polygonFiler.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, _zBuffer);
                 }
             }
             if (paintTriangulationCheckBox.Checked)
@@ -159,9 +196,9 @@ namespace SceneRendering
             }
             var scaleVectorLambda = (Vector3 v) =>
             {
-                v.X = (v.X - minX) / (maxX - minX) * Constants.ObjectBasicDim + Constants.XOffset + (float)0.1 * idx * Constants.Offset;
-                v.Y = (v.Y - minY) / (maxY - minY) * Constants.ObjectBasicDim + Constants.YOffset;
-                v.Z = (v.Z - minZ) / (maxZ - minZ) * Constants.ObjectBasicDim / 2;
+                v.X = (v.X - minX) / (maxX - minX) * _objectScale[idx] + Constants.XOffset + (float)0.1 * idx * Constants.Offset;
+                v.Y = (v.Y - minY) / (maxY - minY) * _objectScale[idx] + Constants.YOffset;
+                v.Z = (v.Z - minZ) / (maxZ - minZ) * _objectScale[idx] / 2;
                 return v;
             };
 
@@ -169,28 +206,19 @@ namespace SceneRendering
             var group = data.Groups.First(); // only one object in obj file
             foreach (var f in group.Faces)
             {
-                Vector3 v0 = scaleVectorLambda(data.Vertices[f[0].VertexIndex - 1]);
-                Vector3 v1 = scaleVectorLambda(data.Vertices[f[1].VertexIndex - 1]);
-                Vector3 v2 = scaleVectorLambda(data.Vertices[f[2].VertexIndex - 1]);
-
-                Vector3 n0 = data.Normals[f[0].NormalIndex - 1];
-                Vector3 n1 = data.Normals[f[1].NormalIndex - 1];
-                Vector3 n2 = data.Normals[f[2].NormalIndex - 1];
-
                 List<Vector3> normals = new List<Vector3>();
-                normals.Add(n0);
-                normals.Add(n1);
-                normals.Add(n2);
-
                 List<Vector3> vertices = new List<Vector3>();
-                vertices.Add(v0);
-                vertices.Add(v1);
-                vertices.Add(v2);
-
                 List<int> ids = new List<int>();
-                ids.Add(f[0].VertexIndex);
-                ids.Add(f[1].VertexIndex);
-                ids.Add(f[2].VertexIndex);
+
+                for (int i = 0; i < f.Count; i++)
+                {
+                    Vector3 v = scaleVectorLambda(data.Vertices[f[i].VertexIndex - 1]);
+                    Vector3 n = data.Normals[f[i].NormalIndex - 1];
+                    normals.Add(n);
+                    vertices.Add(v);
+                    ids.Add(f[i].VertexIndex);
+
+                }
 
                 faces.Add(new MyFace(vertices, normals, ids));
             }
@@ -198,7 +226,6 @@ namespace SceneRendering
         }
         private void DrawTriangulation()
         {
-
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
                 foreach (var faces in _listOfObjects)
@@ -210,10 +237,12 @@ namespace SceneRendering
                     foreach (var f in faces)
                     {
                         Pen pen = new Pen(Brushes.Black, 1);
+                        for (int i = 0; i < f.vertices.Count - 1; i++)
+                        {
+                            g.DrawLine(pen, ToPointF(f.vertices[i].X, f.vertices[i].Y, f.vertices[i].Z), ToPointF(f.vertices[i + 1].X, f.vertices[i + 1].Y, f.vertices[i + 1].Z));
 
-                        g.DrawLine(pen, ToPointF(f.vertices[0].X, f.vertices[0].Y, f.vertices[0].Z), ToPointF(f.vertices[1].X, f.vertices[1].Y, f.vertices[1].Z));
-                        g.DrawLine(pen, ToPointF(f.vertices[1].X, f.vertices[1].Y, f.vertices[1].Z), ToPointF(f.vertices[2].X, f.vertices[2].Y, f.vertices[2].Z));
-                        g.DrawLine(pen, ToPointF(f.vertices[2].X, f.vertices[2].Y, f.vertices[2].Z), ToPointF(f.vertices[0].X, f.vertices[0].Y, f.vertices[0].Z));
+                        }
+                        g.DrawLine(pen, ToPointF(f.vertices[f.vertices.Count - 1].X, f.vertices[f.vertices.Count - 1].Y, f.vertices[f.vertices.Count - 1].Z), ToPointF(f.vertices[0].X, f.vertices[0].Y, f.vertices[0].Z));
                     }
                 }
             }
@@ -315,19 +344,20 @@ namespace SceneRendering
             var rotationMat =
                   System.Numerics.Matrix4x4.CreateRotationX((float)(Constants.Angle * Math.PI / 180.0));
 
-            System.Numerics.Vector3 camPosition, camTarget, camUpVec;
+            System.Numerics.Vector3 camPosition, camUpVec;
+            System.Numerics.Vector3 camTarget;
             camPosition.X = (float)this.xNumericUpDown.Value;
             camPosition.Y = (float)this.yNumericUpDown.Value;
             camPosition.Z = (float)this.zNumericUpDown.Value;
 
-            camTarget.X = 0;
-            camTarget.Y = 0;
-            camTarget.Z = 0;
+            //camTarget.X = 0;
+            //camTarget.Y = 0;
+            //camTarget.Z = 0;
 
             camUpVec.X = 0;
             camUpVec.Y = 0;
             camUpVec.Z = -1;
-            var viewMat = Matrix4x4.CreateLookAt(camPosition, camTarget, camUpVec);
+            var viewMat = Matrix4x4.CreateLookAt(camPosition, _camTargerts[_curCameraIdx], camUpVec);
             float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
             fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
             aspecetRatio = _drawArea.Width / _drawArea.Height;
@@ -341,6 +371,7 @@ namespace SceneRendering
                     rotatePoint(_listOfObjects[idx][f].vertices, _listOfObjectsCOPY[idx][f].vertices, rotationMat, viewMat, perspectiveMat, idx);
                     rotateNormalVector(_listOfObjects[idx][f].normals, _listOfObjectsCOPY[idx][f].normals, rotationMat, idx);
                 }
+                // rorate center point of object
                 _polygonFillers[idx].Faces = _listOfObjects[idx];
             }
         }
