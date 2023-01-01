@@ -38,6 +38,7 @@ namespace SceneRendering
         private double[,] _zBuffer;
 
         private List<System.Numerics.Vector3> _objectCenter = new List<System.Numerics.Vector3>();
+        private List<System.Numerics.Vector3> _objectCenterCOPY = new List<System.Numerics.Vector3>();
 
         //cameras 
         // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
@@ -85,6 +86,9 @@ namespace SceneRendering
             _objectCenter.Add(GetObjectsCenter(0));
             _objectCenter.Add(GetObjectsCenter(1));
             _objectCenter.Add(GetObjectsCenter(2));
+            _objectCenterCOPY.Add(GetObjectsCenter(0));
+            _objectCenterCOPY.Add(GetObjectsCenter(1));
+            _objectCenterCOPY.Add(GetObjectsCenter(2));
 
             _camPositions.Add(new System.Numerics.Vector3(0, 0, 0));
             _camTargerts.Add(_objectCenter[0]);
@@ -339,6 +343,25 @@ namespace SceneRendering
                 v[i].Z = after.Z;
             }
         }
+        private void RotateCenterPoint(Matrix4x4 rotationMat, int idx)
+        {
+            System.Numerics.Vector4 p;
+            p.X = (float)_objectCenterCOPY[idx].X;
+            p.Y = (float)_objectCenterCOPY[idx].Y;
+            p.Z = (float)_objectCenterCOPY[idx].Z;
+            p.W = 1;
+
+            if (_animateObject[idx] == true)
+            {
+                p = Vector4.Transform(p, rotationMat);
+            }
+            p.X /= p.W;
+            p.Y /= p.W;
+            p.Z /= p.W;
+            _objectCenter[idx] = new System.Numerics.Vector3(p.X, p.Y, p.Z);
+
+        }
+
         void RotateScene()
         {
             var rotationMat =
@@ -357,6 +380,12 @@ namespace SceneRendering
             camUpVec.X = 0;
             camUpVec.Y = 0;
             camUpVec.Z = -1;
+            for (int idx = 0; idx < _objectCenter.Count; idx++)
+            {
+                RotateCenterPoint(rotationMat, idx);
+            }
+
+            _camTargerts[_curCameraIdx] = _objectCenter[_curCameraIdx];
             var viewMat = Matrix4x4.CreateLookAt(camPosition, _camTargerts[_curCameraIdx], camUpVec);
             float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
             fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
@@ -372,6 +401,7 @@ namespace SceneRendering
                     rotateNormalVector(_listOfObjects[idx][f].normals, _listOfObjectsCOPY[idx][f].normals, rotationMat, idx);
                 }
                 // rorate center point of object
+
                 _polygonFillers[idx].Faces = _listOfObjects[idx];
             }
         }
