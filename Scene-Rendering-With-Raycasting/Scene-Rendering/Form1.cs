@@ -11,10 +11,27 @@ namespace SceneRendering
         // 3. pozwoliæ na rózne skalowanie róznych obiektów
         // 4. rózne kolory/tekstóry róznych obiektów
 
+        private class SceneObject
+        {
+            public bool Animate { get; set; }
+            public int Scale { get; set; }
+            public List<MyFace> FacesCurrent { get; set; }
+            public List<MyFace> FacesOriginal { get; set; }
+            public PolygonFiller PolygonFiller { get; set; }
+        }
+
+        // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
+        private class Camera
+        {
+            static public int CurrentCameraIndex = 0;
+            public System.Numerics.Vector3 _camPosition { get; set; }
+            public System.Numerics.Vector3 _camTarget { get; set; }
+        }
+
         // paths to files
         private List<string> _pathsToObjFiles = new List<string>();
         private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
-        private string _pathToObjFile = "..\\..\\..\\..\\..\\fulltorust.obj";
+        private string _pathToObjFile = "..\\..\\..\\..\\..\\monkey.obj";
         private string _pathToObjFileSecond = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToPlaneObj = "..\\..\\..\\..\\..\\coords.obj";
 
@@ -28,28 +45,20 @@ namespace SceneRendering
         private int _minSpiralRadious = 40;
 
         private Bitmap _drawArea;
-        private List<PolygonFiller> _polygonFillers = new List<PolygonFiller>();
-        private List<List<MyFace>> _listOfObjects = new List<List<MyFace>>();
-        private List<List<MyFace>> _listOfObjectsCOPY = new List<List<MyFace>>();
         private Vector3[,] _normalMap = null;
         private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
 
         private double[,] _zBuffer;
 
-        private List<System.Numerics.Vector3> _objectCenter = new List<System.Numerics.Vector3>();
-        private List<System.Numerics.Vector3> _objectCenterCOPY = new List<System.Numerics.Vector3>();
-
         //cameras 
         // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
-        private List<System.Numerics.Vector3> _camPositions = new List<System.Numerics.Vector3>();
-        private List<System.Numerics.Vector3> _camTargerts = new List<System.Numerics.Vector3>();
-        private int _curCameraIdx = 0;
+        //private List<System.Numerics.Vector3> _camPositions = new List<System.Numerics.Vector3>();
+        //private List<System.Numerics.Vector3> _camTargerts = new List<System.Numerics.Vector3>();
+        //private int _curCameraIdx = 0;
 
-
-        // behavior fo objects
-        private List<bool> _animateObject = new List<bool>();
-        private List<int> _objectScale = new List<int>();
+        private List<SceneObject> _objects = new List<SceneObject>();
+        private List<Camera> _cameras = new List<Camera>();
         public Form1()
         {
             InitializeComponent();
@@ -65,43 +74,41 @@ namespace SceneRendering
             _zBuffer = new double[Canvas.Width, Canvas.Height];
 
             _pathsToObjFiles.Add(_pathToObjFile);
-            _animateObject.Add(true);
-            _objectScale.Add(Constants.ObjectBasicDim);
+            SceneObject obj1 = new SceneObject();
+            obj1.Animate = true;
+            obj1.Scale = Constants.ObjectBasicDim;
+            _objects.Add(obj1);
 
             _pathsToObjFiles.Add(_pathToObjFileSecond);
-            _animateObject.Add(false);
-            _objectScale.Add(Constants.ObjectBasicDim);
+            SceneObject obj2 = new SceneObject();
+            obj2.Animate = false;
+            obj2.Scale = Constants.ObjectBasicDim;
+            _objects.Add(obj2);
 
             _pathsToObjFiles.Add(_pathToPlaneObj);
-            _animateObject.Add(false);
-            _objectScale.Add(Constants.ObjectBasicDim * 5);
-
-
+            SceneObject obj3 = new SceneObject();
+            obj3.Animate = false;
+            obj3.Scale = Constants.ObjectBasicDim * 5;
+            _objects.Add(obj3);
 
 
             var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
             _colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);
             GetAndSetObj();
 
-            _objectCenter.Add(GetObjectsCenter(0));
-            _objectCenter.Add(GetObjectsCenter(1));
-            _objectCenter.Add(GetObjectsCenter(2));
-            _objectCenterCOPY.Add(GetObjectsCenter(0));
-            _objectCenterCOPY.Add(GetObjectsCenter(1));
-            _objectCenterCOPY.Add(GetObjectsCenter(2));
-
-            _camPositions.Add(new System.Numerics.Vector3(0, 0, 0));
-            _camTargerts.Add(_objectCenter[0]);
-
+            Camera cam1 = new Camera();
+            cam1._camTarget = GetCurrentObjectsCenter(Camera.CurrentCameraIndex);
+            cam1._camPosition = new System.Numerics.Vector3(0, 0, 0);
+            _cameras.Add(cam1);
 
             PaintScene();
         }
 
-        System.Numerics.Vector3 GetObjectsCenter(int objectIdx)
+        System.Numerics.Vector3 GetCurrentObjectsCenter(int objectIdx)
         {
             double x = 0, y = 0, z = 0;
             int count = 0;
-            foreach (var face in _listOfObjectsCOPY[objectIdx])
+            foreach (var face in _objects[objectIdx].FacesCurrent)
             {
                 foreach (var vertex in face.vertices)
                 {
@@ -142,10 +149,9 @@ namespace SceneRendering
             }
             if (this.paintObjectsCheckBox.Checked)
             {
-                foreach (var polygonFiler in _polygonFillers)
+                foreach (var obj in _objects)
                 {
-
-                    polygonFiler.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, _zBuffer);
+                    obj.PolygonFiller.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, _zBuffer);
                 }
             }
             if (paintTriangulationCheckBox.Checked)
@@ -156,20 +162,15 @@ namespace SceneRendering
         }
         private void GetAndSetObj()
         {
-            _polygonFillers.Clear();
-            _listOfObjects.Clear();
-            _listOfObjectsCOPY.Clear();
             var result = LoadObjFile();
-            int i = 0;
-            foreach (var loadResult in result)
+            for (int idx = 0; idx < result.Count; idx++)
             {
-                var faces = GetAllFaces(loadResult, i);
-                var faces2 = GetAllFaces(loadResult, i);
-                _listOfObjects.Add(faces);
-                _listOfObjectsCOPY.Add(faces2);
+                var faces = GetAllFaces(result[idx], idx);
+                var faces2 = GetAllFaces(result[idx], idx);
+                _objects[idx].FacesCurrent = faces;
+                _objects[idx].FacesOriginal = faces2;
                 var polygonFiller = new PolygonFiller(_drawArea, faces, _colorMap, _lighColor, _normalMap);
-                _polygonFillers.Add(polygonFiller);
-                i++;
+                _objects[idx].PolygonFiller = polygonFiller;
             }
         }
         private Bitmap GetBitampFromFile(string path)
@@ -200,9 +201,9 @@ namespace SceneRendering
             }
             var scaleVectorLambda = (Vector3 v) =>
             {
-                v.X = (v.X - minX) / (maxX - minX) * _objectScale[idx] + Constants.XOffset + (float)0.1 * idx * Constants.Offset;
-                v.Y = (v.Y - minY) / (maxY - minY) * _objectScale[idx] + Constants.YOffset;
-                v.Z = (v.Z - minZ) / (maxZ - minZ) * _objectScale[idx] / 2;
+                v.X = (v.X - minX) / (maxX - minX) * _objects[idx].Scale + Constants.XOffset + (float)0.1 * idx * Constants.Offset;
+                v.Y = (v.Y - minY) / (maxY - minY) * _objects[idx].Scale + Constants.YOffset;
+                v.Z = (v.Z - minZ) / (maxZ - minZ) * _objects[idx].Scale / 2;
                 return v;
             };
 
@@ -223,7 +224,6 @@ namespace SceneRendering
                     ids.Add(f[i].VertexIndex);
 
                 }
-
                 faces.Add(new MyFace(vertices, normals, ids));
             }
             return faces;
@@ -232,13 +232,13 @@ namespace SceneRendering
         {
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
-                foreach (var faces in _listOfObjects)
+                for (int idx = 0; idx < _objects.Count; idx++)
                 {
                     var ToPointF = (double x, double y, double z) =>
                     {
                         return new PointF((float)x, (float)y);
                     };
-                    foreach (var f in faces)
+                    foreach (var f in _objects[idx].FacesCurrent)
                     {
                         Pen pen = new Pen(Brushes.Black, 1);
                         for (int i = 0; i < f.vertices.Count - 1; i++)
@@ -299,7 +299,7 @@ namespace SceneRendering
                 p.Z = (float)original[i].Z;
                 p.W = 1;
 
-                if (_animateObject[idx] == true)
+                if (_objects[idx].Animate == true)
                 {
                     p = Vector4.Transform(p, rotationMat);
                 }
@@ -326,7 +326,7 @@ namespace SceneRendering
         }
         private void rotateNormalVector(List<Vector3> v, List<Vector3> original, Matrix4x4 rotationMat, int idx)
         {
-            if (_animateObject[idx] == true)
+            if (_objects[idx].Animate == true)
             {
                 return;
             }
@@ -343,25 +343,10 @@ namespace SceneRendering
                 v[i].Z = after.Z;
             }
         }
-        private void RotateCenterPoint(Matrix4x4 rotationMat, int idx)
+        private void UpdataCameraTarget(int idx)
         {
-            System.Numerics.Vector4 p;
-            p.X = (float)_objectCenterCOPY[idx].X;
-            p.Y = (float)_objectCenterCOPY[idx].Y;
-            p.Z = (float)_objectCenterCOPY[idx].Z;
-            p.W = 1;
-
-            if (_animateObject[idx] == true)
-            {
-                p = Vector4.Transform(p, rotationMat);
-            }
-            p.X /= p.W;
-            p.Y /= p.W;
-            p.Z /= p.W;
-            _objectCenter[idx] = new System.Numerics.Vector3(p.X, p.Y, p.Z);
-
+            _cameras[idx]._camTarget = GetCurrentObjectsCenter(idx);
         }
-
         void RotateScene()
         {
             var rotationMat =
@@ -380,29 +365,28 @@ namespace SceneRendering
             camUpVec.X = 0;
             camUpVec.Y = 0;
             camUpVec.Z = -1;
-            for (int idx = 0; idx < _objectCenter.Count; idx++)
+            for (int idx = 0; idx < _cameras.Count; idx++)
             {
-                RotateCenterPoint(rotationMat, idx);
+                UpdataCameraTarget(idx);
             }
 
-            _camTargerts[_curCameraIdx] = _objectCenter[_curCameraIdx];
-            var viewMat = Matrix4x4.CreateLookAt(camPosition, _camTargerts[_curCameraIdx], camUpVec);
+            var viewMat = Matrix4x4.CreateLookAt(camPosition, _cameras[Camera.CurrentCameraIndex]._camTarget, camUpVec);
             float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
             fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
             aspecetRatio = _drawArea.Width / _drawArea.Height;
             nearPlaneDist = 10;
             farPlaneDist = 1000;
             var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
-            for (int idx = 0; idx < _listOfObjects.Count; idx++)
+            for (int idx = 0; idx < _objects.Count; idx++)
             {
-                for (int f = 0; f < _listOfObjects[idx].Count; f++)
+                for (int f = 0; f < _objects[idx].FacesOriginal.Count; f++)
                 {
-                    rotatePoint(_listOfObjects[idx][f].vertices, _listOfObjectsCOPY[idx][f].vertices, rotationMat, viewMat, perspectiveMat, idx);
-                    rotateNormalVector(_listOfObjects[idx][f].normals, _listOfObjectsCOPY[idx][f].normals, rotationMat, idx);
+                    rotatePoint(_objects[idx].FacesCurrent[f].vertices, _objects[idx].FacesOriginal[f].vertices, rotationMat, viewMat, perspectiveMat, idx);
+                    rotateNormalVector(_objects[idx].FacesCurrent[f].normals, _objects[idx].FacesOriginal[f].normals, rotationMat, idx);
                 }
                 // rorate center point of object
 
-                _polygonFillers[idx].Faces = _listOfObjects[idx];
+                _objects[idx].PolygonFiller.Faces = _objects[idx].FacesCurrent;
             }
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -467,9 +451,9 @@ namespace SceneRendering
             _pathToColorMap = this.openFileDialog1.FileName;
             var texture = GetBitampFromFile(_pathToColorMap);
             _colorMap = Utils.ConvertBitmapToArray(texture);
-            foreach (var polygonFiller in _polygonFillers)
+            for (int idx = 0; idx < _objects.Count; idx++)
             {
-                polygonFiller.ColorMap = _colorMap;
+                _objects[idx].PolygonFiller.ColorMap = _colorMap;
             }
             PaintScene();
         }
@@ -491,9 +475,9 @@ namespace SceneRendering
                 g.Dispose();
             }
             _colorMap = Utils.ConvertBitmapToArray(bmp);
-            foreach (var polygonFiller in _polygonFillers)
+            foreach (var obj in _objects)
             {
-                polygonFiller.ColorMap = _colorMap;
+                obj.PolygonFiller.ColorMap = _colorMap;
             }
             PaintScene();
 
@@ -519,9 +503,10 @@ namespace SceneRendering
                 return;
             }
             _lighColor = this.lightColorDialog.Color;
-            foreach (var polygonFiller in _polygonFillers)
+
+            foreach (var obj in _objects)
             {
-                polygonFiller.LighColor = _lighColor;
+                obj.PolygonFiller.LighColor = _lighColor;
             }
             PaintScene();
         }
@@ -541,13 +526,6 @@ namespace SceneRendering
         private void paintObjectsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             PaintScene();
-        }
-        private void clearSceneButton_Click(object sender, EventArgs e)
-        {
-            _pathsToObjFiles.Clear();
-            _polygonFillers.Clear();
-            _listOfObjects.Clear();
-            _listOfObjectsCOPY.Clear();
         }
     }
 }

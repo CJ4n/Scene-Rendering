@@ -41,7 +41,6 @@
             this.zNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.yNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.FOVTrackBar = new System.Windows.Forms.TrackBar();
-            this.clearSceneButton = new System.Windows.Forms.Button();
             this.paintObjectsCheckBox = new System.Windows.Forms.CheckBox();
             this.kaLabel = new System.Windows.Forms.Label();
             this.changeLightColorButton = new System.Windows.Forms.Button();
@@ -124,7 +123,6 @@
             this.groupBox1.Controls.Add(this.zNumericUpDown);
             this.groupBox1.Controls.Add(this.yNumericUpDown);
             this.groupBox1.Controls.Add(this.FOVTrackBar);
-            this.groupBox1.Controls.Add(this.clearSceneButton);
             this.groupBox1.Controls.Add(this.paintObjectsCheckBox);
             this.groupBox1.Controls.Add(this.kaLabel);
             this.groupBox1.Controls.Add(this.changeLightColorButton);
@@ -273,16 +271,6 @@
             this.FOVTrackBar.Size = new System.Drawing.Size(130, 56);
             this.FOVTrackBar.TabIndex = 25;
             this.FOVTrackBar.Value = 30;
-            // 
-            // clearSceneButton
-            // 
-            this.clearSceneButton.Location = new System.Drawing.Point(1, 859);
-            this.clearSceneButton.Name = "clearSceneButton";
-            this.clearSceneButton.Size = new System.Drawing.Size(210, 29);
-            this.clearSceneButton.TabIndex = 24;
-            this.clearSceneButton.Text = "Clear Scene";
-            this.clearSceneButton.UseVisualStyleBackColor = true;
-            this.clearSceneButton.Click += new System.EventHandler(this.clearSceneButton_Click);
             // 
             // paintObjectsCheckBox
             // 
@@ -597,7 +585,6 @@
         private TrackBar kaTrackBar;
         private Label kaLabel;
         private CheckBox paintObjectsCheckBox;
-        private Button clearSceneButton;
         private NumericUpDown xNumericUpDown;
         private NumericUpDown zNumericUpDown;
         private NumericUpDown yNumericUpDown;
