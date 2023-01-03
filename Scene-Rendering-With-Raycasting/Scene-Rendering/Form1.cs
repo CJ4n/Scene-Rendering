@@ -15,17 +15,18 @@ namespace SceneRendering
         {
             public bool Animate { get; set; }
             public int Scale { get; set; }
-            public List<MyFace> FacesCurrent { get; set; }
-            public List<MyFace> FacesOriginal { get; set; }
+            public List<MyFace> FacesCamera { get; set; }
+            public List<MyFace> FacesWorld { get; set; }
             public PolygonFiller PolygonFiller { get; set; }
         }
 
         // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
         private class Camera
         {
+            public string Name { get; set; }
             static public int CurrentCameraIndex = 0;
-            public System.Numerics.Vector3 _camPosition { get; set; }
-            public System.Numerics.Vector3 _camTarget { get; set; }
+            public System.Numerics.Vector3 CamPosition { get; set; }
+            public System.Numerics.Vector3 CamTarget { get; set; }
         }
 
         // paths to files
@@ -36,6 +37,7 @@ namespace SceneRendering
         private string _pathToPlaneObj = "..\\..\\..\\..\\..\\coords.obj";
 
         private Vector3 _lightSource = new Vector3(1000, 300, 2500);
+        private Vector3 _lightSourceCamera = new Vector3(1000, 300, 2500);
         private PointF _origin = new PointF(Constants.ObjectBasicDim / 2, Constants.ObjectBasicDim / 2);
         private int _radius = 1000;
         private int _angle = 0;
@@ -50,12 +52,6 @@ namespace SceneRendering
         private Color _lighColor = Color.White;
 
         private double[,] _zBuffer;
-
-        //cameras 
-        // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
-        //private List<System.Numerics.Vector3> _camPositions = new List<System.Numerics.Vector3>();
-        //private List<System.Numerics.Vector3> _camTargerts = new List<System.Numerics.Vector3>();
-        //private int _curCameraIdx = 0;
 
         private List<SceneObject> _objects = new List<SceneObject>();
         private List<Camera> _cameras = new List<Camera>();
@@ -97,18 +93,33 @@ namespace SceneRendering
             GetAndSetObj();
 
             Camera cam1 = new Camera();
-            cam1._camTarget = GetCurrentObjectsCenter(Camera.CurrentCameraIndex);
-            cam1._camPosition = new System.Numerics.Vector3(0, 0, 0);
+            cam1.CamTarget = GetWorldObjectsCenter(Camera.CurrentCameraIndex);
+            cam1.CamPosition = new System.Numerics.Vector3(400, 400, 1500);
+            cam1.Name = "StationaryTrackingCamera";
             _cameras.Add(cam1);
+
+            Camera cam2 = new Camera();
+            cam2.CamTarget = new System.Numerics.Vector3(0, 0, 0);
+            cam2.CamPosition = new System.Numerics.Vector3(1000, 1000, 1500);
+            cam2.Name = "StationaryCamera";
+            _cameras.Add(cam2);
+
+            this.comboBox1.DataSource = _cameras.Select(x => x.Name).ToList();
+
+            var tmp = _cameras[Camera.CurrentCameraIndex].CamPosition;
+            this.xNumericUpDown.Value = (decimal)tmp.X;
+            this.yNumericUpDown.Value = (decimal)tmp.Y;
+            this.zNumericUpDown.Value = (decimal)tmp.Z;
+            this.zNumericUpDown.Update();
 
             PaintScene();
         }
 
-        System.Numerics.Vector3 GetCurrentObjectsCenter(int objectIdx)
+        System.Numerics.Vector3 GetWorldObjectsCenter(int objectIdx)
         {
             double x = 0, y = 0, z = 0;
             int count = 0;
-            foreach (var face in _objects[objectIdx].FacesCurrent)
+            foreach (var face in _objects[objectIdx].FacesWorld)
             {
                 foreach (var vertex in face.vertices)
                 {
@@ -116,12 +127,12 @@ namespace SceneRendering
                     y += vertex.Y;
                     z += vertex.Z;
                 }
-                count++;
+                count += 3;
             }
 
             return new System.Numerics.Vector3((float)x / count, (float)y / count, (float)z / count);
         }
-        void zBuffer()
+        void InitZBuffer()
         {
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
@@ -135,17 +146,18 @@ namespace SceneRendering
         }
         private void PaintScene()
         {
-            zBuffer();
+            InitZBuffer();
             RotateScene();
             float ks = (float)(this.ksTrackBar.Value / 100.0);
             float kd = (float)(this.kdTrackBar.Value / 100.0);
             float ka = (float)(this.kaTrackBar.Value / 100.0);
             int m = this.mTrackBar.Value;
-            bool interpolateNormalVector = this.normalRadioButton.Checked;
+            bool interpolateNormalVector = this.interpolateNormalRadioButton.Checked;
 
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
                 g.Clear(Color.LightBlue);
+                g.FillEllipse(Brushes.Yellow, (int)_lightSourceCamera.X, (int)_lightSourceCamera.Y, 50, 50);
             }
             if (this.paintObjectsCheckBox.Checked)
             {
@@ -158,6 +170,8 @@ namespace SceneRendering
             {
                 DrawTriangulation();
             }
+
+
             Canvas.Refresh();
         }
         private void GetAndSetObj()
@@ -167,8 +181,8 @@ namespace SceneRendering
             {
                 var faces = GetAllFaces(result[idx], idx);
                 var faces2 = GetAllFaces(result[idx], idx);
-                _objects[idx].FacesCurrent = faces;
-                _objects[idx].FacesOriginal = faces2;
+                _objects[idx].FacesCamera = faces;
+                _objects[idx].FacesWorld = faces2;
                 var polygonFiller = new PolygonFiller(_drawArea, faces, _colorMap, _lighColor, _normalMap);
                 _objects[idx].PolygonFiller = polygonFiller;
             }
@@ -238,7 +252,7 @@ namespace SceneRendering
                     {
                         return new PointF((float)x, (float)y);
                     };
-                    foreach (var f in _objects[idx].FacesCurrent)
+                    foreach (var f in _objects[idx].FacesCamera)
                     {
                         Pen pen = new Pen(Brushes.Black, 1);
                         for (int i = 0; i < f.vertices.Count - 1; i++)
@@ -266,6 +280,166 @@ namespace SceneRendering
 
             return loadResults;
         }
+        private void rotateObjectsPoint(List<Vector3> cameraPoint, List<Vector3> worldPoint, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat, int idx)
+        {
+            for (int i = 0; i < worldPoint.Count; i++)
+            {
+                System.Numerics.Vector4 p;
+                p.X = (float)worldPoint[i].X;
+                p.Y = (float)worldPoint[i].Y;
+                p.Z = (float)worldPoint[i].Z;
+                p.W = 1;
+
+                if (_objects[idx].Animate == true)
+                {
+                    p = Vector4.Transform(p, rotationMat);
+                    worldPoint[i].X = p.X / p.W;
+                    worldPoint[i].Y = p.Y / p.W;
+                    worldPoint[i].Z = p.Z / p.W;
+                }
+                p = Vector4.Transform(p, viewMat);
+                p = Vector4.Transform(p, perspectiveMat);
+                p.X /= p.W;
+                p.Y /= p.W;
+                p.Z /= p.W;
+                if (p.X < -1) p.X = -1;
+                if (p.Y < -1) p.Y = -1;
+                if (p.Z < -1) p.Z = -1;
+
+                if (p.X > 1) p.X = 1;
+                if (p.Y > 1) p.Y = 1;
+                if (p.Z > 1) p.Z = 1;
+                p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
+                p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
+                p.Z = (p.Z + 1) / 2 * (3000 - 1);
+
+                cameraPoint[i].X = p.X;
+                cameraPoint[i].Y = p.Y;
+                cameraPoint[i].Z = p.Z;
+            }
+        }
+        // cameraNormal==worldNormal
+        private void rotateNormalVector(List<Vector3> cameraNormal, List<Vector3> worldNormal, Matrix4x4 rotationMat, int idx)
+        {
+            if (_objects[idx].Animate == true)
+            {
+                return;
+            }
+
+            for (int i = 0; i < worldNormal.Count; i++)
+            {
+                System.Numerics.Vector3 p;
+                p.X = (float)worldNormal[i].X;
+                p.Y = (float)worldNormal[i].Y;
+                p.Z = (float)worldNormal[i].Z;
+                var after = System.Numerics.Vector3.TransformNormal(p, rotationMat);
+                cameraNormal[i].X = after.X;
+                cameraNormal[i].Y = after.Y;
+                cameraNormal[i].Z = after.Z;
+            }
+        }
+
+        private void rotateSun(Vector3 cameraPoint, Vector3 worldPoint, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat)
+        {
+
+            System.Numerics.Vector4 p;
+            p.X = (float)worldPoint.X;
+            p.Y = (float)worldPoint.Y;
+            p.Z = (float)worldPoint.Z;
+            p.W = 1;
+
+            //p = Vector4.Transform(p, rotationMat);
+            //worldPoint.X = p.X / p.W;
+            //worldPoint.Y = p.Y / p.W;
+            //worldPoint.Z = p.Z / p.W;
+            p = Vector4.Transform(p, viewMat);
+            p = Vector4.Transform(p, perspectiveMat);
+            p.X /= p.W;
+            p.Y /= p.W;
+            p.Z /= p.W;
+            if (p.X < -1) p.X = -1;
+            if (p.Y < -1) p.Y = -1;
+            if (p.Z < -1) p.Z = -1;
+
+            if (p.X > 1) p.X = 1;
+            if (p.Y > 1) p.Y = 1;
+            if (p.Z > 1) p.Z = 1;
+            p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
+            p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
+            p.Z = (p.Z + 1) / 2 * (3000 - 1);
+
+            cameraPoint.X = p.X;
+            cameraPoint.Y = p.Y;
+            cameraPoint.Z = p.Z;
+
+        }
+        private void UpdataCameraTarget(int idx)
+        {
+            _cameras[idx].CamTarget = GetWorldObjectsCenter(idx);
+        }
+        void RotateScene()
+        {
+            var rotationMat =
+                  System.Numerics.Matrix4x4.CreateRotationX((float)(Constants.Angle * Math.PI / 180.0));
+
+            System.Numerics.Vector3 camUpVec;
+
+            camUpVec.X = 0;
+            camUpVec.Y = 0;
+            camUpVec.Z = 1; // something is working when == 1
+            for (int idx = 0; idx < _cameras.Count; idx++)
+            {
+                UpdataCameraTarget(idx);
+            }
+
+            var viewMat = Matrix4x4.CreateLookAt(_cameras[Camera.CurrentCameraIndex].CamPosition, _cameras[Camera.CurrentCameraIndex].CamTarget, camUpVec);
+            float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
+            fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
+            aspecetRatio = _drawArea.Width / _drawArea.Height;
+            nearPlaneDist = 10;
+            farPlaneDist = 10000;
+            var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
+            for (int idx = 0; idx < _objects.Count; idx++)
+            {
+                for (int f = 0; f < _objects[idx].FacesWorld.Count; f++)
+                {
+                    rotateObjectsPoint(_objects[idx].FacesCamera[f].vertices, _objects[idx].FacesWorld[f].vertices, rotationMat, viewMat, perspectiveMat, idx);
+                    rotateNormalVector(_objects[idx].FacesCamera[f].normals, _objects[idx].FacesWorld[f].normals, rotationMat, idx);
+                }
+
+                _objects[idx].PolygonFiller.Faces = _objects[idx].FacesCamera;
+            }
+            rotateSun(_lightSourceCamera, _lightSource, rotationMat, viewMat, perspectiveMat);
+        }
+
+        //purely debug featuer, not intented for any particular usage
+        private void CameraPositionChanged(object sender, EventArgs e)
+        {
+            _cameras[Camera.CurrentCameraIndex].CamPosition =
+                new System.Numerics.Vector3((float)this.xNumericUpDown.Value, (float)this.yNumericUpDown.Value, (float)this.zNumericUpDown.Value);
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (this.animateLightCheckBox.Checked)
+            {
+                if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
+                {
+                    _radiusIncrement = -_radiusIncrement;
+                }
+
+                double x = _radius * Math.Cos(_angle * Math.PI / 180);
+                double y = _radius * Math.Sin(_angle * Math.PI / 180);
+                _angle += _angleIncrement;
+                //_radius += _radiusIncrement;
+                _lightSource.X = x + _origin.X;
+                _lightSource.Y = y + _origin.Y;
+            }
+            if (this.animateObjectCheckBox.Checked)
+            {
+                //Constants.Angle += 3;
+            }
+            PaintScene();
+        }
         private void kdTrackBar_ValueChanged(object sender, EventArgs e)
         {
             this.kdLabel.Text = "kd: " + (this.kdTrackBar.Value / 100.0).ToString();
@@ -289,128 +463,6 @@ namespace SceneRendering
         {
             PaintScene();
         }
-        private void rotatePoint(List<Vector3> v, List<Vector3> original, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat, int idx)
-        {
-            for (int i = 0; i < original.Count; i++)
-            {
-                System.Numerics.Vector4 p;
-                p.X = (float)original[i].X;
-                p.Y = (float)original[i].Y;
-                p.Z = (float)original[i].Z;
-                p.W = 1;
-
-                if (_objects[idx].Animate == true)
-                {
-                    p = Vector4.Transform(p, rotationMat);
-                }
-                p = Vector4.Transform(p, viewMat);
-                p = Vector4.Transform(p, perspectiveMat);
-                p.X /= p.W;
-                p.Y /= p.W;
-                p.Z /= p.W;
-                if (p.X < -1) p.X = -1;
-                if (p.Y < -1) p.Y = -1;
-                if (p.Z < -1) p.Z = -1;
-
-                if (p.X > 1) p.X = 1;
-                if (p.Y > 1) p.Y = 1;
-                if (p.Z > 1) p.Z = 1;
-                p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
-                p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
-                p.Z = (p.Z + 1) / 2 * (3000 - 1);
-
-                v[i].X = p.X;
-                v[i].Y = p.Y;
-                v[i].Z = p.Z;
-            }
-        }
-        private void rotateNormalVector(List<Vector3> v, List<Vector3> original, Matrix4x4 rotationMat, int idx)
-        {
-            if (_objects[idx].Animate == true)
-            {
-                return;
-            }
-
-            for (int i = 0; i < original.Count; i++)
-            {
-                System.Numerics.Vector3 p;
-                p.X = (float)original[i].X;
-                p.Y = (float)original[i].Y;
-                p.Z = (float)original[i].Z;
-                var after = System.Numerics.Vector3.TransformNormal(p, rotationMat);
-                v[i].X = after.X;
-                v[i].Y = after.Y;
-                v[i].Z = after.Z;
-            }
-        }
-        private void UpdataCameraTarget(int idx)
-        {
-            _cameras[idx]._camTarget = GetCurrentObjectsCenter(idx);
-        }
-        void RotateScene()
-        {
-            var rotationMat =
-                  System.Numerics.Matrix4x4.CreateRotationX((float)(Constants.Angle * Math.PI / 180.0));
-
-            System.Numerics.Vector3 camPosition, camUpVec;
-            System.Numerics.Vector3 camTarget;
-            camPosition.X = (float)this.xNumericUpDown.Value;
-            camPosition.Y = (float)this.yNumericUpDown.Value;
-            camPosition.Z = (float)this.zNumericUpDown.Value;
-
-            //camTarget.X = 0;
-            //camTarget.Y = 0;
-            //camTarget.Z = 0;
-
-            camUpVec.X = 0;
-            camUpVec.Y = 0;
-            camUpVec.Z = -1;
-            for (int idx = 0; idx < _cameras.Count; idx++)
-            {
-                UpdataCameraTarget(idx);
-            }
-
-            var viewMat = Matrix4x4.CreateLookAt(camPosition, _cameras[Camera.CurrentCameraIndex]._camTarget, camUpVec);
-            float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
-            fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
-            aspecetRatio = _drawArea.Width / _drawArea.Height;
-            nearPlaneDist = 10;
-            farPlaneDist = 1000;
-            var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
-            for (int idx = 0; idx < _objects.Count; idx++)
-            {
-                for (int f = 0; f < _objects[idx].FacesOriginal.Count; f++)
-                {
-                    rotatePoint(_objects[idx].FacesCurrent[f].vertices, _objects[idx].FacesOriginal[f].vertices, rotationMat, viewMat, perspectiveMat, idx);
-                    rotateNormalVector(_objects[idx].FacesCurrent[f].normals, _objects[idx].FacesOriginal[f].normals, rotationMat, idx);
-                }
-                // rorate center point of object
-
-                _objects[idx].PolygonFiller.Faces = _objects[idx].FacesCurrent;
-            }
-        }
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (this.animateLightCheckBox.Checked)
-            {
-                if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
-                {
-                    _radiusIncrement = -_radiusIncrement;
-                }
-
-                double x = _radius * Math.Cos(_angle * Math.PI / 180);
-                double y = _radius * Math.Sin(_angle * Math.PI / 180);
-                _angle += _angleIncrement;
-                _radius += _radiusIncrement;
-                _lightSource.X = x + _origin.X;
-                _lightSource.Y = y + _origin.Y;
-            }
-            if (this.animateObjectCheckBox.Checked)
-            {
-                Constants.Angle += 3;
-            }
-            PaintScene();
-        }
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var z = (double)zTrackBar.Value;
@@ -424,6 +476,10 @@ namespace SceneRendering
         }
         private void animationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+            foreach (var obj in _objects)
+            {
+                obj.Animate = false;
+            }
             //if (animationCheckBox.Checked)
             //{
             //    animationTimer.Start();
@@ -482,19 +538,6 @@ namespace SceneRendering
             PaintScene();
 
         }
-        private void loadObjFileButton_Click(object sender, EventArgs e)
-        {
-            var status = this.openFileDialog1.ShowDialog();
-            if (status != DialogResult.OK)
-            {
-                return;
-            }
-            //_pathToObjFile = this.openFileDialog1.FileName;
-            var pathToObj = this.openFileDialog1.FileName;
-            _pathsToObjFiles.Add(pathToObj);
-            GetAndSetObj();
-            PaintScene();
-        }
         private void changeLightColorButton_Click(object sender, EventArgs e)
         {
             var status = this.lightColorDialog.ShowDialog();
@@ -526,6 +569,14 @@ namespace SceneRendering
         private void paintObjectsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             PaintScene();
+        }
+        private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            Camera.CurrentCameraIndex = this.comboBox1.SelectedIndex;
+            var tmp = _cameras[Camera.CurrentCameraIndex].CamPosition;
+            this.xNumericUpDown.Value = (decimal)tmp.X;
+            this.yNumericUpDown.Value = (decimal)tmp.Y;
+            this.zNumericUpDown.Value = (decimal)tmp.Z;
         }
     }
 }

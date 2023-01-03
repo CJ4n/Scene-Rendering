@@ -9,6 +9,6 @@
 
         static public int Offset = ObjectBasicDim + XOffset;
 
-        static public float Angle = 0;
+        static public float Angle = 3;
     }
 }
