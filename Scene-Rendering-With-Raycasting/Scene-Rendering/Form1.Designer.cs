@@ -49,7 +49,6 @@
             this.interpolateNormalRadioButton = new System.Windows.Forms.RadioButton();
             this.interpolateColorRadioButton = new System.Windows.Forms.RadioButton();
             this.ColorGroupBox = new System.Windows.Forms.GroupBox();
-            this.bitmapColorRadioButton = new System.Windows.Forms.RadioButton();
             this.constColorRadioButton = new System.Windows.Forms.RadioButton();
             this.paintTriangulationCheckBox = new System.Windows.Forms.CheckBox();
             this.animateObjectCheckBox = new System.Windows.Forms.CheckBox();
@@ -355,7 +354,6 @@
             // 
             // ColorGroupBox
             // 
-            this.ColorGroupBox.Controls.Add(this.bitmapColorRadioButton);
             this.ColorGroupBox.Controls.Add(this.constColorRadioButton);
             this.ColorGroupBox.Location = new System.Drawing.Point(2, 452);
             this.ColorGroupBox.Name = "ColorGroupBox";
@@ -364,26 +362,15 @@
             this.ColorGroupBox.TabStop = false;
             this.ColorGroupBox.Text = "Color";
             // 
-            // bitmapColorRadioButton
-            // 
-            this.bitmapColorRadioButton.AutoSize = true;
-            this.bitmapColorRadioButton.Checked = true;
-            this.bitmapColorRadioButton.Location = new System.Drawing.Point(21, 26);
-            this.bitmapColorRadioButton.Name = "bitmapColorRadioButton";
-            this.bitmapColorRadioButton.Size = new System.Drawing.Size(156, 24);
-            this.bitmapColorRadioButton.TabIndex = 14;
-            this.bitmapColorRadioButton.TabStop = true;
-            this.bitmapColorRadioButton.Text = "Color From Bitmap";
-            this.bitmapColorRadioButton.UseVisualStyleBackColor = true;
-            this.bitmapColorRadioButton.Click += new System.EventHandler(this.bitmapColorRadioButton_Click);
-            // 
             // constColorRadioButton
             // 
             this.constColorRadioButton.AutoSize = true;
+            this.constColorRadioButton.Checked = true;
             this.constColorRadioButton.Location = new System.Drawing.Point(21, 56);
             this.constColorRadioButton.Name = "constColorRadioButton";
             this.constColorRadioButton.Size = new System.Drawing.Size(128, 24);
             this.constColorRadioButton.TabIndex = 13;
+            this.constColorRadioButton.TabStop = true;
             this.constColorRadioButton.Text = "Constant Color";
             this.constColorRadioButton.UseVisualStyleBackColor = true;
             this.constColorRadioButton.Click += new System.EventHandler(this.constColorRadioButton_Click);
@@ -576,7 +563,6 @@
         private CheckBox animateObjectCheckBox;
         private CheckBox paintTriangulationCheckBox;
         private ColorDialog surfaceColorDialog;
-        private RadioButton bitmapColorRadioButton;
         private RadioButton constColorRadioButton;
         private GroupBox interpolationGroupBox;
         private GroupBox ColorGroupBox;

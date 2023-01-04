@@ -10,7 +10,9 @@ namespace SceneRendering
         // 2. dodaæ nowe kamery
         // 3. pozwoliæ na rózne skalowanie róznych obiektów
         // 4. rózne kolory/tekstóry róznych obiektów
-
+        // 5. zmienic alg rysowania pod rysowanie tylko trojk¹tów
+        // 6. dodac mutexy ale one nie dizalaja, program sie nie odpala xD
+        // 7. cos jest nie tak z swiatlem, zmiania z na -z pomaga z jakiegos powodu
         private class SceneObject
         {
             public bool Animate { get; set; }
@@ -31,7 +33,7 @@ namespace SceneRendering
 
         // paths to files
         private List<string> _pathsToObjFiles = new List<string>();
-        private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
+        //private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
         private string _pathToObjFile = "..\\..\\..\\..\\..\\monkey.obj";
         private string _pathToObjFileSecond = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToPlaneObj = "..\\..\\..\\..\\..\\coords.obj";
@@ -47,14 +49,16 @@ namespace SceneRendering
         private int _minSpiralRadious = 40;
 
         private Bitmap _drawArea;
-        private Vector3[,] _normalMap = null;
-        private MyColor[,] _colorMap;
+        //private Vector3[,] _normalMap = null;
+        //private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
+        private MyColor _objectColor;
 
         private double[,] _zBuffer;
 
         private List<SceneObject> _objects = new List<SceneObject>();
         private List<Camera> _cameras = new List<Camera>();
+
         public Form1()
         {
             InitializeComponent();
@@ -87,9 +91,11 @@ namespace SceneRendering
             obj3.Scale = Constants.ObjectBasicDim * 5;
             _objects.Add(obj3);
 
+            var colorTmp = Color.OrangeRed;
+            _objectColor = new MyColor(colorTmp.R / 255f, colorTmp.G / 255f, colorTmp.B / 255f);
 
-            var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
-            _colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);
+            //var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
+            //_colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);
             GetAndSetObj();
 
             Camera cam1 = new Camera();
@@ -147,7 +153,7 @@ namespace SceneRendering
         private void PaintScene()
         {
             InitZBuffer();
-            RotateScene();
+            //RotateScene();
             float ks = (float)(this.ksTrackBar.Value / 100.0);
             float kd = (float)(this.kdTrackBar.Value / 100.0);
             float ka = (float)(this.kaTrackBar.Value / 100.0);
@@ -171,7 +177,6 @@ namespace SceneRendering
                 DrawTriangulation();
             }
 
-
             Canvas.Refresh();
         }
         private void GetAndSetObj()
@@ -183,18 +188,19 @@ namespace SceneRendering
                 var faces2 = GetAllFaces(result[idx], idx);
                 _objects[idx].FacesCamera = faces;
                 _objects[idx].FacesWorld = faces2;
-                var polygonFiller = new PolygonFiller(_drawArea, faces, _colorMap, _lighColor, _normalMap);
+
+                var polygonFiller = new PolygonFiller(_drawArea, faces, _objectColor, _lighColor/*, _normalMap*/);
                 _objects[idx].PolygonFiller = polygonFiller;
             }
         }
-        private Bitmap GetBitampFromFile(string path)
-        {
-            Bitmap bitmap = new Bitmap(path);
-            Rectangle cloneRect = new Rectangle(0, 0, Math.Min(_drawArea.Width, bitmap.Width), Math.Min(_drawArea.Height, bitmap.Height));
-            Bitmap bmp = bitmap.Clone(cloneRect, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            bitmap.Dispose();
-            return bmp;
-        }
+        //private Bitmap GetBitampFromFile(string path)
+        //{
+        //    Bitmap bitmap = new Bitmap(path);
+        //    Rectangle cloneRect = new Rectangle(0, 0, Math.Min(_drawArea.Width, bitmap.Width), Math.Min(_drawArea.Height, bitmap.Height));
+        //    Bitmap bmp = bitmap.Clone(cloneRect, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+        //    bitmap.Dispose();
+        //    return bmp;
+        //}
         private List<MyFace> GetAllFaces(LoadResult data, int idx)
         {
             float maxX = data.Vertices.Max(x => x.X);
@@ -338,10 +344,8 @@ namespace SceneRendering
                 cameraNormal[i].Z = after.Z;
             }
         }
-
         private void rotateSun(Vector3 cameraPoint, Vector3 worldPoint, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat)
         {
-
             System.Numerics.Vector4 p;
             p.X = (float)worldPoint.X;
             p.Y = (float)worldPoint.Y;
@@ -411,7 +415,6 @@ namespace SceneRendering
             }
             rotateSun(_lightSourceCamera, _lightSource, rotationMat, viewMat, perspectiveMat);
         }
-
         //purely debug featuer, not intented for any particular usage
         private void CameraPositionChanged(object sender, EventArgs e)
         {
@@ -422,10 +425,10 @@ namespace SceneRendering
         {
             if (this.animateLightCheckBox.Checked)
             {
-                if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
-                {
-                    _radiusIncrement = -_radiusIncrement;
-                }
+                //if (_radius < _minSpiralRadious || _radius > _maxSpiralRadius)
+                //{
+                //    _radiusIncrement = -_radiusIncrement;
+                //}
 
                 double x = _radius * Math.Cos(_angle * Math.PI / 180);
                 double y = _radius * Math.Sin(_angle * Math.PI / 180);
@@ -433,6 +436,8 @@ namespace SceneRendering
                 //_radius += _radiusIncrement;
                 _lightSource.X = x + _origin.X;
                 _lightSource.Y = y + _origin.Y;
+                _lightSourceCamera.X = x + _origin.X;
+                _lightSourceCamera.Y = y + _origin.Y;
             }
             if (this.animateObjectCheckBox.Checked)
             {
@@ -493,26 +498,26 @@ namespace SceneRendering
         {
             PaintScene();
         }
-        private void bitmapColorRadioButton_Click(object sender, EventArgs e)
-        {
-            if (this.bitmapColorRadioButton.Checked == false)
-            {
-                return;
-            }
-            var status = this.openFileDialog1.ShowDialog();
-            if (status != DialogResult.OK)
-            {
-                return;
-            }
-            _pathToColorMap = this.openFileDialog1.FileName;
-            var texture = GetBitampFromFile(_pathToColorMap);
-            _colorMap = Utils.ConvertBitmapToArray(texture);
-            for (int idx = 0; idx < _objects.Count; idx++)
-            {
-                _objects[idx].PolygonFiller.ColorMap = _colorMap;
-            }
-            PaintScene();
-        }
+        //private void bitmapColorRadioButton_Click(object sender, EventArgs e)
+        //{
+        //    if (this.bitmapColorRadioButton.Checked == false)
+        //    {
+        //        return;
+        //    }
+        //    var status = this.openFileDialog1.ShowDialog();
+        //    if (status != DialogResult.OK)
+        //    {
+        //        return;
+        //    }
+        //    _pathToColorMap = this.openFileDialog1.FileName;
+        //    var texture = GetBitampFromFile(_pathToColorMap);
+        //    _colorMap = Utils.ConvertBitmapToArray(texture);
+        //    for (int idx = 0; idx < _objects.Count; idx++)
+        //    {
+        //        _objects[idx].PolygonFiller.ColorMap = _colorMap;
+        //    }
+        //    PaintScene();
+        //}
         private void constColorRadioButton_Click(object sender, EventArgs e)
         {
             if (this.constColorRadioButton.Checked == false)
@@ -524,16 +529,17 @@ namespace SceneRendering
                 return;
             }
             Color c = this.surfaceColorDialog.Color;
-            Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
-            using (Graphics g = Graphics.FromImage(bmp))
-            {
-                g.Clear(c);
-                g.Dispose();
-            }
-            _colorMap = Utils.ConvertBitmapToArray(bmp);
+            MyColor myCol = new MyColor(c.R / 255f, c.G / 255f, c.B / 255f);
+            //Bitmap bmp = new Bitmap(_drawArea.Width, _drawArea.Height);
+            //using (Graphics g = Graphics.FromImage(bmp))
+            //{
+            //    g.Clear(c);
+            //    g.Dispose();
+            //}
+            //_colorMap = Utils.ConvertBitmapToArray(bmp);
             foreach (var obj in _objects)
             {
-                obj.PolygonFiller.ColorMap = _colorMap;
+                obj.PolygonFiller.ObjectColor = myCol;
             }
             PaintScene();
 

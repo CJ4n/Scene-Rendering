@@ -11,18 +11,19 @@ namespace SceneRendering
         private int _m;
         private bool _interpolateNormalVector;
         private Vector3 _lightSourcePoint;
-        private MyColor[,] _colorMap;
+        //private MyColor[,] _colorMap;
         private MyColor _lightColor;
-        private Vector3[,] _normalMap;
+        //private Vector3[,] _normalMap;
         private Vector3 _V;
         private Vector3 _v1Color; // color in vertex 1
         private Vector3 _v2Color; // color in vertex 2
         private Vector3 _v3Color; // color in vertex 3
         private Vector3 _R; // for memrory allocation optimazation purpose
         private Vector3 _L; // for memrory allocation optimazation purpose
+        private MyColor _objectColor;
 
         public ColorGenerator(MyFace face, float ka, float ks, float kd, int m, bool interpolateNormalVector,
-            Vector3 lightSourceVector, MyColor[,] colorMap, Color lightColor, Vector3[,] normalMap = null)
+            Vector3 lightSourceVector, MyColor color, Color lightColor/*, Vector3[,] normalMap = null*/)
         {
             this._face = face;
             this._ks = ks;
@@ -31,9 +32,9 @@ namespace SceneRendering
             this._ka = ka;
             this._interpolateNormalVector = interpolateNormalVector;
             this._lightSourcePoint = lightSourceVector;
-            this._colorMap = colorMap;
+            this._objectColor = color;
             this._lightColor = new MyColor(lightColor.R / 255.0, lightColor.G / 255.0, lightColor.B / 255.0);
-            this._normalMap = normalMap;
+            //this._normalMap = normalMap;
             this._V = new Vector3(0, 0, 1);
             this._L = new Vector3(0, 0, 0);
             this._R = new Vector3(0, 0, 0);
@@ -55,33 +56,33 @@ namespace SceneRendering
                 return ComputeColorInterpolateColor(x, y);
             }
         }
-        private Vector3 ModifyNormalVector(Vector3 normalVersor, int x, int y)
-        {
-            Vector3 Ntextrue = _normalMap[x, y];
-            Utils.Normalize(Ntextrue);
-            Vector3 B;
-            if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0)
-                && Utils.AreTwoDoublesClose(normalVersor.Z, 1))
-            {
-                B = new Vector3(0, 1, 0);
-            }
-            else
-            {
-                B = Utils.CrossProduct(normalVersor, new Vector3(0, 0, 1));
-            }
-            Utils.Normalize(B);
+        //private Vector3 ModifyNormalVector(Vector3 normalVersor, int x, int y)
+        //{
+        //    Vector3 Ntextrue = _normalMap[x, y];
+        //    Utils.Normalize(Ntextrue);
+        //    Vector3 B;
+        //    if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0)
+        //        && Utils.AreTwoDoublesClose(normalVersor.Z, 1))
+        //    {
+        //        B = new Vector3(0, 1, 0);
+        //    }
+        //    else
+        //    {
+        //        B = Utils.CrossProduct(normalVersor, new Vector3(0, 0, 1));
+        //    }
+        //    Utils.Normalize(B);
 
-            Vector3 T = Utils.CrossProduct(B, normalVersor);
-            Utils.Normalize(T);
+        //    Vector3 T = Utils.CrossProduct(B, normalVersor);
+        //    Utils.Normalize(T);
 
-            double X = T.X * Ntextrue.X + B.X * Ntextrue.Y + normalVersor.X * Ntextrue.Z;
-            double Y = T.Y * Ntextrue.X + B.Y * Ntextrue.Y + normalVersor.Y * Ntextrue.Z;
-            double Z = T.Z * Ntextrue.X + B.Z * Ntextrue.Y + normalVersor.Z * Ntextrue.Z;
+        //    double X = T.X * Ntextrue.X + B.X * Ntextrue.Y + normalVersor.X * Ntextrue.Z;
+        //    double Y = T.Y * Ntextrue.X + B.Y * Ntextrue.Y + normalVersor.Y * Ntextrue.Z;
+        //    double Z = T.Z * Ntextrue.X + B.Z * Ntextrue.Y + normalVersor.Z * Ntextrue.Z;
 
-            Vector3 N = new Vector3(X, Y, Z);
-            Utils.Normalize(N);
-            return N;
-        }
+        //    Vector3 N = new Vector3(X, Y, Z);
+        //    Utils.Normalize(N);
+        //    return N;
+        //}
         private Vector3 GetColorInVetex(int idx)
         {
 
@@ -96,10 +97,10 @@ namespace SceneRendering
 
             Vector3 normalVersor = _face.normals[idx];
 
-            if (_normalMap != null)
-            {
-                normalVersor = ModifyNormalVector(normalVersor, (int)_face.vertices[idx].X, (int)_face.vertices[idx].Y);
-            }
+            //if (_normalMap != null)
+            //{
+            //    normalVersor = ModifyNormalVector(normalVersor, (int)_face.vertices[idx].X, (int)_face.vertices[idx].Y);
+            //}
             double dotProduct = Utils.DotProduct(normalVersor, _L);
             _R.X = 2 * dotProduct * normalVersor.X - _L.X;
             _R.Y = 2 * dotProduct * normalVersor.Y - _L.Y;
@@ -109,11 +110,11 @@ namespace SceneRendering
             double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
             double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVersor, _L));
 
-            var objectColor = _colorMap[(int)_face.vertices[idx].X, (int)_face.vertices[idx].Y];
+            //var _objectColor = _colorMap[(int)_face.vertices[idx].X, (int)_face.vertices[idx].Y];
 
-            double r = _ka + _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
-            double g = _ka + _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
-            double b = _ka + _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
+            double r = _ka + _kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m);
+            double g = _ka + _kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m);
+            double b = _ka + _kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m);
             return new Vector3(r, g, b);
         }
         private Color ComputeColorInterpolateNormalVector(int x, int y)
@@ -127,10 +128,10 @@ namespace SceneRendering
 
             Vector3 normalVector = BarycentricInterpolation(_face.normals[0], _face.normals[1], _face.normals[2], x, y);
             Utils.Normalize(normalVector);
-            if (_normalMap != null)
-            {
-                normalVector = ModifyNormalVector(normalVector, x, y);
-            }
+            //if (_normalMap != null)
+            //{
+            //    normalVector = ModifyNormalVector(normalVector, x, y);
+            //}
             double dotProduct = Utils.DotProduct(normalVector, _L);
             _R.X = 2 * dotProduct * normalVector.X - _L.X;
             _R.Y = 2 * dotProduct * normalVector.Y - _L.Y;
@@ -140,10 +141,10 @@ namespace SceneRendering
             double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
             double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, _L));
 
-            var objectColor = _colorMap[x, y];
-            double r = _ka + _kd * _lightColor.R * objectColor.R * cosNL + _ks * _lightColor.R * objectColor.R * Math.Pow(cosVR, _m);
-            double g = _ka + _kd * _lightColor.G * objectColor.G * cosNL + _ks * _lightColor.G * objectColor.G * Math.Pow(cosVR, _m);
-            double b = _ka + _kd * _lightColor.B * objectColor.B * cosNL + _ks * _lightColor.B * objectColor.B * Math.Pow(cosVR, _m);
+            //var _objectColor = _colorMap[x, y];
+            double r = _ka + _kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m);
+            double g = _ka + _kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m);
+            double b = _ka + _kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m);
             r = Math.Min(r, 1);
             g = Math.Min(g, 1);
             b = Math.Min(b, 1);
