@@ -11,8 +11,11 @@ namespace SceneRendering
         // 3. pozwoliæ na rózne skalowanie róznych obiektów
         // 4. rózne kolory/tekstóry róznych obiektów
         // 5. zmienic alg rysowania pod rysowanie tylko trojk¹tów
-        // 6. dodac mutexy ale one nie dizalaja, program sie nie odpala xD
-        // 7. cos jest nie tak z swiatlem, zmiania z na -z pomaga z jakiegos powodu
+        // 8. ma byc sterowanie obiektem
+        // 9. z coord po transoformacjach jest moco malo zmienny, maly przedzial przyjmowanych wartosci
+        // 10. dodac mgle
+        // 11. dodac noc/dzien
+        // 12. dodac 3rd person camera
         private class SceneObject
         {
             public bool Animate { get; set; }
@@ -27,6 +30,7 @@ namespace SceneRendering
         {
             public string Name { get; set; }
             static public int CurrentCameraIndex = 0;
+            public int TargetObjectIdx = -1;
             public System.Numerics.Vector3 CamPosition { get; set; }
             public System.Numerics.Vector3 CamTarget { get; set; }
         }
@@ -49,7 +53,6 @@ namespace SceneRendering
         private int _minSpiralRadious = 40;
 
         private Bitmap _drawArea;
-        //private Vector3[,] _normalMap = null;
         //private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
         private MyColor _objectColor;
@@ -102,13 +105,22 @@ namespace SceneRendering
             cam1.CamTarget = GetWorldObjectsCenter(Camera.CurrentCameraIndex);
             cam1.CamPosition = new System.Numerics.Vector3(400, 400, 1500);
             cam1.Name = "StationaryTrackingCamera";
+            cam1.TargetObjectIdx = 0;
             _cameras.Add(cam1);
 
             Camera cam2 = new Camera();
             cam2.CamTarget = new System.Numerics.Vector3(0, 0, 0);
             cam2.CamPosition = new System.Numerics.Vector3(1000, 1000, 1500);
             cam2.Name = "StationaryCamera";
+            cam2.TargetObjectIdx = -1;
             _cameras.Add(cam2);
+
+            Camera cam3 = new Camera();
+            cam3.CamTarget = new System.Numerics.Vector3(0, 0, 0);
+            cam3.CamPosition = new System.Numerics.Vector3(1000, 1000, 1500);
+            cam3.Name = "3rdPersonCamera";
+            cam3.TargetObjectIdx = -1;
+            _cameras.Add(cam3);
 
             this.comboBox1.DataSource = _cameras.Select(x => x.Name).ToList();
 
@@ -153,13 +165,12 @@ namespace SceneRendering
         private void PaintScene()
         {
             InitZBuffer();
-            //RotateScene();
+            RotateScene();
             float ks = (float)(this.ksTrackBar.Value / 100.0);
             float kd = (float)(this.kdTrackBar.Value / 100.0);
             float ka = (float)(this.kaTrackBar.Value / 100.0);
             int m = this.mTrackBar.Value;
             bool interpolateNormalVector = this.interpolateNormalRadioButton.Checked;
-
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
                 g.Clear(Color.LightBlue);
@@ -169,6 +180,7 @@ namespace SceneRendering
             {
                 foreach (var obj in _objects)
                 {
+
                     obj.PolygonFiller.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, _zBuffer);
                 }
             }
@@ -189,7 +201,7 @@ namespace SceneRendering
                 _objects[idx].FacesCamera = faces;
                 _objects[idx].FacesWorld = faces2;
 
-                var polygonFiller = new PolygonFiller(_drawArea, faces, _objectColor, _lighColor/*, _normalMap*/);
+                var polygonFiller = new PolygonFiller(_drawArea, faces,faces2, _objectColor, _lighColor/*, _normalMap*/);
                 _objects[idx].PolygonFiller = polygonFiller;
             }
         }
@@ -327,7 +339,7 @@ namespace SceneRendering
         // cameraNormal==worldNormal
         private void rotateNormalVector(List<Vector3> cameraNormal, List<Vector3> worldNormal, Matrix4x4 rotationMat, int idx)
         {
-            if (_objects[idx].Animate == true)
+            if (_objects[idx].Animate == false)
             {
                 return;
             }
@@ -342,6 +354,9 @@ namespace SceneRendering
                 cameraNormal[i].X = after.X;
                 cameraNormal[i].Y = after.Y;
                 cameraNormal[i].Z = after.Z;
+                worldNormal[i].X = after.X;
+                worldNormal[i].Y = after.Y;
+                worldNormal[i].Z = after.Z;
             }
         }
         private void rotateSun(Vector3 cameraPoint, Vector3 worldPoint, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat)
@@ -379,7 +394,7 @@ namespace SceneRendering
         }
         private void UpdataCameraTarget(int idx)
         {
-            _cameras[idx].CamTarget = GetWorldObjectsCenter(idx);
+            _cameras[idx].CamTarget = GetWorldObjectsCenter(_cameras[idx].TargetObjectIdx);
         }
         void RotateScene()
         {
@@ -393,7 +408,11 @@ namespace SceneRendering
             camUpVec.Z = 1; // something is working when == 1
             for (int idx = 0; idx < _cameras.Count; idx++)
             {
-                UpdataCameraTarget(idx);
+                if (_cameras[idx].TargetObjectIdx != -1)
+                {
+                    if (_cameras[idx].TargetObjectIdx<_objects.Count)
+                    UpdataCameraTarget(idx);
+                }
             }
 
             var viewMat = Matrix4x4.CreateLookAt(_cameras[Camera.CurrentCameraIndex].CamPosition, _cameras[Camera.CurrentCameraIndex].CamTarget, camUpVec);
@@ -413,7 +432,7 @@ namespace SceneRendering
 
                 _objects[idx].PolygonFiller.Faces = _objects[idx].FacesCamera;
             }
-            rotateSun(_lightSourceCamera, _lightSource, rotationMat, viewMat, perspectiveMat);
+            //rotateSun(_lightSourceCamera, _lightSource, rotationMat, viewMat, perspectiveMat);
         }
         //purely debug featuer, not intented for any particular usage
         private void CameraPositionChanged(object sender, EventArgs e)
@@ -483,7 +502,7 @@ namespace SceneRendering
         {
             foreach (var obj in _objects)
             {
-                obj.Animate = false;
+                obj.Animate = !obj.Animate;
             }
             //if (animationCheckBox.Checked)
             //{

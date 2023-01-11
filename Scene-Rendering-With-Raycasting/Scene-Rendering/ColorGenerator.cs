@@ -5,6 +5,7 @@ namespace SceneRendering
     public class ColorGenerator
     {
         private MyFace _face;
+        private MyFace _faceWorld;
         private double _ka;
         private double _ks;
         private double _kd;
@@ -22,10 +23,11 @@ namespace SceneRendering
         private Vector3 _L; // for memrory allocation optimazation purpose
         private MyColor _objectColor;
 
-        public ColorGenerator(MyFace face, float ka, float ks, float kd, int m, bool interpolateNormalVector,
+        public ColorGenerator(MyFace face, MyFace faceWorld, float ka, float ks, float kd, int m, bool interpolateNormalVector,
             Vector3 lightSourceVector, MyColor color, Color lightColor/*, Vector3[,] normalMap = null*/)
         {
             this._face = face;
+            this._faceWorld = faceWorld;
             this._ks = ks;
             this._kd = kd;
             this._m = m;
@@ -56,33 +58,7 @@ namespace SceneRendering
                 return ComputeColorInterpolateColor(x, y);
             }
         }
-        //private Vector3 ModifyNormalVector(Vector3 normalVersor, int x, int y)
-        //{
-        //    Vector3 Ntextrue = _normalMap[x, y];
-        //    Utils.Normalize(Ntextrue);
-        //    Vector3 B;
-        //    if (Utils.AreTwoDoublesClose(normalVersor.X, 0) && Utils.AreTwoDoublesClose(normalVersor.Y, 0)
-        //        && Utils.AreTwoDoublesClose(normalVersor.Z, 1))
-        //    {
-        //        B = new Vector3(0, 1, 0);
-        //    }
-        //    else
-        //    {
-        //        B = Utils.CrossProduct(normalVersor, new Vector3(0, 0, 1));
-        //    }
-        //    Utils.Normalize(B);
-
-        //    Vector3 T = Utils.CrossProduct(B, normalVersor);
-        //    Utils.Normalize(T);
-
-        //    double X = T.X * Ntextrue.X + B.X * Ntextrue.Y + normalVersor.X * Ntextrue.Z;
-        //    double Y = T.Y * Ntextrue.X + B.Y * Ntextrue.Y + normalVersor.Y * Ntextrue.Z;
-        //    double Z = T.Z * Ntextrue.X + B.Z * Ntextrue.Y + normalVersor.Z * Ntextrue.Z;
-
-        //    Vector3 N = new Vector3(X, Y, Z);
-        //    Utils.Normalize(N);
-        //    return N;
-        //}
+       
         private Vector3 GetColorInVetex(int idx)
         {
 
@@ -90,22 +66,18 @@ namespace SceneRendering
             {
                 return new Vector3(0, 0, 0);
             }
-            _L.X = _lightSourcePoint.X - _face.vertices[idx].X;
-            _L.Y = _lightSourcePoint.Y - _face.vertices[idx].Y;
-            _L.Z = _lightSourcePoint.Z - _face.vertices[idx].Z;
+            _L.X = _lightSourcePoint.X - _faceWorld.vertices[idx].X;
+            _L.Y = _lightSourcePoint.Y - _faceWorld.vertices[idx].Y;
+            _L.Z = _lightSourcePoint.Z - _faceWorld.vertices[idx].Z;
             Utils.Normalize(_L);
 
             Vector3 normalVersor = _face.normals[idx];
 
-            //if (_normalMap != null)
-            //{
-            //    normalVersor = ModifyNormalVector(normalVersor, (int)_face.vertices[idx].X, (int)_face.vertices[idx].Y);
-            //}
+            
             double dotProduct = Utils.DotProduct(normalVersor, _L);
             _R.X = 2 * dotProduct * normalVersor.X - _L.X;
             _R.Y = 2 * dotProduct * normalVersor.Y - _L.Y;
             _R.Z = 2 * dotProduct * normalVersor.Z - _L.Z;
-            //R = Utils.Normalize(R);
 
             double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
             double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVersor, _L));
@@ -119,7 +91,7 @@ namespace SceneRendering
         }
         private Color ComputeColorInterpolateNormalVector(int x, int y)
         {
-            Vector3 XYZ = BarycentricInterpolation(_face.vertices[0], _face.vertices[1], _face.vertices[2], x, y);
+            Vector3 XYZ = BarycentricInterpolation(_faceWorld.vertices[0], _faceWorld.vertices[1], _faceWorld.vertices[2], x, y);
 
             _L.X = _lightSourcePoint.X - (double)x;
             _L.Y = _lightSourcePoint.Y - (double)y;

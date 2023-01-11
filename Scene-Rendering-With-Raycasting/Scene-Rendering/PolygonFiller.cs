@@ -6,14 +6,14 @@ namespace SceneRendering
     {
         public Bitmap Drawarea { get; set; } // canvas to draw on
 
-        //private MyColor[,] _colorMap; // colors in pixels
         //public MyColor[,] ColorMap
         //{
-        //    get { return _colorMap; }
-        //    set { _colorMap = value; }
+        //    get ;
+        //    set ;
         //}
         public Color LighColor { get; set; }
         public List<MyFace> Faces { get; set; }
+        public List<MyFace> FacesWorld { get; set; }
         private int _bitmapWidth;
         private int _bitmapHeight;
         public MyColor ObjectColor { get; set; }
@@ -21,12 +21,13 @@ namespace SceneRendering
         private int _width;
         private int _height;
 
-        private Mutex[,] _mutex;
+        private object[,] _mutex;
 
-        public PolygonFiller(Bitmap drawarea, List<MyFace> faces, MyColor color, Color lightColor/*, Vector3[,] normalMap*/)
+        public PolygonFiller(Bitmap drawarea, List<MyFace> faces, List<MyFace> facesWorld, MyColor color, Color lightColor/*, Vector3[,] normalMap*/)
         {
             this.Drawarea = drawarea;
             this.Faces = faces;
+            this.FacesWorld = facesWorld;
             //this._colorMap = colorMap;
             this._bitmapWidth = drawarea.Width;
             this._bitmapHeight = drawarea.Height;
@@ -34,24 +35,31 @@ namespace SceneRendering
             this.ObjectColor = color;
             _width = Drawarea.Width;
             _height = Drawarea.Height;
-            _mutex = new Mutex[_width, _height];
-            //for (int col = 0; col < _width; col++)
-            //{
-            //    for (int row = 0; row < _height; row++)
-            //    {
-            //        _mutex[col, row] = new Mutex();
-            //    }
-            //}
+            _mutex = new object[_width, _height];
+            for (int col = 0; col < _width; col++)
+            {
+                for (int row = 0; row < _height; row++)
+                {
+                    _mutex[col, row] = new object();
+                }
+            }
             //this.ColorMap = colorMap;
             //this._normalMap = normalMap;
         }
         public void FillEachFace(float ka, float kd, float ks, int m, bool interpolateNormalVector, Vector3 lightSource, double[,] ZBuffer)
         {
-            if (_width != Drawarea.Width || _height == Drawarea.Height)
+            if (_width != Drawarea.Width || _height != Drawarea.Height)
             {
                 _width = Drawarea.Width;
                 _height = Drawarea.Height;
-                _mutex = new Mutex[_width, _height];
+                _mutex = new object[_width, _height];
+                for (int col = 0; col < _width; col++)
+                {
+                    for (int row = 0; row < _height; row++)
+                    {
+                        _mutex[col, row] = new object();
+                    }
+                }
             }
             using (var snoop = new BmpPixelSnoop(Drawarea))
             {
@@ -62,7 +70,7 @@ namespace SceneRendering
                         //var polygon = new List<Point> { new Point((int)Faces[i].vertices[0].X, (int)Faces[i].vertices[0].Y),
                         //                         new Point((int)Faces[i].vertices[1].X, (int)Faces[i].vertices[1].Y),
                         //                         new Point((int)Faces[i].vertices[2].X, (int)Faces[i].vertices[2].Y)};
-                        var colorGenerator = new ColorGenerator(Faces[i], ka, ks, kd, m, interpolateNormalVector, lightSource, ObjectColor, LighColor/*, _normalMap*/);
+                        var colorGenerator = new ColorGenerator(Faces[i], FacesWorld[i], ka, ks, kd, m, interpolateNormalVector, lightSource, ObjectColor, LighColor/*, _normalMap*/);
                         FillPolygon(Faces[i].vertices, colorGenerator, snoop, ZBuffer);
                     });
                 }
@@ -92,14 +100,16 @@ namespace SceneRendering
                     {
                         continue;
                     }
-                    //_mutex[x, y].WaitOne();
-                    if (z <= ZBuffer[x, y])
+                    lock (_mutex[x, y])
                     {
-                        Color color = colorGenerator.ComputeColor(x, y);
-                        snoop.SetPixel(x, y, color);
-                        ZBuffer[x, y] = z;
-                    }
-                    //_mutex[x, y].ReleaseMutex();
+                        //_mutex[x, y].WaitOne();
+                        if (z <= ZBuffer[x, y])
+                        {
+                            Color color = colorGenerator.ComputeColor(x, y);
+                            snoop.SetPixel(x, y, color);
+                            ZBuffer[x, y] = z;
+                        }
+                    }            //_mutex[x, y].ReleaseMutex();
                 }
             }
         }

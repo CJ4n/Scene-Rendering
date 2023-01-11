@@ -413,7 +413,8 @@
             // zTrackBar
             // 
             this.zTrackBar.Location = new System.Drawing.Point(6, 290);
-            this.zTrackBar.Maximum = 2500;
+            this.zTrackBar.Maximum = 10000;
+            this.zTrackBar.Minimum = -4000;
             this.zTrackBar.Name = "zTrackBar";
             this.zTrackBar.Size = new System.Drawing.Size(234, 56);
             this.zTrackBar.TabIndex = 8;
