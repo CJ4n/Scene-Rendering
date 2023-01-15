@@ -201,7 +201,7 @@ namespace SceneRendering
                 _objects[idx].FacesCamera = faces;
                 _objects[idx].FacesWorld = faces2;
 
-                var polygonFiller = new PolygonFiller(_drawArea, faces,faces2, _objectColor, _lighColor/*, _normalMap*/);
+                var polygonFiller = new PolygonFiller(_drawArea, faces, faces2, _objectColor, _lighColor/*, _normalMap*/);
                 _objects[idx].PolygonFiller = polygonFiller;
             }
         }
@@ -317,9 +317,11 @@ namespace SceneRendering
                 }
                 p = Vector4.Transform(p, viewMat);
                 p = Vector4.Transform(p, perspectiveMat);
+                if (p.W == 0) { throw new Exception("unexpecatde happend"); }
                 p.X /= p.W;
                 p.Y /= p.W;
                 p.Z /= p.W;
+
                 if (p.X < -1) p.X = -1;
                 if (p.Y < -1) p.Y = -1;
                 if (p.Z < -1) p.Z = -1;
@@ -329,12 +331,13 @@ namespace SceneRendering
                 if (p.Z > 1) p.Z = 1;
                 p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
                 p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
-                p.Z = (p.Z + 1) / 2 * (3000 - 1);
+                p.Z = (p.Z + 1) / 2;
 
                 cameraPoint[i].X = p.X;
                 cameraPoint[i].Y = p.Y;
                 cameraPoint[i].Z = p.Z;
             }
+
         }
         // cameraNormal==worldNormal
         private void rotateNormalVector(List<Vector3> cameraNormal, List<Vector3> worldNormal, Matrix4x4 rotationMat, int idx)
@@ -385,7 +388,7 @@ namespace SceneRendering
             if (p.Z > 1) p.Z = 1;
             p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
             p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
-            p.Z = (p.Z + 1) / 2 * (3000 - 1);
+            p.Z = (p.Z + 1) / 2;
 
             cameraPoint.X = p.X;
             cameraPoint.Y = p.Y;
@@ -410,8 +413,8 @@ namespace SceneRendering
             {
                 if (_cameras[idx].TargetObjectIdx != -1)
                 {
-                    if (_cameras[idx].TargetObjectIdx<_objects.Count)
-                    UpdataCameraTarget(idx);
+                    if (_cameras[idx].TargetObjectIdx < _objects.Count)
+                        UpdataCameraTarget(idx);
                 }
             }
 
@@ -419,8 +422,8 @@ namespace SceneRendering
             float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
             fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
             aspecetRatio = _drawArea.Width / _drawArea.Height;
-            nearPlaneDist = 10;
-            farPlaneDist = 10000;
+            nearPlaneDist = 2500;
+            farPlaneDist = 20000;
             var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
             for (int idx = 0; idx < _objects.Count; idx++)
             {
@@ -430,6 +433,8 @@ namespace SceneRendering
                     rotateNormalVector(_objects[idx].FacesCamera[f].normals, _objects[idx].FacesWorld[f].normals, rotationMat, idx);
                 }
 
+                Constants.MaxZ = Math.Max(Constants.MaxZ, _objects[idx].FacesCamera.Max(x => (x.vertices.Max(xx => (xx.Z)))));
+                Constants.MinZ = Math.Min(Constants.MinZ, _objects[idx].FacesCamera.Min(x => (x.vertices.Min(xx => (xx.Z)))));
                 _objects[idx].PolygonFiller.Faces = _objects[idx].FacesCamera;
             }
             //rotateSun(_lightSourceCamera, _lightSource, rotationMat, viewMat, perspectiveMat);
@@ -462,6 +467,12 @@ namespace SceneRendering
             {
                 //Constants.Angle += 3;
             }
+
+            if (Constants.LightIntensity + Constants.LightIntensityChangeRate > 1 || Constants.LightIntensity + Constants.LightIntensityChangeRate < 0)
+            {
+                Constants.LightIntensityChangeRate = -Constants.LightIntensityChangeRate;
+            }
+            Constants.LightIntensity += Constants.LightIntensityChangeRate;
             PaintScene();
         }
         private void kdTrackBar_ValueChanged(object sender, EventArgs e)

@@ -102,14 +102,14 @@ namespace SceneRendering
                     }
                     lock (_mutex[x, y])
                     {
-                        //_mutex[x, y].WaitOne();
+                        //z = Math.Log(z);
                         if (z <= ZBuffer[x, y])
                         {
                             Color color = colorGenerator.ComputeColor(x, y);
                             snoop.SetPixel(x, y, color);
                             ZBuffer[x, y] = z;
                         }
-                    }            //_mutex[x, y].ReleaseMutex();
+                    }
                 }
             }
         }

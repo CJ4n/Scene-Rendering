@@ -58,7 +58,7 @@ namespace SceneRendering
                 return ComputeColorInterpolateColor(x, y);
             }
         }
-       
+
         private Vector3 GetColorInVetex(int idx)
         {
 
@@ -73,7 +73,7 @@ namespace SceneRendering
 
             Vector3 normalVersor = _face.normals[idx];
 
-            
+
             double dotProduct = Utils.DotProduct(normalVersor, _L);
             _R.X = 2 * dotProduct * normalVersor.X - _L.X;
             _R.Y = 2 * dotProduct * normalVersor.Y - _L.Y;
@@ -114,20 +114,26 @@ namespace SceneRendering
             double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, _L));
 
             //var _objectColor = _colorMap[x, y];
-            double r = _ka + _kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m);
-            double g = _ka + _kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m);
-            double b = _ka + _kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m);
+            double r = _ka + Constants.LightIntensity * (_kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m));
+            double g = _ka + Constants.LightIntensity * (_kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m));
+            double b = _ka + Constants.LightIntensity * (_kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m));
             r = Math.Min(r, 1);
             g = Math.Min(g, 1);
             b = Math.Min(b, 1);
-            Color color = Color.FromArgb(255, (int)(r * 255), (int)(g * 255), (int)(b * 255));
-            return color;
+            double z = ZValue(x, y);
+            z = (z - Constants.MinZ) / (Constants.MaxZ - Constants.MinZ);
+            Color c = Color.FromArgb(255, (int)(r * 255 * (1 - z) + 255 * z), (int)(g * 255 * (1 - z) + 255 * z), (int)(b * 255 * (1 - z) + 255 * z));
+            //Color color = Color.FromArgb(255, (int)(r * 255), (int)(g * 255), (int)(b * 255));
+            return c;
         }
         private Color ComputeColorInterpolateColor(int x, int y)
         {
             MyColor myColor = BarycentricInterpolation(_v1Color, _v2Color, _v3Color, x, y);
-            Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
-            return color;
+            double z = ZValue(x, y);
+            z = (z - Constants.MinZ) / (Constants.MaxZ - Constants.MinZ);
+            Color c = Color.FromArgb(255, (int)(myColor.R * 255 * (1 - z) + 255 * z), (int)(myColor.G * 255 * (1 - z) + 255 * z), (int)(myColor.B * 255 * (1 - z) + 255 * z));
+            //Color color = Color.FromArgb(255, (int)(myColor.R * 255), (int)(myColor.G * 255), (int)(myColor.B * 255));
+            return c;
         }
 
         public double ZValue(int x, int y)
