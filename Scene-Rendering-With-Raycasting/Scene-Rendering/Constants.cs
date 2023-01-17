@@ -17,5 +17,7 @@
         static public double MaxZ = 0;
         static public float LightIntensity = 1; // 1 - day, 0 - night
         static public float LightIntensityChangeRate = 0.01f;
+        public enum SHADER { CONST, GOURAUD, PHONG };
+        static public SHADER Shader = SHADER.PHONG;
     }
 }

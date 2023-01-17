@@ -22,8 +22,8 @@ namespace SceneRendering
         private Vector3 _R; // for memrory allocation optimazation purpose
         private Vector3 _L; // for memrory allocation optimazation purpose
         private MyColor _objectColor;
-
-        public ColorGenerator(MyFace face, MyFace faceWorld, float ka, float ks, float kd, int m, bool interpolateNormalVector,
+        private Constants.SHADER _shader;
+        public ColorGenerator(MyFace face, MyFace faceWorld, float ka, float ks, float kd, int m, Constants.SHADER shader,
             Vector3 lightSourceVector, MyColor color, Color lightColor/*, Vector3[,] normalMap = null*/)
         {
             this._face = face;
@@ -32,7 +32,7 @@ namespace SceneRendering
             this._kd = kd;
             this._m = m;
             this._ka = ka;
-            this._interpolateNormalVector = interpolateNormalVector;
+            this._shader = shader;
             this._lightSourcePoint = lightSourceVector;
             this._objectColor = color;
             this._lightColor = new MyColor(lightColor.R / 255.0, lightColor.G / 255.0, lightColor.B / 255.0);
@@ -49,14 +49,15 @@ namespace SceneRendering
         }
         public Color ComputeColor(int x, int y)
         {
-            if (_interpolateNormalVector)
+            if (_shader == Constants.SHADER.PHONG)
             {
                 return ComputeColorInterpolateNormalVector(x, y);
             }
-            else
+            else if (_shader == Constants.SHADER.GOURAUD)
             {
                 return ComputeColorInterpolateColor(x, y);
             }
+            else return Color.AliceBlue;
         }
 
         private Vector3 GetColorInVetex(int idx)

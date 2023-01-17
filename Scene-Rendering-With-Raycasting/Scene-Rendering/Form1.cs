@@ -13,11 +13,10 @@ namespace SceneRendering
         // 5. zmienic alg rysowania pod rysowanie tylko trojk¹tów
         // 8. ma byc sterowanie obiektem
         // 9. z coord po transoformacjach jest moco malo zmienny, maly przedzial przyjmowanych wartosci
-        // 10. dodac mgle
-        // 11. dodac noc/dzien
         // 12. dodac 3rd person camera
         private class SceneObject
         {
+            public bool Animatable = false;
             public bool Animate { get; set; }
             public int Scale { get; set; }
             public List<MyFace> FacesCamera { get; set; }
@@ -79,6 +78,7 @@ namespace SceneRendering
             _pathsToObjFiles.Add(_pathToObjFile);
             SceneObject obj1 = new SceneObject();
             obj1.Animate = true;
+            obj1.Animatable = true;
             obj1.Scale = Constants.ObjectBasicDim;
             _objects.Add(obj1);
 
@@ -170,10 +170,11 @@ namespace SceneRendering
             float kd = (float)(this.kdTrackBar.Value / 100.0);
             float ka = (float)(this.kaTrackBar.Value / 100.0);
             int m = this.mTrackBar.Value;
-            bool interpolateNormalVector = this.interpolateNormalRadioButton.Checked;
+            //bool interpolateNormalVector = this.interpolateNormalRadioButton.Checked;
+            Constants.SHADER shader = this.interpolateConstradioButton.Checked ? Constants.SHADER.CONST : this.interpolateNormalRadioButton.Checked ? Constants.SHADER.PHONG : Constants.SHADER.GOURAUD;
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
-                g.Clear(Color.LightBlue);
+                g.Clear(Color.FromArgb(255,(int)(255.0f*Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity)));
                 g.FillEllipse(Brushes.Yellow, (int)_lightSourceCamera.X, (int)_lightSourceCamera.Y, 50, 50);
             }
             if (this.paintObjectsCheckBox.Checked)
@@ -181,7 +182,7 @@ namespace SceneRendering
                 foreach (var obj in _objects)
                 {
 
-                    obj.PolygonFiller.FillEachFace(ka, kd, ks, m, interpolateNormalVector, _lightSource, _zBuffer);
+                    obj.PolygonFiller.FillEachFace(ka, kd, ks, m, shader, _lightSource, _zBuffer);
                 }
             }
             if (paintTriangulationCheckBox.Checked)
@@ -513,6 +514,7 @@ namespace SceneRendering
         {
             foreach (var obj in _objects)
             {
+                if(obj.Animatable)
                 obj.Animate = !obj.Animate;
             }
             //if (animationCheckBox.Checked)
