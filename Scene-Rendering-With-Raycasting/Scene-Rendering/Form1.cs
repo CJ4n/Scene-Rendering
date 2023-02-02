@@ -7,13 +7,14 @@ namespace SceneRendering
     public partial class Form1 : Form
     {
         //TODO:
-        // 2. dodaæ nowe kamery
         // 3. pozwoliæ na rózne skalowanie róznych obiektów
-        // 4. rózne kolory/tekstóry róznych obiektów
-        // 5. zmienic alg rysowania pod rysowanie tylko trojk¹tów
-        // 8. ma byc sterowanie obiektem
+        // 8. dodac sterowanie obiektem
         // 9. z coord po transoformacjach jest moco malo zmienny, maly przedzial przyjmowanych wartosci
         // 12. dodac 3rd person camera
+        // 13. dodac reflektor
+        // 14. dodac sterowanie refloektorem
+        // 16. dodac nowe obiekty
+        // 17. dodac 3 zrodlo swiatal
         private class SceneObject
         {
             public bool Animatable = false;
@@ -174,7 +175,7 @@ namespace SceneRendering
             Constants.SHADER shader = this.interpolateConstradioButton.Checked ? Constants.SHADER.CONST : this.interpolateNormalRadioButton.Checked ? Constants.SHADER.PHONG : Constants.SHADER.GOURAUD;
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
-                g.Clear(Color.FromArgb(255,(int)(255.0f*Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity)));
+                g.Clear(Color.FromArgb(255, (int)(255.0f * Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity)));
                 g.FillEllipse(Brushes.Yellow, (int)_lightSourceCamera.X, (int)_lightSourceCamera.Y, 50, 50);
             }
             if (this.paintObjectsCheckBox.Checked)
@@ -225,7 +226,6 @@ namespace SceneRendering
 
             if (maxZ == minZ)
             {
-
                 maxZ *= 2;
                 if (maxZ == 0)
                 {
@@ -514,8 +514,8 @@ namespace SceneRendering
         {
             foreach (var obj in _objects)
             {
-                if(obj.Animatable)
-                obj.Animate = !obj.Animate;
+                if (obj.Animatable)
+                    obj.Animate = !obj.Animate;
             }
             //if (animationCheckBox.Checked)
             //{

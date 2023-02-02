@@ -4557,23 +4557,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\yanci\\.nuget\\packages\\": {},
+    "C:\\Users\\YanPC\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\yanci\\Desktop\\test\\Scene-Rendering\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+      "projectUniqueName": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
       "projectName": "Scene-Rendering",
-      "projectPath": "C:\\Users\\yanci\\Desktop\\test\\Scene-Rendering\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
-      "packagesPath": "C:\\Users\\yanci\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\yanci\\Desktop\\test\\Scene-Rendering\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\obj\\",
+      "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\Scene-Rendering.csproj",
+      "packagesPath": "C:\\Users\\YanPC\\.nuget\\packages\\",
+      "outputPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\Scene-Rendering-With-Raycasting\\Scene-Rendering\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\yanci\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\YanPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -4588,8 +4588,8 @@
         "net6.0-windows7.0": {
           "targetAlias": "net6.0-windows",
           "projectReferences": {
-            "C:\\Users\\yanci\\Desktop\\test\\Scene-Rendering\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
-              "projectPath": "C:\\Users\\yanci\\Desktop\\test\\Scene-Rendering\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
+            "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj": {
+              "projectPath": "D:\\JAN_CICHOMSKI\\STUDIA\\STUDIA_SEMESTR_5_2022_ZIMA\\Grafika Komputerowa 1\\lab2\\Scene-Rendering-With-Raycasting\\ObjLoader-master\\source\\CjClutter.ObjLoader.Loader\\CjClutter.ObjLoader.Loader.csproj"
             }
           }
         }
@@ -4627,7 +4627,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.307\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.308\\RuntimeIdentifierGraph.json"
       }
     }
   }

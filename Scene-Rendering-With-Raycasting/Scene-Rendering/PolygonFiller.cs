@@ -67,9 +67,6 @@ namespace SceneRendering
                 {
                     Parallel.For(0, Faces.Count, i =>
                     {
-                        //var polygon = new List<Point> { new Point((int)Faces[i].vertices[0].X, (int)Faces[i].vertices[0].Y),
-                        //                         new Point((int)Faces[i].vertices[1].X, (int)Faces[i].vertices[1].Y),
-                        //                         new Point((int)Faces[i].vertices[2].X, (int)Faces[i].vertices[2].Y)};
                         var colorGenerator = new ColorGenerator(Faces[i], FacesWorld[i], ka, ks, kd, m, shader, lightSource, ObjectColor, LighColor/*, _normalMap*/);
                         FillPolygon(Faces[i].vertices, colorGenerator, snoop, ZBuffer);
                     });
