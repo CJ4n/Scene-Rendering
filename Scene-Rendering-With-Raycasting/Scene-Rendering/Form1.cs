@@ -7,17 +7,16 @@ namespace SceneRendering
     public partial class Form1 : Form
     {
         //TODO:
-        // 3. pozwoliæ na rózne skalowanie róznych obiektów
         // 13. dodac reflektor
         // 14. dodac sterowanie refloektorem
-        // 16. dodac nowe obiekty
-        // 17. dodac 3 zrodlo swiatal
+        // 15. dodac dragania
         private class SceneObject
         {
             public string Name { get; set; }
             public bool Animatable = false;
             public bool Animate { get; set; }
             public int Scale { get; set; }
+            public System.Numerics.Vector3 Offset { get; set; }
             public List<MyFace> FacesCamera { get; set; }
             public List<MyFace> FacesWorld { get; set; }
             public PolygonFiller PolygonFiller { get; set; }
@@ -40,18 +39,14 @@ namespace SceneRendering
         private string _pathToTorus = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToCoords = "..\\..\\..\\..\\..\\coords.obj";
 
-        private Vector3 _lightSource = new Vector3(1000, 300, 2500);
-        private Vector3 _lightSourceCamera = new Vector3(1000, 300, 2500);
+        private List<Vector3> _lightSource = new List<Vector3>();
+        //private Vector3 _lightSourceCamera = new Vector3(1000, 300, 2500);
         private PointF _origin = new PointF(Constants.ObjectBasicDim / 2, Constants.ObjectBasicDim / 2);
         private int _radius = 1000;
         private int _angle = 0;
-        private int _radiusIncrement = -10;
         private int _angleIncrement = 3;
-        private int _maxSpiralRadius = 2000;
-        private int _minSpiralRadious = 40;
 
         private Bitmap _drawArea;
-        //private MyColor[,] _colorMap;
         private Color _lighColor = Color.White;
         private MyColor _objectColor;
 
@@ -59,7 +54,6 @@ namespace SceneRendering
 
         private List<SceneObject> _objects = new List<SceneObject>();
         private List<Camera> _cameras = new List<Camera>();
-
 
         System.Numerics.Vector3 translation = new System.Numerics.Vector3(0, 0, 0);
 
@@ -82,12 +76,16 @@ namespace SceneRendering
 
             _zBuffer = new double[Canvas.Width, Canvas.Height];
 
+
+            _lightSource.Add(new Vector3(1000, 300, 2500));
+            _lightSource.Add(new Vector3(-1000, 300, 2500));
             _pathsToObjFiles.Add(_pathToMonkey);
             SceneObject obj1 = new SceneObject();
             obj1.Name = "monkey";
             obj1.Animate = false;
             obj1.Animatable = false;
             obj1.Scale = Constants.ObjectBasicDim;
+            obj1.Offset = new System.Numerics.Vector3(0, 0, 0);
 
             _pathsToObjFiles.Add(_pathToTorus);
             SceneObject obj2 = new SceneObject();
@@ -95,16 +93,35 @@ namespace SceneRendering
             obj2.Animate = true;
             obj2.Animatable = true;
             obj2.Scale = Constants.ObjectBasicDim;
+            obj2.Offset = new System.Numerics.Vector3(400, 400, 0);
 
             //_pathsToObjFiles.Add(_pathToCoords);
-            SceneObject obj3 = new SceneObject();
-            obj3.Name = "coords";
-            obj3.Animate = false;
-            obj3.Scale = Constants.ObjectBasicDim * 5;
+            //SceneObject obj3 = new SceneObject();
+            //obj3.Name = "coords";
+            //obj3.Animate = false;
+            //obj3.Scale = Constants.ObjectBasicDim * 5;
+            //obj3.Offset = new System.Numerics.Vector3(0, 0, 0);
+
+
+            _pathsToObjFiles.Add(_pathToTorus);
+            SceneObject obj4 = new SceneObject();
+            obj4.Name = "torusv2";
+            obj4.Animate = false;
+            obj4.Scale = Constants.ObjectBasicDim;
+            obj4.Offset = new System.Numerics.Vector3(-400, -400, 0);
+
+            _pathsToObjFiles.Add(_pathToTorus);
+            SceneObject obj5 = new SceneObject();
+            obj5.Name = "torusv3";
+            obj5.Animate = false;
+            obj5.Scale = Constants.ObjectBasicDim;
+            obj5.Offset = new System.Numerics.Vector3(400, -400, 0);
 
             _objects.Add(obj1);
             _objects.Add(obj2);
             //_objects.Add(obj3);
+            _objects.Add(obj4);
+            _objects.Add(obj5);
 
             var colorTmp = Color.OrangeRed;
             _objectColor = new MyColor(colorTmp.R / 255f, colorTmp.G / 255f, colorTmp.B / 255f);
@@ -158,20 +175,38 @@ namespace SceneRendering
 
         System.Numerics.Vector3 GetWorldObjectsCenter(int objectIdx)
         {
-            double x = 0, y = 0, z = 0;
-            int count = 0;
+            //double x = 0, y = 0, z = 0;
+            //int count = 0;
+            double maxX = float.MinValue, maxY = float.MinValue, maxZ = float.MinValue;
+            double minX = float.MaxValue, minY = float.MaxValue, minZ = float.MaxValue;
             foreach (var face in _objects[objectIdx].FacesWorld)
             {
                 foreach (var vertex in face.vertices)
                 {
-                    x += vertex.X;
-                    y += vertex.Y;
-                    z += vertex.Z;
-                }
-                count += 3;
-            }
 
-            return new System.Numerics.Vector3((float)x / count, (float)y / count, (float)z / count);
+                    maxX = (vertex.X > maxX) ? vertex.X : maxX;
+                    maxY = (vertex.Y > maxY) ? vertex.Y : maxY;
+                    maxZ = (vertex.Z > maxZ) ? vertex.Z : maxZ;
+                    minX = (vertex.X < minX) ? vertex.X : minX;
+                    minY = (vertex.Y < minY) ? vertex.Y : minY;
+                    minZ = (vertex.Z < minZ) ? vertex.Z : minZ;
+                    //x += vertex.X;  
+                    //y += vertex.Y;
+                    //z += vertex.Z;
+                }
+                //count += 3;
+            }
+            //var data = _objects[idx].FacesWorld.Min(x=>x.)
+
+            //float maxX = data.Vertices.Max(x => x.X);
+            //float maxY = data.Vertices.Max(x => x.Y);
+            //float maxZ = data.Vertices.Max(x => x.Z);
+            //float minX = data.Vertices.Min(x => x.X);
+            //float minY = data.Vertices.Min(x => x.Y);
+            //float minZ = data.Vertices.Min(x => x.Z);
+
+            //return new System.Numerics.Vector3((float)x / count, (float)y / count, (float)z / count);
+            return new System.Numerics.Vector3((float)((minX + maxX) / 2.0f), (float)((minY + maxY) / 2.0f), (float)((minZ + maxZ) / 2.0f));
         }
         void InitZBuffer()
         {
@@ -198,7 +233,7 @@ namespace SceneRendering
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
                 g.Clear(Color.FromArgb(255, (int)(255.0f * Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity), (int)(255.0f * Constants.LightIntensity)));
-                g.FillEllipse(Brushes.Yellow, (int)_lightSourceCamera.X, (int)_lightSourceCamera.Y, 50, 50);
+                //g.FillEllipse(Brushes.Yellow, (int)_lightSourceCamera.X, (int)_lightSourceCamera.Y, 50, 50);
             }
             if (this.paintObjectsCheckBox.Checked)
             {
@@ -256,9 +291,9 @@ namespace SceneRendering
             }
             var scaleVectorLambda = (Vector3 v) =>
             {
-                v.X = (v.X - minX) / (maxX - minX) * _objects[idx].Scale + Constants.XOffset + (float)0.1 * idx * Constants.Offset;
-                v.Y = (v.Y - minY) / (maxY - minY) * _objects[idx].Scale + Constants.YOffset;
-                v.Z = (v.Z - minZ) / (maxZ - minZ) * _objects[idx].Scale / 2;
+                v.X = (v.X - minX) / (maxX - minX) * _objects[idx].Scale + _objects[idx].Offset.X;// + Constants.XOffset + (float)0.1 * idx * Constants.Offset;
+                v.Y = (v.Y - minY) / (maxY - minY) * _objects[idx].Scale + _objects[idx].Offset.Y;// + Constants.YOffset;
+                v.Z = (v.Z - minZ) / (maxZ - minZ) * _objects[idx].Scale / 2 + _objects[idx].Offset.Z;
                 return v;
             };
 
@@ -321,7 +356,7 @@ namespace SceneRendering
 
             return loadResults;
         }
-        private void rotateObjectsPoint(List<Vector3> cameraPoint, List<Vector3> worldPoint, Matrix4x4 rotationMat, Matrix4x4 translationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat, int idx)
+        private void rotateObjectsPoint(List<Vector3> cameraPoint, List<Vector3> worldPoint, Matrix4x4 rotationMat, Matrix4x4 translationMat, Matrix4x4 transleteToOriginMat, Matrix4x4 transleteFromOriginMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat, int idx)
         {
             for (int i = 0; i < worldPoint.Count; i++)
             {
@@ -333,8 +368,10 @@ namespace SceneRendering
 
                 if (_objects[idx].Animate == true)
                 {
-                    p = Vector4.Transform(p, translationMat);
+                    p = Vector4.Transform(p, transleteToOriginMat);
                     p = Vector4.Transform(p, rotationMat);
+                    p = Vector4.Transform(p, transleteFromOriginMat);
+                    p = Vector4.Transform(p, translationMat);
                     worldPoint[i].X = p.X / p.W;
                     worldPoint[i].Y = p.Y / p.W;
                     worldPoint[i].Z = p.Z / p.W;
@@ -428,6 +465,7 @@ namespace SceneRendering
             var rotationMat =
                   System.Numerics.Matrix4x4.CreateRotationZ((float)(Constants.Angle * Math.PI / 180.0));
 
+
             var translationMat = Matrix4x4.CreateTranslation(translation);
             translation.X = 0;
             translation.Y = 0;
@@ -436,7 +474,7 @@ namespace SceneRendering
 
             camUpVec.X = 0;
             camUpVec.Y = 0;
-            camUpVec.Z = -1;
+            camUpVec.Z = 1;
             if (stationaryTrackingCameraIdx == Camera.CurrentCameraIndex)
             {
                 UpdataCameraTarget(stationaryTrackingCameraIdx);
@@ -464,9 +502,16 @@ namespace SceneRendering
             var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
             for (int idx = 0; idx < _objects.Count; idx++)
             {
+                System.Numerics.Vector3 center = new System.Numerics.Vector3(0, 0, 0);
+                if (_objects[idx].Animate == true)
+                {
+                    center = GetWorldObjectsCenter(idx);
+                }
+                Matrix4x4 transleteToOriginMat = Matrix4x4.CreateTranslation(-center);
+                Matrix4x4 transleteFromOriginMat = Matrix4x4.CreateTranslation(center);
                 for (int f = 0; f < _objects[idx].FacesWorld.Count; f++)
                 {
-                    rotateObjectsPoint(_objects[idx].FacesCamera[f].vertices, _objects[idx].FacesWorld[f].vertices, rotationMat, translationMat, viewMat, perspectiveMat, idx);
+                    rotateObjectsPoint(_objects[idx].FacesCamera[f].vertices, _objects[idx].FacesWorld[f].vertices, rotationMat, translationMat, transleteToOriginMat, transleteFromOriginMat, viewMat, perspectiveMat, idx);
                     rotateNormalVector(_objects[idx].FacesCamera[f].normals, _objects[idx].FacesWorld[f].normals, rotationMat, idx);
                 }
 
@@ -495,10 +540,10 @@ namespace SceneRendering
                 double y = _radius * Math.Sin(_angle * Math.PI / 180);
                 _angle += _angleIncrement;
                 //_radius += _radiusIncrement;
-                _lightSource.X = x + _origin.X;
-                _lightSource.Y = y + _origin.Y;
-                _lightSourceCamera.X = x + _origin.X;
-                _lightSourceCamera.Y = y + _origin.Y;
+                _lightSource[0].X = x + _origin.X;
+                _lightSource[0].Y = y + _origin.Y;
+                //_lightSourceCamera.X = x + _origin.X;
+                //_lightSourceCamera.Y = y + _origin.Y;
             }
             if (this.animateObjectCheckBox.Checked)
             {
@@ -538,7 +583,8 @@ namespace SceneRendering
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var z = (double)zTrackBar.Value;
-            _lightSource.Z = z;
+            _lightSource[0].Z = z;
+
             this.zLabel.Text = "z: " + this.zTrackBar.Value.ToString();
 
             if (animateObjectCheckBox.Checked == false)
@@ -652,8 +698,6 @@ namespace SceneRendering
             this.yNumericUpDown.Value = (decimal)tmp.Y;
             this.zNumericUpDown.Value = (decimal)tmp.Z;
         }
-
-
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             int val = 40;

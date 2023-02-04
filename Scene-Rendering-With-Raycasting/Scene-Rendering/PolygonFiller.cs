@@ -46,7 +46,7 @@ namespace SceneRendering
             //this.ColorMap = colorMap;
             //this._normalMap = normalMap;
         }
-        public void FillEachFace(float ka, float kd, float ks, int m, Constants.SHADER shader, Vector3 lightSource, double[,] ZBuffer)
+        public void FillEachFace(float ka, float kd, float ks, int m, Constants.SHADER shader, List<Vector3> lightSource, double[,] ZBuffer)
         {
             if (_width != Drawarea.Width || _height != Drawarea.Height)
             {

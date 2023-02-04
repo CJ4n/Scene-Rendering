@@ -10,18 +10,18 @@ namespace SceneRendering
         private double _ks;
         private double _kd;
         private int _m;
-        private Vector3 _lightSourcePoint;
+        private List<Vector3> _lightSourcePoint;
         private MyColor _lightColor;
         private Vector3 _V;
         private Vector3 _v1Color; // color in vertex 1
         private Vector3 _v2Color; // color in vertex 2
         private Vector3 _v3Color; // color in vertex 3
         private Vector3 _R; // for memrory allocation optimazation purpose
-        private Vector3 _L; // for memrory allocation optimazation purpose
+        //private Vector3 _L; // for memrory allocation optimazation purpose
         private MyColor _objectColor;
         private Constants.SHADER _shader;
         public ColorGenerator(MyFace face, MyFace faceWorld, float ka, float ks, float kd, int m, Constants.SHADER shader,
-            Vector3 lightSourceVector, MyColor color, Color lightColor)
+             List<Vector3> lightSource, MyColor color, Color lightColor)
         {
             this._face = face;
             this._faceWorld = faceWorld;
@@ -30,11 +30,11 @@ namespace SceneRendering
             this._m = m;
             this._ka = ka;
             this._shader = shader;
-            this._lightSourcePoint = lightSourceVector;
+            this._lightSourcePoint = lightSource;
             this._objectColor = color;
             this._lightColor = new MyColor(lightColor.R / 255.0, lightColor.G / 255.0, lightColor.B / 255.0);
-            this._V = new Vector3(0, 0, 1);
-            this._L = new Vector3(0, 0, 0);
+            this._V = new Vector3(0, 0, -1);
+            //this._L = new Vector3(0, 0, 0);
             this._R = new Vector3(0, 0, 0);
             this._v1Color = GetColorInVetex(0);
             this._v2Color = GetColorInVetex(1);
@@ -65,26 +65,38 @@ namespace SceneRendering
             {
                 return new Vector3(0, 0, 0);
             }
-            _L.X = _lightSourcePoint.X - _faceWorld.vertices[idx].X;
-            _L.Y = _lightSourcePoint.Y - _faceWorld.vertices[idx].Y;
-            _L.Z = _lightSourcePoint.Z - _faceWorld.vertices[idx].Z;
-            Utils.Normalize(_L);
 
-            Vector3 normalVersor = _face.normals[idx];
+            double r = 0, g = 0, b = 0;
 
+            Vector3 _L = new Vector3(0, 0, 0);
+            foreach (var light in _lightSourcePoint)
+            {
 
-            double dotProduct = Utils.DotProduct(normalVersor, _L);
-            _R.X = 2 * dotProduct * normalVersor.X - _L.X;
-            _R.Y = 2 * dotProduct * normalVersor.Y - _L.Y;
-            _R.Z = 2 * dotProduct * normalVersor.Z - _L.Z;
+                _L.X = light.X - _faceWorld.vertices[idx].X;
+                _L.Y = light.Y - _faceWorld.vertices[idx].Y;
+                _L.Z = light.Z - _faceWorld.vertices[idx].Z;
+                Utils.Normalize(_L);
 
-            double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
-            double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVersor, _L));
+                Vector3 normalVersor = _face.normals[idx];
 
 
-            double r = _ka + Constants.LightIntensity * (_kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m));
-            double g = _ka + Constants.LightIntensity * (_kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m));
-            double b = _ka + Constants.LightIntensity * (_kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m));
+                double dotProduct = Utils.DotProduct(normalVersor, _L);
+                _R.X = 2 * dotProduct * normalVersor.X - _L.X;
+                _R.Y = 2 * dotProduct * normalVersor.Y - _L.Y;
+                _R.Z = 2 * dotProduct * normalVersor.Z - _L.Z;
+
+                double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
+                double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVersor, _L));
+
+
+                r += _kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m);
+                g += _kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m);
+                b += _kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m);
+            }
+            r = _ka + Constants.LightIntensity * r;
+            g = _ka + Constants.LightIntensity * g;
+            b = _ka + Constants.LightIntensity * b;
+
             r = System.Math.Clamp(r, 0, 1);
             g = System.Math.Clamp(g, 0, 1);
             b = System.Math.Clamp(b, 0, 1);
@@ -95,24 +107,37 @@ namespace SceneRendering
         {
             Vector3 XYZ = BarycentricInterpolation(_faceWorld.vertices[0], _faceWorld.vertices[1], _faceWorld.vertices[2], x, y);
 
-            _L.X = _lightSourcePoint.X - (double)x;
-            _L.Y = _lightSourcePoint.Y - (double)y;
-            _L.Z = _lightSourcePoint.Z - (double)XYZ.Z;
-            Utils.Normalize(_L);
 
-            Vector3 normalVector = BarycentricInterpolation(_face.normals[0], _face.normals[1], _face.normals[2], x, y);
-            Utils.Normalize(normalVector);
-            double dotProduct = Utils.DotProduct(normalVector, _L);
-            _R.X = 2 * dotProduct * normalVector.X - _L.X;
-            _R.Y = 2 * dotProduct * normalVector.Y - _L.Y;
-            _R.Z = 2 * dotProduct * normalVector.Z - _L.Z;
+            double r = 0, g = 0, b = 0;
+            Vector3 _L = new Vector3(0, 0, 0);
+            foreach (var light in _lightSourcePoint)
+            {
 
-            double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
-            double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, _L));
+                _L.X = light.X - (double)x;
+                _L.Y = light.Y - (double)y;
+                _L.Z = light.Z - (double)XYZ.Z;
+                Utils.Normalize(_L);
 
-            double r = _ka + Constants.LightIntensity * (_kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m));
-            double g = _ka + Constants.LightIntensity * (_kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m));
-            double b = _ka + Constants.LightIntensity * (_kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m));
+                Vector3 normalVector = BarycentricInterpolation(_face.normals[0], _face.normals[1], _face.normals[2], x, y);
+                Utils.Normalize(normalVector);
+                double dotProduct = Utils.DotProduct(normalVector, _L);
+                _R.X = 2 * dotProduct * normalVector.X - _L.X;
+                _R.Y = 2 * dotProduct * normalVector.Y - _L.Y;
+                _R.Z = 2 * dotProduct * normalVector.Z - _L.Z;
+
+                double cosVR = Math.Max(0, Utils.CosBetweenVersors(_V, _R));
+                double cosNL = Math.Max(0, Utils.CosBetweenVersors(normalVector, _L));
+
+                r += _kd * _lightColor.R * _objectColor.R * cosNL + _ks * _lightColor.R * _objectColor.R * Math.Pow(cosVR, _m);
+                g += _kd * _lightColor.G * _objectColor.G * cosNL + _ks * _lightColor.G * _objectColor.G * Math.Pow(cosVR, _m);
+                b += _kd * _lightColor.B * _objectColor.B * cosNL + _ks * _lightColor.B * _objectColor.B * Math.Pow(cosVR, _m);
+            }
+
+            r = _ka + Constants.LightIntensity * r;
+            g = _ka + Constants.LightIntensity * g;
+            b = _ka + Constants.LightIntensity * b;
+
+
             r = System.Math.Clamp(r, 0, 1);
             g = System.Math.Clamp(g, 0, 1);
             b = System.Math.Clamp(b, 0, 1);
