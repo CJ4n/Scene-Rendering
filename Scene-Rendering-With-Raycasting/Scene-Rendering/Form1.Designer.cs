@@ -218,6 +218,11 @@
             0,
             0,
             0});
+            this.xNumericUpDown.Minimum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            -2147483648});
             this.xNumericUpDown.Name = "xNumericUpDown";
             this.xNumericUpDown.Size = new System.Drawing.Size(150, 27);
             this.xNumericUpDown.TabIndex = 28;
@@ -241,6 +246,11 @@
             0,
             0,
             0});
+            this.zNumericUpDown.Minimum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            -2147483648});
             this.zNumericUpDown.Name = "zNumericUpDown";
             this.zNumericUpDown.Size = new System.Drawing.Size(150, 27);
             this.zNumericUpDown.TabIndex = 27;
@@ -264,6 +274,11 @@
             0,
             0,
             0});
+            this.yNumericUpDown.Minimum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            -2147483648});
             this.yNumericUpDown.Name = "yNumericUpDown";
             this.yNumericUpDown.Size = new System.Drawing.Size(150, 27);
             this.yNumericUpDown.TabIndex = 26;
@@ -533,8 +548,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1423, 1055);
             this.Controls.Add(this.splitContainer1);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "Form1";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.Canvas)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
