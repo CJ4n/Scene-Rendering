@@ -47,4 +47,34 @@ namespace SceneRendering
             return new MyColor(x.X, x.Y, x.Z);
         }
     }
+
+    public class SceneObject
+    {
+        public string Name { get; set; }
+        public bool Animatable = false;
+        public bool Animate { get; set; }
+        public int Scale { get; set; }
+        public System.Numerics.Vector3 Offset { get; set; }
+        public List<MyFace> FacesCamera { get; set; }
+        public List<MyFace> FacesWorld { get; set; }
+        public PolygonFiller PolygonFiller { get; set; }
+    }
+
+    // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
+    public class Camera
+    {
+        public string Name { get; set; }
+        static public int CurrentCameraIndex = 0;
+        public int TargetObjectIdx = -1;
+        public System.Numerics.Vector3 CamPosition { get; set; }
+        public System.Numerics.Vector3 CamTarget { get; set; }
+    }
+
+    public class Light
+    {
+        public Vector3 Position { get; set; }
+        public bool Enabled { get; set; }
+        public bool IsSpotLight { get; set; }
+        public Vector3 DirectionOfLight { get; set; }
+    }
 }

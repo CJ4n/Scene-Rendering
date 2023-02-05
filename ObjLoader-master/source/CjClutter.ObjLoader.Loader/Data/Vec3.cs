@@ -1,4 +1,5 @@
 using ObjLoader.Loader.Data.VertexData;
+
 namespace ObjLoader.Loader.Data
 {
     public class Vector3
@@ -11,6 +12,11 @@ namespace ObjLoader.Loader.Data
             X = x;
             Y = y;
             Z = z;
+        }
+
+        public static Vector3 operator -(Vector3 v)
+        {
+            return new Vector3(-v.X, -v.Y, -v.Z);
         }
         public static implicit operator Vector3(Normal x)
         {

@@ -52,7 +52,6 @@ D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Sc
 D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\bin\Debug\net6.0-windows\CjClutter.ObjLoader.Loader.dll
 D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\bin\Debug\net6.0-windows\CjClutter.ObjLoader.Loader.pdb
 D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\Scene-Rendering.csproj.AssemblyReference.cache
-D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\SceneRendering.Form1.resources
 D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\Scene-Rendering.csproj.GenerateResource.cache
 D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\Scene-Rendering.GeneratedMSBuildEditorConfig.editorconfig
 D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\Scene-Rendering.AssemblyInfoInputs.cache
@@ -130,3 +129,4 @@ C:\Users\yanci\Desktop\test\Scene-Rendering\Scene-Rendering-With-Raycasting\Scen
 C:\Users\yanci\Desktop\test\Scene-Rendering\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\Scene-Rendering.pdb
 C:\Users\yanci\Desktop\test\Scene-Rendering\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\Scene-Rendering.genruntimeconfig.cache
 C:\Users\yanci\Desktop\test\Scene-Rendering\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\ref\Scene-Rendering.dll
+D:\JAN_CICHOMSKI\STUDIA\STUDIA_SEMESTR_5_2022_ZIMA\Grafika Komputerowa 1\lab2\Scene-Rendering-With-Raycasting\Scene-Rendering-With-Raycasting\Scene-Rendering\obj\Debug\net6.0-windows\SceneRendering.Form1.resources

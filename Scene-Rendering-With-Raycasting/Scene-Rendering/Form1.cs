@@ -4,43 +4,21 @@ using Vector3 = ObjLoader.Loader.Data.Vector3;
 
 namespace SceneRendering
 {
+
+
     public partial class Form1 : Form
     {
         //TODO:
         // 13. dodac reflektor
         // 14. dodac sterowanie refloektorem
-        // 15. dodac dragania
-        private class SceneObject
-        {
-            public string Name { get; set; }
-            public bool Animatable = false;
-            public bool Animate { get; set; }
-            public int Scale { get; set; }
-            public System.Numerics.Vector3 Offset { get; set; }
-            public List<MyFace> FacesCamera { get; set; }
-            public List<MyFace> FacesWorld { get; set; }
-            public PolygonFiller PolygonFiller { get; set; }
-        }
-
-        // 0 - stationary cam, 1 - stationary-tracking object cam, 2 - object following cam
-        private class Camera
-        {
-            public string Name { get; set; }
-            static public int CurrentCameraIndex = 0;
-            public int TargetObjectIdx = -1;
-            public System.Numerics.Vector3 CamPosition { get; set; }
-            public System.Numerics.Vector3 CamTarget { get; set; }
-        }
-
+        //15. add every thing to const shader
         // paths to files
         private List<string> _pathsToObjFiles = new List<string>();
-        //private string _pathToColorMap = "..\\..\\..\\..\\..\\colorMap1.jpg";
         private string _pathToMonkey = "..\\..\\..\\..\\..\\monkey.obj";
         private string _pathToTorus = "..\\..\\..\\..\\..\\fulltorust.obj";
         private string _pathToCoords = "..\\..\\..\\..\\..\\coords.obj";
 
-        private List<Vector3> _lightSource = new List<Vector3>();
-        //private Vector3 _lightSourceCamera = new Vector3(1000, 300, 2500);
+        private List<Light> _lightSource = new List<Light>();
         private PointF _origin = new PointF(Constants.ObjectBasicDim / 2, Constants.ObjectBasicDim / 2);
         private int _radius = 1000;
         private int _angle = 0;
@@ -60,8 +38,11 @@ namespace SceneRendering
         private int stationaryCameraIdx = 1;
         private int stationaryTrackingCameraIdx = 0;
         private int thirdPersonCameraIdx = 2;
+        private int CameraTargetObjectIdx = 1;
 
-        private int CameraTargetIdx = 1;
+        private bool oscilate = true;
+        System.Numerics.Vector3 oscilation = new System.Numerics.Vector3(0, 0, 20);
+
         public Form1()
         {
             InitializeComponent();
@@ -77,8 +58,8 @@ namespace SceneRendering
             _zBuffer = new double[Canvas.Width, Canvas.Height];
 
 
-            _lightSource.Add(new Vector3(1000, 300, 2500));
-            _lightSource.Add(new Vector3(-1000, 300, 2500));
+
+
             _pathsToObjFiles.Add(_pathToMonkey);
             SceneObject obj1 = new SceneObject();
             obj1.Name = "monkey";
@@ -126,15 +107,13 @@ namespace SceneRendering
             var colorTmp = Color.OrangeRed;
             _objectColor = new MyColor(colorTmp.R / 255f, colorTmp.G / 255f, colorTmp.B / 255f);
 
-            //var colorMapBitmap = GetBitampFromFile(_pathToColorMap);
-            //_colorMap = Utils.ConvertBitmapToArray(colorMapBitmap);
             GetAndSetObj();
 
             Camera cam1 = new Camera();
-            cam1.CamTarget = GetWorldObjectsCenter(Camera.CurrentCameraIndex);
+            cam1.CamTarget = GetWorldObjectsCenter(CameraTargetObjectIdx);
             cam1.CamPosition = new System.Numerics.Vector3(400, 400, 1500);
             cam1.Name = "StationaryTrackingCamera";
-            cam1.TargetObjectIdx = CameraTargetIdx;
+            cam1.TargetObjectIdx = CameraTargetObjectIdx;
             _cameras.Add(cam1);
 
             Camera cam2 = new Camera();
@@ -160,13 +139,37 @@ namespace SceneRendering
             this.yNumericUpDown.Value = (decimal)tmp.Y;
             this.zNumericUpDown.Value = (decimal)tmp.Z;
             this.zNumericUpDown.Update();
+            //Constants.camPositoin = new Vector3(_cameras[Camera.CurrentCameraIndex].CamPosition.X,
+            //    _cameras[Camera.CurrentCameraIndex].CamPosition.Y, _cameras[Camera.CurrentCameraIndex].CamPosition.Z);
+            Constants.camPositoin = Utils.NumericsVec3ToVec3(_cameras[Camera.CurrentCameraIndex].CamPosition);
 
+            Light light1 = new Light();
+            light1.Position = new Vector3(1000, 300, 2500);
+            light1.Enabled = true;
+            light1.IsSpotLight = false;
+            _lightSource.Add(light1);
+
+            Light light2 = new Light();
+            light2.Position = new Vector3(-1000, 300, 2500);
+            light2.Enabled = true;
+            light2.IsSpotLight = false;
+            _lightSource.Add(light2);
+
+            Light light3 = new Light();
+            light3.Position = Utils.NumericsVec3ToVec3(GetWorldObjectsCenter(CameraTargetObjectIdx));
+            light3.Enabled = true;
+            light3.IsSpotLight = true;
+            light3.DirectionOfLight = new Vector3(1, 0, 0);
+            _lightSource.Add(light3);
+
+
+            this.animationTimer.Enabled = true;
             PaintScene();
         }
 
         System.Numerics.Vector3 GetThirdPersonCameraPosition()
         {
-            var position = GetWorldObjectsCenter(CameraTargetIdx);
+            var position = GetWorldObjectsCenter(CameraTargetObjectIdx);
             position.Z += 300;
             position.X -= 500;
             position.Y -= 500;
@@ -228,7 +231,6 @@ namespace SceneRendering
             float kd = (float)(this.kdTrackBar.Value / 100.0);
             float ka = (float)(this.kaTrackBar.Value / 100.0);
             int m = this.mTrackBar.Value;
-            //bool interpolateNormalVector = this.interpolateNormalRadioButton.Checked;
             Constants.SHADER shader = this.interpolateConstradioButton.Checked ? Constants.SHADER.CONST : this.interpolateNormalRadioButton.Checked ? Constants.SHADER.PHONG : Constants.SHADER.GOURAUD;
             using (Graphics g = Graphics.FromImage(_drawArea))
             {
@@ -264,14 +266,6 @@ namespace SceneRendering
                 _objects[idx].PolygonFiller = polygonFiller;
             }
         }
-        //private Bitmap GetBitampFromFile(string path)
-        //{
-        //    Bitmap bitmap = new Bitmap(path);
-        //    Rectangle cloneRect = new Rectangle(0, 0, Math.Min(_drawArea.Width, bitmap.Width), Math.Min(_drawArea.Height, bitmap.Height));
-        //    Bitmap bmp = bitmap.Clone(cloneRect, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-        //    bitmap.Dispose();
-        //    return bmp;
-        //}
         private List<MyFace> GetAllFaces(LoadResult data, int idx)
         {
             float maxX = data.Vertices.Max(x => x.X);
@@ -356,7 +350,9 @@ namespace SceneRendering
 
             return loadResults;
         }
-        private void rotateObjectsPoint(List<Vector3> cameraPoint, List<Vector3> worldPoint, Matrix4x4 rotationMat, Matrix4x4 translationMat, Matrix4x4 transleteToOriginMat, Matrix4x4 transleteFromOriginMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat, int idx)
+        private void rotateObjectsPoint(List<Vector3> cameraPoint, List<Vector3> worldPoint, Matrix4x4 rotationMat,
+            Matrix4x4 translationMat, Matrix4x4 oscilationMat, Matrix4x4 transleteToOriginMat, Matrix4x4 transleteFromOriginMat,
+            Matrix4x4 viewMat, Matrix4x4 perspectiveMat, int idx)
         {
             for (int i = 0; i < worldPoint.Count; i++)
             {
@@ -366,16 +362,24 @@ namespace SceneRendering
                 p.Z = (float)worldPoint[i].Z;
                 p.W = 1;
 
+
                 if (_objects[idx].Animate == true)
                 {
                     p = Vector4.Transform(p, transleteToOriginMat);
                     p = Vector4.Transform(p, rotationMat);
                     p = Vector4.Transform(p, transleteFromOriginMat);
+
+                    if (oscilate)
+                    {
+                        p = Vector4.Transform(p, oscilationMat);
+                    }
+
                     p = Vector4.Transform(p, translationMat);
                     worldPoint[i].X = p.X / p.W;
                     worldPoint[i].Y = p.Y / p.W;
                     worldPoint[i].Z = p.Z / p.W;
                 }
+
                 p = Vector4.Transform(p, viewMat);
                 p = Vector4.Transform(p, perspectiveMat);
                 if (p.W == 0) { throw new Exception("unexpecatde happend"); }
@@ -400,7 +404,6 @@ namespace SceneRendering
             }
 
         }
-        // cameraNormal==worldNormal
         private void rotateNormalVector(List<Vector3> cameraNormal, List<Vector3> worldNormal, Matrix4x4 rotationMat, int idx)
         {
             if (_objects[idx].Animate == false)
@@ -423,39 +426,6 @@ namespace SceneRendering
                 worldNormal[i].Z = after.Z;
             }
         }
-        private void rotateSun(Vector3 cameraPoint, Vector3 worldPoint, Matrix4x4 rotationMat, Matrix4x4 viewMat, Matrix4x4 perspectiveMat)
-        {
-            System.Numerics.Vector4 p;
-            p.X = (float)worldPoint.X;
-            p.Y = (float)worldPoint.Y;
-            p.Z = (float)worldPoint.Z;
-            p.W = 1;
-
-            //p = Vector4.Transform(p, rotationMat);
-            //worldPoint.X = p.X / p.W;
-            //worldPoint.Y = p.Y / p.W;
-            //worldPoint.Z = p.Z / p.W;
-            p = Vector4.Transform(p, viewMat);
-            p = Vector4.Transform(p, perspectiveMat);
-            p.X /= p.W;
-            p.Y /= p.W;
-            p.Z /= p.W;
-            if (p.X < -1) p.X = -1;
-            if (p.Y < -1) p.Y = -1;
-            if (p.Z < -1) p.Z = -1;
-
-            if (p.X > 1) p.X = 1;
-            if (p.Y > 1) p.Y = 1;
-            if (p.Z > 1) p.Z = 1;
-            p.X = (p.X + 1) / 2 * (_drawArea.Width - 1);
-            p.Y = (p.Y + 1) / 2 * (_drawArea.Height - 1);
-            p.Z = (p.Z + 1) / 2;
-
-            cameraPoint.X = p.X;
-            cameraPoint.Y = p.Y;
-            cameraPoint.Z = p.Z;
-
-        }
         private void UpdataCameraTarget(int idx)
         {
             _cameras[idx].CamTarget = GetWorldObjectsCenter(_cameras[idx].TargetObjectIdx);
@@ -463,10 +433,12 @@ namespace SceneRendering
         void RotateScene()
         {
             var rotationMat =
-                  System.Numerics.Matrix4x4.CreateRotationZ((float)(Constants.Angle * Math.PI / 180.0));
-
+                  System.Numerics.Matrix4x4.CreateRotationY((float)(Constants.Angle * Math.PI / 180.0));
 
             var translationMat = Matrix4x4.CreateTranslation(translation);
+            var oscilationMat = Matrix4x4.CreateTranslation(oscilation);
+
+            oscilation = -oscilation;
             translation.X = 0;
             translation.Y = 0;
             translation.Z = 0;
@@ -497,7 +469,7 @@ namespace SceneRendering
             float fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist;
             fieldOfView = (float)((double)this.FOVTrackBar.Value * Math.PI / 180.0);
             aspecetRatio = _drawArea.Width / _drawArea.Height;
-            nearPlaneDist = 2500;
+            nearPlaneDist = 10;
             farPlaneDist = 20000;
             var perspectiveMat = System.Numerics.Matrix4x4.CreatePerspectiveFieldOfView(fieldOfView, aspecetRatio, nearPlaneDist, farPlaneDist);
             for (int idx = 0; idx < _objects.Count; idx++)
@@ -511,7 +483,8 @@ namespace SceneRendering
                 Matrix4x4 transleteFromOriginMat = Matrix4x4.CreateTranslation(center);
                 for (int f = 0; f < _objects[idx].FacesWorld.Count; f++)
                 {
-                    rotateObjectsPoint(_objects[idx].FacesCamera[f].vertices, _objects[idx].FacesWorld[f].vertices, rotationMat, translationMat, transleteToOriginMat, transleteFromOriginMat, viewMat, perspectiveMat, idx);
+                    rotateObjectsPoint(_objects[idx].FacesCamera[f].vertices, _objects[idx].FacesWorld[f].vertices, rotationMat, translationMat,
+                        oscilationMat, transleteToOriginMat, transleteFromOriginMat, viewMat, perspectiveMat, idx);
                     rotateNormalVector(_objects[idx].FacesCamera[f].normals, _objects[idx].FacesWorld[f].normals, rotationMat, idx);
                 }
 
@@ -519,13 +492,14 @@ namespace SceneRendering
                 Constants.MinZ = Math.Min(Constants.MinZ, _objects[idx].FacesCamera.Min(x => (x.vertices.Min(xx => (xx.Z)))));
                 _objects[idx].PolygonFiller.Faces = _objects[idx].FacesCamera;
             }
-            //rotateSun(_lightSourceCamera, _lightSource, rotationMat, viewMat, perspectiveMat);
         }
         //purely debug featuer, not intented for any particular usage
         private void CameraPositionChanged(object sender, EventArgs e)
         {
             _cameras[Camera.CurrentCameraIndex].CamPosition =
                 new System.Numerics.Vector3((float)this.xNumericUpDown.Value, (float)this.yNumericUpDown.Value, (float)this.zNumericUpDown.Value);
+
+            Constants.camPositoin = new Vector3((float)this.xNumericUpDown.Value, (float)this.yNumericUpDown.Value, (float)this.zNumericUpDown.Value);
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -540,21 +514,33 @@ namespace SceneRendering
                 double y = _radius * Math.Sin(_angle * Math.PI / 180);
                 _angle += _angleIncrement;
                 //_radius += _radiusIncrement;
-                _lightSource[0].X = x + _origin.X;
-                _lightSource[0].Y = y + _origin.Y;
+                _lightSource[0].Position.X = x + _origin.X;
+                _lightSource[0].Position.Y = y + _origin.Y;
                 //_lightSourceCamera.X = x + _origin.X;
                 //_lightSourceCamera.Y = y + _origin.Y;
             }
-            if (this.animateObjectCheckBox.Checked)
+            //if (this.animateObjectCheckBox.Checked)
+            //{
+            //    //Constants.Angle += 3;
+            //}
+            if (Constants.DayAndNight)
             {
-                //Constants.Angle += 3;
+
+                if (Constants.LightIntensity + Constants.LightIntensityChangeRate > 1 || Constants.LightIntensity + Constants.LightIntensityChangeRate < 0)
+                {
+                    Constants.LightIntensityChangeRate = -Constants.LightIntensityChangeRate;
+                }
+                Constants.LightIntensity += Constants.LightIntensityChangeRate;
+            }
+            else
+            {
+                Constants.LightIntensity = 1;
             }
 
-            if (Constants.LightIntensity + Constants.LightIntensityChangeRate > 1 || Constants.LightIntensity + Constants.LightIntensityChangeRate < 0)
+            if (this._lightSource[2].Enabled)
             {
-                Constants.LightIntensityChangeRate = -Constants.LightIntensityChangeRate;
+                this._lightSource[2].Position = Utils.NumericsVec3ToVec3(GetWorldObjectsCenter(CameraTargetObjectIdx));
             }
-            Constants.LightIntensity += Constants.LightIntensityChangeRate;
             PaintScene();
         }
         private void kdTrackBar_ValueChanged(object sender, EventArgs e)
@@ -583,7 +569,7 @@ namespace SceneRendering
         private void zTrackBar_ValueChanged(object sender, EventArgs e)
         {
             var z = (double)zTrackBar.Value;
-            _lightSource[0].Z = z;
+            _lightSource[0].Position.Z = z;
 
             this.zLabel.Text = "z: " + this.zTrackBar.Value.ToString();
 
@@ -612,26 +598,6 @@ namespace SceneRendering
         {
             PaintScene();
         }
-        //private void bitmapColorRadioButton_Click(object sender, EventArgs e)
-        //{
-        //    if (this.bitmapColorRadioButton.Checked == false)
-        //    {
-        //        return;
-        //    }
-        //    var status = this.openFileDialog1.ShowDialog();
-        //    if (status != DialogResult.OK)
-        //    {
-        //        return;
-        //    }
-        //    _pathToColorMap = this.openFileDialog1.FileName;
-        //    var texture = GetBitampFromFile(_pathToColorMap);
-        //    _colorMap = Utils.ConvertBitmapToArray(texture);
-        //    for (int idx = 0; idx < _objects.Count; idx++)
-        //    {
-        //        _objects[idx].PolygonFiller.ColorMap = _colorMap;
-        //    }
-        //    PaintScene();
-        //}
         private void constColorRadioButton_Click(object sender, EventArgs e)
         {
             if (this.constColorRadioButton.Checked == false)
@@ -694,6 +660,7 @@ namespace SceneRendering
         {
             Camera.CurrentCameraIndex = this.comboBox1.SelectedIndex;
             var tmp = _cameras[Camera.CurrentCameraIndex].CamPosition;
+            Constants.camPositoin = new Vector3(tmp.X, tmp.Y, tmp.Z);
             this.xNumericUpDown.Value = (decimal)tmp.X;
             this.yNumericUpDown.Value = (decimal)tmp.Y;
             this.zNumericUpDown.Value = (decimal)tmp.Z;
@@ -717,6 +684,32 @@ namespace SceneRendering
             {
                 translation.Y += -val;
             }
+        }
+        private void oscilationCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            oscilate = !oscilate;
+        }
+        private void light1CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _lightSource[0].Enabled = !_lightSource[0].Enabled;
+        }
+        private void light2CheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _lightSource[1].Enabled = !_lightSource[1].Enabled;
+        }
+        private void light3reflectorCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            _lightSource[2].Enabled = !_lightSource[2].Enabled;
+        }
+
+        private void fogCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Constants.Fog = !Constants.Fog;
+        }
+
+        private void dayAndNightCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            Constants.DayAndNight = !Constants.DayAndNight;
         }
     }
 }

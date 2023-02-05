@@ -46,7 +46,7 @@ namespace SceneRendering
             //this.ColorMap = colorMap;
             //this._normalMap = normalMap;
         }
-        public void FillEachFace(float ka, float kd, float ks, int m, Constants.SHADER shader, List<Vector3> lightSource, double[,] ZBuffer)
+        public void FillEachFace(float ka, float kd, float ks, int m, Constants.SHADER shader, List<Light> lightSource, double[,] ZBuffer)
         {
             if (_width != Drawarea.Width || _height != Drawarea.Height)
             {
@@ -69,7 +69,8 @@ namespace SceneRendering
                     {
                         var colorGenerator = new ColorGenerator(Faces[i], FacesWorld[i], ka, ks, kd, m, shader, lightSource, ObjectColor, LighColor/*, _normalMap*/);
                         FillPolygon(Faces[i].vertices, colorGenerator, snoop, ZBuffer);
-                    });
+                    }
+                    );
                 }
             }
         }

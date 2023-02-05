@@ -32,6 +32,12 @@
             this.Canvas = new System.Windows.Forms.PictureBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dayAndNightCheckBox = new System.Windows.Forms.CheckBox();
+            this.fogCheckBox = new System.Windows.Forms.CheckBox();
+            this.light3reflectorCheckBox = new System.Windows.Forms.CheckBox();
+            this.light2CheckBox = new System.Windows.Forms.CheckBox();
+            this.light1CheckBox = new System.Windows.Forms.CheckBox();
+            this.oscilationCheckBox = new System.Windows.Forms.CheckBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.animateLightCheckBox = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -114,6 +120,12 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.dayAndNightCheckBox);
+            this.groupBox1.Controls.Add(this.fogCheckBox);
+            this.groupBox1.Controls.Add(this.light3reflectorCheckBox);
+            this.groupBox1.Controls.Add(this.light2CheckBox);
+            this.groupBox1.Controls.Add(this.light1CheckBox);
+            this.groupBox1.Controls.Add(this.oscilationCheckBox);
             this.groupBox1.Controls.Add(this.comboBox1);
             this.groupBox1.Controls.Add(this.animateLightCheckBox);
             this.groupBox1.Controls.Add(this.label4);
@@ -148,10 +160,88 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameter adjustment";
             // 
+            // dayAndNightCheckBox
+            // 
+            this.dayAndNightCheckBox.AutoSize = true;
+            this.dayAndNightCheckBox.Checked = true;
+            this.dayAndNightCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dayAndNightCheckBox.Location = new System.Drawing.Point(8, 812);
+            this.dayAndNightCheckBox.Name = "dayAndNightCheckBox";
+            this.dayAndNightCheckBox.Size = new System.Drawing.Size(127, 24);
+            this.dayAndNightCheckBox.TabIndex = 40;
+            this.dayAndNightCheckBox.Text = "Day and Night";
+            this.dayAndNightCheckBox.UseVisualStyleBackColor = true;
+            this.dayAndNightCheckBox.CheckedChanged += new System.EventHandler(this.dayAndNightCheckBox_CheckedChanged);
+            // 
+            // fogCheckBox
+            // 
+            this.fogCheckBox.AutoSize = true;
+            this.fogCheckBox.Checked = true;
+            this.fogCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fogCheckBox.Location = new System.Drawing.Point(10, 541);
+            this.fogCheckBox.Name = "fogCheckBox";
+            this.fogCheckBox.Size = new System.Drawing.Size(56, 24);
+            this.fogCheckBox.TabIndex = 39;
+            this.fogCheckBox.Text = "Fog";
+            this.fogCheckBox.UseVisualStyleBackColor = true;
+            this.fogCheckBox.CheckedChanged += new System.EventHandler(this.fogCheckBox_CheckedChanged);
+            // 
+            // light3reflectorCheckBox
+            // 
+            this.light3reflectorCheckBox.AutoSize = true;
+            this.light3reflectorCheckBox.Checked = true;
+            this.light3reflectorCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.light3reflectorCheckBox.Location = new System.Drawing.Point(9, 781);
+            this.light3reflectorCheckBox.Name = "light3reflectorCheckBox";
+            this.light3reflectorCheckBox.Size = new System.Drawing.Size(146, 24);
+            this.light3reflectorCheckBox.TabIndex = 38;
+            this.light3reflectorCheckBox.Text = "Light 3 (reflector)";
+            this.light3reflectorCheckBox.UseVisualStyleBackColor = true;
+            this.light3reflectorCheckBox.CheckedChanged += new System.EventHandler(this.light3reflectorCheckBox_CheckedChanged);
+            // 
+            // light2CheckBox
+            // 
+            this.light2CheckBox.AutoSize = true;
+            this.light2CheckBox.Checked = true;
+            this.light2CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.light2CheckBox.Location = new System.Drawing.Point(10, 751);
+            this.light2CheckBox.Name = "light2CheckBox";
+            this.light2CheckBox.Size = new System.Drawing.Size(76, 24);
+            this.light2CheckBox.TabIndex = 37;
+            this.light2CheckBox.Text = "Light 2";
+            this.light2CheckBox.UseVisualStyleBackColor = true;
+            this.light2CheckBox.CheckedChanged += new System.EventHandler(this.light2CheckBox_CheckedChanged);
+            // 
+            // light1CheckBox
+            // 
+            this.light1CheckBox.AutoSize = true;
+            this.light1CheckBox.Checked = true;
+            this.light1CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.light1CheckBox.Location = new System.Drawing.Point(10, 721);
+            this.light1CheckBox.Name = "light1CheckBox";
+            this.light1CheckBox.Size = new System.Drawing.Size(76, 24);
+            this.light1CheckBox.TabIndex = 36;
+            this.light1CheckBox.Text = "Light 1";
+            this.light1CheckBox.UseVisualStyleBackColor = true;
+            this.light1CheckBox.CheckedChanged += new System.EventHandler(this.light1CheckBox_CheckedChanged);
+            // 
+            // oscilationCheckBox
+            // 
+            this.oscilationCheckBox.AutoSize = true;
+            this.oscilationCheckBox.Checked = true;
+            this.oscilationCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.oscilationCheckBox.Location = new System.Drawing.Point(10, 691);
+            this.oscilationCheckBox.Name = "oscilationCheckBox";
+            this.oscilationCheckBox.Size = new System.Drawing.Size(97, 24);
+            this.oscilationCheckBox.TabIndex = 35;
+            this.oscilationCheckBox.Text = "Oscilation";
+            this.oscilationCheckBox.UseVisualStyleBackColor = true;
+            this.oscilationCheckBox.CheckedChanged += new System.EventHandler(this.oscilationCheckBox_CheckedChanged);
+            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(10, 698);
+            this.comboBox1.Location = new System.Drawing.Point(6, 844);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(151, 28);
             this.comboBox1.TabIndex = 34;
@@ -172,7 +262,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 902);
+            this.label4.Location = new System.Drawing.Point(12, 921);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(39, 20);
             this.label4.TabIndex = 32;
@@ -181,7 +271,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(23, 1006);
+            this.label3.Location = new System.Drawing.Point(26, 1025);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(21, 20);
             this.label3.TabIndex = 31;
@@ -190,7 +280,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 975);
+            this.label2.Location = new System.Drawing.Point(26, 994);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(20, 20);
             this.label2.TabIndex = 30;
@@ -199,7 +289,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 947);
+            this.label1.Location = new System.Drawing.Point(26, 966);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(21, 20);
             this.label1.TabIndex = 29;
@@ -212,7 +302,7 @@
             0,
             0,
             0});
-            this.xNumericUpDown.Location = new System.Drawing.Point(50, 940);
+            this.xNumericUpDown.Location = new System.Drawing.Point(53, 959);
             this.xNumericUpDown.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -240,7 +330,7 @@
             0,
             0,
             0});
-            this.zNumericUpDown.Location = new System.Drawing.Point(50, 1004);
+            this.zNumericUpDown.Location = new System.Drawing.Point(53, 1023);
             this.zNumericUpDown.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -268,7 +358,7 @@
             0,
             0,
             0});
-            this.yNumericUpDown.Location = new System.Drawing.Point(49, 973);
+            this.yNumericUpDown.Location = new System.Drawing.Point(52, 992);
             this.yNumericUpDown.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -291,7 +381,7 @@
             // 
             // FOVTrackBar
             // 
-            this.FOVTrackBar.Location = new System.Drawing.Point(49, 894);
+            this.FOVTrackBar.Location = new System.Drawing.Point(53, 913);
             this.FOVTrackBar.Maximum = 120;
             this.FOVTrackBar.Minimum = 30;
             this.FOVTrackBar.Name = "FOVTrackBar";
@@ -323,7 +413,7 @@
             // 
             // changeLightColorButton
             // 
-            this.changeLightColorButton.Location = new System.Drawing.Point(6, 780);
+            this.changeLightColorButton.Location = new System.Drawing.Point(6, 878);
             this.changeLightColorButton.Name = "changeLightColorButton";
             this.changeLightColorButton.Size = new System.Drawing.Size(216, 29);
             this.changeLightColorButton.TabIndex = 17;
@@ -336,7 +426,7 @@
             this.interpolationGroupBox.Controls.Add(this.interpolateConstradioButton);
             this.interpolationGroupBox.Controls.Add(this.interpolateNormalRadioButton);
             this.interpolationGroupBox.Controls.Add(this.interpolateColorRadioButton);
-            this.interpolationGroupBox.Location = new System.Drawing.Point(2, 348);
+            this.interpolationGroupBox.Location = new System.Drawing.Point(6, 332);
             this.interpolationGroupBox.Name = "interpolationGroupBox";
             this.interpolationGroupBox.Size = new System.Drawing.Size(235, 126);
             this.interpolationGroupBox.TabIndex = 1;
@@ -384,7 +474,7 @@
             // ColorGroupBox
             // 
             this.ColorGroupBox.Controls.Add(this.constColorRadioButton);
-            this.ColorGroupBox.Location = new System.Drawing.Point(2, 480);
+            this.ColorGroupBox.Location = new System.Drawing.Point(0, 458);
             this.ColorGroupBox.Name = "ColorGroupBox";
             this.ColorGroupBox.Size = new System.Drawing.Size(234, 74);
             this.ColorGroupBox.TabIndex = 15;
@@ -534,7 +624,6 @@
             // 
             // animationTimer
             // 
-            this.animationTimer.Enabled = true;
             this.animationTimer.Interval = 50;
             this.animationTimer.Tick += new System.EventHandler(this.timer1_Tick);
             // 
@@ -615,5 +704,11 @@
         private CheckBox animateLightCheckBox;
         private ComboBox comboBox1;
         private RadioButton interpolateConstradioButton;
+        private CheckBox light3reflectorCheckBox;
+        private CheckBox light2CheckBox;
+        private CheckBox light1CheckBox;
+        private CheckBox oscilationCheckBox;
+        private CheckBox fogCheckBox;
+        private CheckBox dayAndNightCheckBox;
     }
 }

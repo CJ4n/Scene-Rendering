@@ -72,6 +72,10 @@ namespace SceneRendering
             return new Vector3(2.0 * c.R / 255.0, 2.0 * c.G / 255.0, c.B / 255.0);
         }
 
+        public static Vector3 NumericsVec3ToVec3(System.Numerics.Vector3 v)
+        {
+            return new Vector3(v.X, v.Y, v.Z);
+        }
 
     }
 }

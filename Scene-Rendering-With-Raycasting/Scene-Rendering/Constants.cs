@@ -1,4 +1,6 @@
-﻿namespace SceneRendering
+﻿using ObjLoader.Loader.Data;
+
+namespace SceneRendering
 {
     public static class Constants
     {
@@ -19,5 +21,9 @@
         static public float LightIntensityChangeRate = 0.01f;
         public enum SHADER { CONST, GOURAUD, PHONG };
         static public SHADER Shader = SHADER.PHONG;
+        public static Vector3 camPositoin = new Vector3(0, 0, 0);
+
+        public static bool Fog = true;
+        public static bool DayAndNight = true;
     }
 }
