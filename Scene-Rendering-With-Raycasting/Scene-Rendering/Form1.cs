@@ -679,7 +679,7 @@ namespace SceneRendering
             {
                 translation.Y += -val;
             }
-            else if (e.KeyChar == 'h')
+            else if (e.KeyChar == 'm')
             {
                 double angle = 5; // Angle of rotation in degrees
 
@@ -692,7 +692,7 @@ namespace SceneRendering
                 _lightSource[2].DirectionOfLight.Y = newY;
 
             }
-            else if (e.KeyChar == 'n')
+            else if (e.KeyChar == 'b')
             {
                 double angle = -5; // Angle of rotation in degrees
 
@@ -703,6 +703,30 @@ namespace SceneRendering
                 double newY = x * Math.Sin(radians) + y * Math.Cos(radians);
                 _lightSource[2].DirectionOfLight.X = newX;
                 _lightSource[2].DirectionOfLight.Y = newY;
+            }
+            else if (e.KeyChar == 'h')
+            {
+                double angle = 5; // Angle of rotation in degrees
+
+                double radians = angle * Math.PI / 180.0; // Convert to radian
+                double x = _lightSource[2].DirectionOfLight.X;
+                double y = _lightSource[2].DirectionOfLight.Z;
+                double newX = x * Math.Cos(radians) - y * Math.Sin(radians);
+                double newY = x * Math.Sin(radians) + y * Math.Cos(radians);
+                _lightSource[2].DirectionOfLight.X = newX;
+                _lightSource[2].DirectionOfLight.Z = newY;
+            }
+            else if (e.KeyChar == 'n')
+            {
+                double angle = -5; // Angle of rotation in degrees
+
+                double radians = angle * Math.PI / 180.0; // Convert to radian
+                double x = _lightSource[2].DirectionOfLight.X;
+                double y = _lightSource[2].DirectionOfLight.Z;
+                double newX = x * Math.Cos(radians) - y * Math.Sin(radians);
+                double newY = x * Math.Sin(radians) + y * Math.Cos(radians);
+                _lightSource[2].DirectionOfLight.X = newX;
+                _lightSource[2].DirectionOfLight.Z = newY;
             }
         }
         private void oscilationCheckBox_CheckedChanged(object sender, EventArgs e)
