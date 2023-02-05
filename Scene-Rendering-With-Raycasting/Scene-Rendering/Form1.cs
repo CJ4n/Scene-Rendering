@@ -9,9 +9,7 @@ namespace SceneRendering
     public partial class Form1 : Form
     {
         //TODO:
-        // 13. dodac reflektor
         // 14. dodac sterowanie refloektorem
-        //15. add every thing to const shader
         // paths to files
         private List<string> _pathsToObjFiles = new List<string>();
         private string _pathToMonkey = "..\\..\\..\\..\\..\\monkey.obj";
@@ -56,9 +54,6 @@ namespace SceneRendering
             Canvas.Image = _drawArea;
 
             _zBuffer = new double[Canvas.Width, Canvas.Height];
-
-
-
 
             _pathsToObjFiles.Add(_pathToMonkey);
             SceneObject obj1 = new SceneObject();
@@ -684,6 +679,31 @@ namespace SceneRendering
             {
                 translation.Y += -val;
             }
+            else if (e.KeyChar == 'h')
+            {
+                double angle = 5; // Angle of rotation in degrees
+
+                double radians = angle * Math.PI / 180.0; // Convert to radian
+                double x = _lightSource[2].DirectionOfLight.X;
+                double y = _lightSource[2].DirectionOfLight.Y;
+                double newX = x * Math.Cos(radians) - y * Math.Sin(radians);
+                double newY = x * Math.Sin(radians) + y * Math.Cos(radians);
+                _lightSource[2].DirectionOfLight.X = newX;
+                _lightSource[2].DirectionOfLight.Y = newY;
+
+            }
+            else if (e.KeyChar == 'n')
+            {
+                double angle = -5; // Angle of rotation in degrees
+
+                double radians = angle * Math.PI / 180.0; // Convert to radian
+                double x = _lightSource[2].DirectionOfLight.X;
+                double y = _lightSource[2].DirectionOfLight.Y;
+                double newX = x * Math.Cos(radians) - y * Math.Sin(radians);
+                double newY = x * Math.Sin(radians) + y * Math.Cos(radians);
+                _lightSource[2].DirectionOfLight.X = newX;
+                _lightSource[2].DirectionOfLight.Y = newY;
+            }
         }
         private void oscilationCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -701,12 +721,10 @@ namespace SceneRendering
         {
             _lightSource[2].Enabled = !_lightSource[2].Enabled;
         }
-
         private void fogCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Constants.Fog = !Constants.Fog;
         }
-
         private void dayAndNightCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             Constants.DayAndNight = !Constants.DayAndNight;

@@ -165,7 +165,7 @@ namespace SceneRendering
                 if (light.IsSpotLight)
                 {
                     double cosDL = Math.Max(0, Utils.CosBetweenVersors(-light.DirectionOfLight, _L));
-                    int p = 1;
+                    int p = 10;
                     double cosDL_p = Math.Pow(cosDL, p);
                     r += _lightColor.R * _objectColor.R * (_kd * cosNL + _ks * cosVR_m) * cosDL_p;
                     g += _lightColor.G * _objectColor.G * (_kd * cosNL + _ks * cosVR_m) * cosDL_p;
@@ -173,7 +173,6 @@ namespace SceneRendering
                 }
                 else
                 {
-
                     r += _lightColor.R * _objectColor.R * (_kd * cosNL + _ks * cosVR_m);
                     g += _lightColor.G * _objectColor.G * (_kd * cosNL + _ks * cosVR_m);
                     b += _lightColor.B * _objectColor.B * (_kd * cosNL + _ks * cosVR_m);
