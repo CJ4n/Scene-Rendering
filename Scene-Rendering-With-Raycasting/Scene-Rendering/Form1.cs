@@ -4,12 +4,8 @@ using Vector3 = ObjLoader.Loader.Data.Vector3;
 
 namespace SceneRendering
 {
-
-
     public partial class Form1 : Form
     {
-        //TODO:
-        // 14. dodac sterowanie refloektorem
         // paths to files
         private List<string> _pathsToObjFiles = new List<string>();
         private string _pathToMonkey = "..\\..\\..\\..\\..\\monkey.obj";
@@ -36,7 +32,7 @@ namespace SceneRendering
         private int stationaryCameraIdx = 1;
         private int stationaryTrackingCameraIdx = 0;
         private int thirdPersonCameraIdx = 2;
-        private int CameraTargetObjectIdx = 1;
+        private int CameraTargetObjectIdx = 0;
 
         private bool oscilate = true;
         System.Numerics.Vector3 oscilation = new System.Numerics.Vector3(0, 0, 20);
@@ -55,14 +51,6 @@ namespace SceneRendering
 
             _zBuffer = new double[Canvas.Width, Canvas.Height];
 
-            _pathsToObjFiles.Add(_pathToMonkey);
-            SceneObject obj1 = new SceneObject();
-            obj1.Name = "monkey";
-            obj1.Animate = false;
-            obj1.Animatable = false;
-            obj1.Scale = Constants.ObjectBasicDim;
-            obj1.Offset = new System.Numerics.Vector3(0, 0, 0);
-
             _pathsToObjFiles.Add(_pathToTorus);
             SceneObject obj2 = new SceneObject();
             obj2.Name = "torus";
@@ -71,13 +59,13 @@ namespace SceneRendering
             obj2.Scale = Constants.ObjectBasicDim;
             obj2.Offset = new System.Numerics.Vector3(400, 400, 0);
 
-            //_pathsToObjFiles.Add(_pathToCoords);
-            //SceneObject obj3 = new SceneObject();
-            //obj3.Name = "coords";
-            //obj3.Animate = false;
-            //obj3.Scale = Constants.ObjectBasicDim * 5;
-            //obj3.Offset = new System.Numerics.Vector3(0, 0, 0);
-
+            _pathsToObjFiles.Add(_pathToMonkey);
+            SceneObject obj1 = new SceneObject();
+            obj1.Name = "monkey";
+            obj1.Animate = false;
+            obj1.Animatable = false;
+            obj1.Scale = Constants.ObjectBasicDim;
+            obj1.Offset = new System.Numerics.Vector3(0, 0, 0);
 
             _pathsToObjFiles.Add(_pathToTorus);
             SceneObject obj4 = new SceneObject();
@@ -93,11 +81,19 @@ namespace SceneRendering
             obj5.Scale = Constants.ObjectBasicDim;
             obj5.Offset = new System.Numerics.Vector3(400, -400, 0);
 
-            _objects.Add(obj1);
             _objects.Add(obj2);
-            //_objects.Add(obj3);
+            _objects.Add(obj1);
             _objects.Add(obj4);
             _objects.Add(obj5);
+
+            //_objects.Add(obj3);
+            //_pathsToObjFiles.Add(_pathToCoords);
+            //SceneObject obj3 = new SceneObject();
+            //obj3.Name = "coords";
+            //obj3.Animate = false;
+            //obj3.Scale = Constants.ObjectBasicDim * 5;
+            //obj3.Offset = new System.Numerics.Vector3(0, 0, 0);
+
 
             var colorTmp = Color.OrangeRed;
             _objectColor = new MyColor(colorTmp.R / 255f, colorTmp.G / 255f, colorTmp.B / 255f);
@@ -120,7 +116,7 @@ namespace SceneRendering
 
             Camera cam3 = new Camera();
             var position = GetThirdPersonCameraPosition();
-            var target = position + new System.Numerics.Vector3(1000, 1000, -150);
+            var target = GetThirdPersonCameraTarget();
             cam3.CamTarget = target;
             cam3.CamPosition = position;
             cam3.Name = "3rdPersonCamera";
@@ -164,13 +160,13 @@ namespace SceneRendering
 
         System.Numerics.Vector3 GetThirdPersonCameraPosition()
         {
-            var position = GetWorldObjectsCenter(CameraTargetObjectIdx);
-            position.Z += 300;
-            position.X -= 500;
-            position.Y -= 500;
-            return position;
+            return GetWorldObjectsCenter(CameraTargetObjectIdx) + new System.Numerics.Vector3(-600, 0, 400);
         }
 
+        System.Numerics.Vector3 GetThirdPersonCameraTarget()
+        {
+            return GetWorldObjectsCenter(CameraTargetObjectIdx) + new System.Numerics.Vector3(10000, 0, 300);
+        }
         System.Numerics.Vector3 GetWorldObjectsCenter(int objectIdx)
         {
             //double x = 0, y = 0, z = 0;
@@ -454,7 +450,7 @@ namespace SceneRendering
                 this.xNumericUpDown.Value = (decimal)position.X;
                 this.yNumericUpDown.Value = (decimal)position.Y;
                 this.zNumericUpDown.Value = (decimal)position.Z;
-                var target = position + new System.Numerics.Vector3(1000, 1000, -150);
+                var target = GetThirdPersonCameraTarget();
                 viewMat = Matrix4x4.CreateLookAt(position, target, camUpVec);
             }
             else
@@ -663,6 +659,7 @@ namespace SceneRendering
         private void Form1_KeyPress(object sender, KeyPressEventArgs e)
         {
             int val = 40;
+            int degree = 15;
             if (e.KeyChar == 'w')
             {
                 translation.X += val;
@@ -681,7 +678,7 @@ namespace SceneRendering
             }
             else if (e.KeyChar == 'm')
             {
-                double angle = 5; // Angle of rotation in degrees
+                double angle = degree; // Angle of rotation in degrees
 
                 double radians = angle * Math.PI / 180.0; // Convert to radian
                 double x = _lightSource[2].DirectionOfLight.X;
@@ -694,7 +691,7 @@ namespace SceneRendering
             }
             else if (e.KeyChar == 'b')
             {
-                double angle = -5; // Angle of rotation in degrees
+                double angle = -degree; // Angle of rotation in degrees
 
                 double radians = angle * Math.PI / 180.0; // Convert to radian
                 double x = _lightSource[2].DirectionOfLight.X;
@@ -706,7 +703,7 @@ namespace SceneRendering
             }
             else if (e.KeyChar == 'h')
             {
-                double angle = 5; // Angle of rotation in degrees
+                double angle = degree; // Angle of rotation in degrees
 
                 double radians = angle * Math.PI / 180.0; // Convert to radian
                 double x = _lightSource[2].DirectionOfLight.X;
@@ -718,7 +715,7 @@ namespace SceneRendering
             }
             else if (e.KeyChar == 'n')
             {
-                double angle = -5; // Angle of rotation in degrees
+                double angle = -degree; // Angle of rotation in degrees
 
                 double radians = angle * Math.PI / 180.0; // Convert to radian
                 double x = _lightSource[2].DirectionOfLight.X;

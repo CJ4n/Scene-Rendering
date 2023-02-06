@@ -86,16 +86,6 @@ namespace SceneRendering
                 _L.Z = light.Position.Z - _faceWorld.vertices[idx].Z;
                 Utils.Normalize(_L);
 
-                //if (light.IsSpotLight)
-                //{
-                //    double cosDL = Math.Max(0, Utils.CosBetweenVersors(-light.DirectionOfLight, _L));
-                //    int p = 1;
-                //    double _kspotlight = 0.5;
-                //    r += _lightColor.R * _objectColor.R * _kspotlight * Math.Pow(cosDL, p);
-                //    g += _lightColor.G * _objectColor.G * _kspotlight * Math.Pow(cosDL, p);
-                //    b += _lightColor.B * _objectColor.B * _kspotlight * Math.Pow(cosDL, p);
-                //    continue;
-                //}
 
                 Vector3 normalVersor = _face.normals[idx];
 
